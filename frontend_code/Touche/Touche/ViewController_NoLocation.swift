@@ -28,19 +28,19 @@ class ViewController_NoLocation: UIViewController, CLLocationManagerDelegate {
     
     // MARK: CLLocationManagerDelegate Methods
     
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
-        println("Failed to get location")
+    func locationManager(_manager: CLLocationManager!, didFailWithError error: Error) {
+        print("Failed to get location")
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
-        self.performSegueWithIdentifier("gotLocation", sender: self)
+        self.performSegue(withIdentifier: "gotLocation", sender: self)
     }
     
     // MARK: Method to transition to another view controller
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "gotLocation") {
-            var upcoming: ViewController = segue.destinationViewController as! ViewController
+            var upcoming: ViewController = segue.destination as! ViewController
             self.locationManager.stopUpdatingLocation()
         }
     }
