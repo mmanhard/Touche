@@ -31,7 +31,7 @@ class ViewController_CategoryMenu: UIViewController, UITableViewDataSource, UITa
         
         let image = UIImage(named:"touche_icon.png") as UIImage?
         let size = CGSize(width: 36, height: 36)
-        self.homeButton.setImage(RBResizeImage(image!, targetSize: size), forState: .Normal)
+        self.homeButton.setImage(RBResizeImage(image: image!, targetSize: size), for: UIControl.State.normal)
         
         self.tableView.reloadData()
     }
@@ -45,39 +45,43 @@ class ViewController_CategoryMenu: UIViewController, UITableViewDataSource, UITa
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
         if(widthRatio > heightRatio) {
-            newSize = CGSizeMake(size.width * heightRatio, size.height * heightRatio)
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
         } else {
-            newSize = CGSizeMake(size.width * widthRatio,  size.height * widthRatio)
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         }
         
         // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
         // Actually do the resizing to the rect using the ImageContext stuff
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.drawInRect(rect)
+        image.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage
+        // ******************
+        // MUST ADD EXCEPTION CASE!!!!
+        //
+        // ********
+        return newImage!
     }
     
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.categories.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = self.tableView.dequeueReusableCellWithIdentifier("categoryCell", forIndexPath: indexPath) as! TableViewCell
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath) as! TableViewCell
         
         cell.titleLabel.text = self.categories[indexPath.row]
         
         return cell
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    private func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let barHeight = Float(self.bar.frame.size.height)
         let viewHeight = Float(self.view.frame.height)
         let rowHeight = (viewHeight - barHeight) / Float(categories.count)
@@ -89,34 +93,33 @@ class ViewController_CategoryMenu: UIViewController, UITableViewDataSource, UITa
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    private func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
-        self.performSegueWithIdentifier("categorySelected", sender: self)
+        self.performSegue(withIdentifier: "categorySelected", sender: self)
     }
     
     // MARK: Methods to transition to another view controller
     
     @IBAction func cancelCategorySelection(sender: UIButton) {
-        self.performSegueWithIdentifier("categoryNotSelected", sender: self)
+        self.performSegue(withIdentifier: "categoryNotSelected", sender: self)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
-    {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "categoryNotSelected")
         {
-            var upcoming: ViewController = segue.destinationViewController as! ViewController
+            let upcoming: ViewController = segue.destination as! ViewController
             
             upcoming.categoryString = oldCategory!
         }
         if (segue.identifier == "categorySelected")
         {
-            var upcoming: ViewController = segue.destinationViewController as! ViewController
+            let upcoming: ViewController = segue.destination as! ViewController
             
-            let indexPath = self.tableView.indexPathForSelectedRow()!
+            let indexPath = self.tableView.indexPathForSelectedRow!
             
             upcoming.categoryString = self.categories[indexPath.row]
             
-            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            self.tableView.deselectRow(at: indexPath, animated: true)
         }
         
     }
