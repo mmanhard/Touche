@@ -264,7 +264,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             let url = NSURL(string: postString)
             let session = URLSession.shared
 
-            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:NSURLResponse!, error: NSError!) -> Void in
+            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
                 println("Task completed")
                 if(error != nil) {
                 
