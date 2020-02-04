@@ -282,12 +282,7 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         }
     }
     
-    // MARK: Miscellaneous methods
-    
-    func getSubstring(str: String, begin: Int, l: Int) -> String {
-        return str.substringWithRange(Range<String.Index>(start: advance(str.startIndex, begin), end: advance(str.startIndex, begin + l)))
-    }
-    
+    // MARK: Miscellaneous methods    
     func getTime(timeDifference: Float) -> String {
         if timeDifference < 60 {
             return "\(Int(timeDifference))s"

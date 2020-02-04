@@ -114,7 +114,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         else
         {
             let duid2 = NSUUID().uuidString
-            let duid = duid2.substringWithRange(Range<String.Index>(start: advance(duid2.startIndex, 24), end: duid2.endIndex))
+            let duid = getSubstring(str: duid2, beginOffset: 24, endOffset: 0)
             UserDefaults.standard.set(NSString(), forKey: "uuid")
             UserDefaults.standard.setValue(duid, forKey:"uuid")
             UserDefaults.standard.set(NSString(), forKey: "iuid")
@@ -317,8 +317,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     // Given a beginning index and a length, returns the substring of a string.
-    func getSubstring(str: String, begin: Int, l: Int) -> String {
-        return str.substringWithRange(Range<String.Index>(start: advance(str.startIndex, begin), end: advance(str.startIndex, begin + l)))
+    func getSubstring(str: String, beginOffset: Int, endOffset: Int) -> String {
+        let start = str.index(str.startIndex, offsetBy: beginOffset)
+        let end = str.index(str.endIndex, offsetBy: endOffset)
+        let range = start..<end
+
+        let mySubstring = str[range]
+        return String(mySubstring)
     }
     
     // Convert the time to a string representation.
