@@ -48,16 +48,16 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         
         let image = UIImage(named:"touche_icon.png") as UIImage?
         let size = CGSize(width: 36, height: 36)
-        self.homeButton.setImage(RBResizeImage(image!, targetSize: size), forState: .Normal)
+        self.homeButton.setImage(RBResizeImage(image: image!, targetSize: size), for: .normal)
         
         updateTable()
         
-        asked_tableView.hidden = !asked
-        answered_tableView.hidden = asked
+        asked_tableView.isHidden = !asked
+        answered_tableView.isHidden = asked
         
-        asked_tableView.rowHeight = UITableViewAutomaticDimension
+        asked_tableView.rowHeight = UITableView.automaticDimension
         asked_tableView.estimatedRowHeight = 160.0
-        answered_tableView.rowHeight = UITableViewAutomaticDimension
+        answered_tableView.rowHeight = UITableView.automaticDimension
         answered_tableView.estimatedRowHeight = 160.0
     }
     
@@ -72,21 +72,25 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
         if(widthRatio > heightRatio) {
-            newSize = CGSizeMake(size.width * heightRatio, size.height * heightRatio)
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
         } else {
-            newSize = CGSizeMake(size.width * widthRatio,  size.height * widthRatio)
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         }
         
         // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
         // Actually do the resizing to the rect using the ImageContext stuff
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.drawInRect(rect)
+        image.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage
+        // ******************
+        // MUST ADD EXCEPTION CASE!!!!
+        //
+        // ********
+        return newImage!
     }
     
     func updateTable() {
@@ -99,11 +103,10 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         self.quids_ask.removeAllObjects()
         self.categories_ask.removeAllObjects()
         
-        let getString = "https://proj-333.herokuapp.com/questions/get_user_asked?user=" + NSUserDefaults.standardUserDefaults().stringForKey("iuid")!
-        println(getString)
+        let getString = "https://proj-333.herokuapp.com/questions/get_user_asked?user=" + UserDefaults.standard.string(forKey: "iuid")!
         let url = NSURL(string: getString)
-        let session = NSURLSession.sharedSession()
-        let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:NSURLResponse!, error: NSError!) -> Void in
+        let session = URLSession.shared
+        let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
             if(error != nil) {
                 // If there is an error in the web request, print it to the console
                 println(error.localizedDescription)
@@ -151,11 +154,10 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         self.quids_ans.removeAllObjects()
         self.categories_ans.removeAllObjects()
         
-        let getString2 = "https://proj-333.herokuapp.com/questions/get_user_answered?user=" + NSUserDefaults.standardUserDefaults().stringForKey("iuid")!
-        println(getString2)
+        let getString2 = "https://proj-333.herokuapp.com/questions/get_user_answered?user=" + UserDefaults.standard.string(forKey: "iuid")!
         let url2 = NSURL(string: getString2)
-        let session2 = NSURLSession.sharedSession()
-        let dataTask2 = session2.dataTaskWithURL(url2!, completionHandler: { (data: NSData!, response:NSURLResponse!, error: NSError!) -> Void in
+        let session2 = URLSession.shared
+        let dataTask2 = session2.dataTaskWithURL(url2!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
             if(error != nil) {
                 // If there is an error in the web request, print it to the console
                 println(error.localizedDescription)
@@ -199,7 +201,7 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tableView == asked_tableView)
         {
             return self.questions_ask.count
@@ -210,66 +212,62 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if (tableView == asked_tableView)
         {
-            let cell = self.asked_tableView.dequeueReusableCellWithIdentifier("cell_asked", forIndexPath: indexPath) as! TableViewCell_Question
+            let cell = self.asked_tableView.dequeueReusableCell(withIdentifier: "cell_asked", for: indexPath as IndexPath) as! TableViewCell_Question
             
-            cell.questionLabel.text = self.questions_ask.objectAtIndex(indexPath.row) as? String
-            if let q = self.times_ask.objectAtIndex(indexPath.row) as? Float {
-                cell.timeLabel.text = getTime(q)
+            cell.questionLabel.text = self.questions_ask.object(at: indexPath.row) as? String
+            if let q = self.times_ask.object(at: indexPath.row) as? Float {
+                cell.timeLabel.text = getTime(timeDifference: q)
             }
-            cell.voteCountLabel.text = self.votes_ask.objectAtIndex(indexPath.row) as? String
-            cell.Answers = self.answers_ask.objectAtIndex(indexPath.row) as? NSArray
-            cell.QUID = self.quids_ask.objectAtIndex(indexPath.row) as! Int
-            cell.numVote = self.numVote_ask.objectAtIndex(indexPath.row) as! Int
-            cell.qCategory = self.categories_ask.objectAtIndex(indexPath.row) as! String
-            println("ask cells are fine")
+            cell.voteCountLabel.text = self.votes_ask.object(at: indexPath.row) as? String
+            cell.Answers = self.answers_ask.object(at: indexPath.row) as? NSArray
+            cell.QUID = self.quids_ask.object(at: indexPath.row) as? Int
+            cell.numVote = self.numVote_ask.object(at: indexPath.row) as? Int
+            cell.qCategory = self.categories_ask.object(at: indexPath.row) as? String
             return cell
         }
         else
         {
-            let cell = self.answered_tableView.dequeueReusableCellWithIdentifier("cell_answered", forIndexPath: indexPath) as! TableViewCell_Question
+            let cell = self.answered_tableView.dequeueReusableCell(withIdentifier: "cell_answered", for: indexPath as IndexPath) as! TableViewCell_Question
             
-            cell.questionLabel.text = self.questions_ans.objectAtIndex(indexPath.row) as? String
-            if let q = self.times_ans.objectAtIndex(indexPath.row) as? Float {
-                cell.timeLabel.text = getTime(q)
+            cell.questionLabel.text = self.questions_ans.object(at: indexPath.row) as? String
+            if let q = self.times_ans.object(at: indexPath.row) as? Float {
+                cell.timeLabel.text = getTime(timeDifference: q)
             }
-            cell.voteCountLabel.text = self.votes_ans.objectAtIndex(indexPath.row) as? String
-            cell.Answers = self.answers_ans.objectAtIndex(indexPath.row) as? NSArray
-            cell.QUID = self.quids_ans.objectAtIndex(indexPath.row) as! Int
-            cell.numVote = self.numVote_ans.objectAtIndex(indexPath.row) as! Int
-            cell.qCategory = self.categories_ans.objectAtIndex(indexPath.row) as! String
-            println("answer cells are fine")
+            cell.voteCountLabel.text = self.votes_ans.object(at: indexPath.row) as? String
+            cell.Answers = self.answers_ans.object(at: indexPath.row) as? NSArray
+            cell.QUID = self.quids_ans.object(at: indexPath.row) as? Int
+            cell.numVote = self.numVote_ans.object(at: indexPath.row) as? Int
+            cell.qCategory = self.categories_ans.object(at: indexPath.row) as? String
             return cell
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-        let currentCell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell_Question;
+        let currentCell = tableView.cellForRow(at: indexPath as IndexPath) as! TableViewCell_Question;
         self.questionPass = currentCell.questionLabel!.text
         self.ANSWERS_pass = currentCell.Answers
         self.QUID = currentCell.QUID
         self.totVotes = currentCell.numVote
         self.qCategory = currentCell.qCategory
-        self.performSegueWithIdentifier("viewQuestionFromProfile", sender: self)
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        self.performSegue(withIdentifier: "viewQuestionFromProfile", sender: self)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
     
     // MARK: Methods to transition to another view controller.
     
     @IBAction func postQuestion(sender: UIButton) {
-        self.performSegueWithIdentifier("postFromProfile", sender: self)
+        self.performSegue(withIdentifier: "postFromProfile", sender: self)
     }
-    
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
-    {
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "viewQuestionFromProfile")
         {
-            var upcoming: ViewController_Voting = segue.destinationViewController as! ViewController_Voting
+            let upcoming: ViewController_Voting = segue.destination as! ViewController_Voting
             upcoming.passed_array = ANSWERS_pass
             upcoming.Question_passed = questionPass
             upcoming.prevView = "Profile"
@@ -279,7 +277,7 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
             upcoming.prevScreen = "Profile"
             upcoming.category = qCategory
         } else if (segue.identifier == "postFromProfile") {
-            var upcoming: ViewController_Post = segue.destinationViewController as! ViewController_Post
+            let upcoming: ViewController_Post = segue.destination as! ViewController_Post
             upcoming.prevScreen = "Profile"
         }
     }
@@ -307,8 +305,8 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     
     @IBAction func askedOrAnswered(sender: AnyObject) {
         asked = !asked
-        asked_tableView.hidden = !asked
-        answered_tableView.hidden = asked
+        asked_tableView.isHidden = asked
+        answered_tableView.isHidden = asked
     }
     
 }
