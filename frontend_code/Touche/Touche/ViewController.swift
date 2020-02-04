@@ -13,6 +13,7 @@ import CoreLocation
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var profile: UIButton!
     @IBOutlet weak var currentCategory: UILabel!
@@ -51,9 +52,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let image = UIImage(named:"profile.png") as UIImage?
         let size = CGSize(width: 22, height: 22)
-        self.profile.setImage(RBResizeImage(image!, targetSize: size), forState: .Normal)
+        self.profile.setImage(RBResizeImage(image: image!, targetSize: size), for: UIControl.State.normal)
         
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.rowHeight = UITableView.automaticDimension
         
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -67,7 +68,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         self.locationManager.startUpdatingLocation()
         
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 160.0
     }
     
@@ -82,50 +83,48 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
         if(widthRatio > heightRatio) {
-            newSize = CGSizeMake(size.width * heightRatio, size.height * heightRatio)
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
         } else {
-            newSize = CGSizeMake(size.width * widthRatio,  size.height * widthRatio)
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         }
         
         // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
         // Actually do the resizing to the rect using the ImageContext stuff
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.drawInRect(rect)
+        image.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage
+        // ******************
+        // MUST ADD EXCEPTION CASE!!!!
+        //
+        // ********
+        return newImage!
     }
     
     
     func registerUser()
     {
-        if let uuid: NSString = NSUserDefaults.standardUserDefaults().stringForKey("uuid")
+        if let uuid: NSString = UserDefaults.standard.string(forKey: "uuid") as NSString?
         {
-            self.myID = NSUserDefaults.standardUserDefaults().stringForKey("iuid")?.toInt()
-            println(uuid)
-            println(self.myID)
-            println("Saved")
+            self.myID = Int(UserDefaults.standard.string(forKey: "iuid")!)
         }
         else
         {
-            let duid2 = NSUUID().UUIDString
+            let duid2 = NSUUID().uuidString
             let duid = duid2.substringWithRange(Range<String.Index>(start: advance(duid2.startIndex, 24), end: duid2.endIndex))
-            NSUserDefaults.standardUserDefaults().setObject(NSString(), forKey: "uuid")
-            NSUserDefaults.standardUserDefaults().setValue(duid, forKey:"uuid")
-            NSUserDefaults.standardUserDefaults().setObject(NSString(), forKey: "iuid")
-            self.myID = NSUserDefaults.standardUserDefaults().stringForKey("iuid")?.toInt()
+            UserDefaults.standard.set(NSString(), forKey: "uuid")
+            UserDefaults.standard.setValue(duid, forKey:"uuid")
+            UserDefaults.standard.set(NSString(), forKey: "iuid")
+            self.myID = Int(UserDefaults.standard.string(forKey: "iuid")!)
             let postString =  "https://proj-333.herokuapp.com/users/new?number=" + (duid as String);
-            println(postString)
             let url = NSURL(string: postString)
-            println("here")
-            let session = NSURLSession.sharedSession()
-            println(session)
+            let session = URLSession.shared
             // Compose a query string
             //let postString2 = "";
-            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:NSURLResponse!, error: NSError!) -> Void in
+            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
                 println("Task completed")
                 if(error != nil) {
                     
@@ -141,11 +140,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
             })
             dataTask.resume()
-            NSUserDefaults.standardUserDefaults().synchronize()
-            println(NSUserDefaults.standardUserDefaults().stringForKey("uuid")!)
-            println(duid)
-            println(NSUserDefaults.standardUserDefaults().stringForKey("iuid")!)
-            println("Not Saved")
+            UserDefaults.standard.synchronize()
         }
     }
     
@@ -178,10 +173,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let lonValue = longitude
         getString += latValue + lonValue
         
-        println(getString)
         let url = NSURL(string: getString)
-        let session = NSURLSession.sharedSession()
-        let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:NSURLResponse!, error: NSError!) -> Void in
+        let session = URLSession.shared
+        let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
             if(error != nil) {
                 // If there is an error in the web request, print it to the console
                 println(error.localizedDescription)
@@ -235,9 +229,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // MARK: CLLocationManagerDelegate Methods
     
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
-        println("Failed to get location")
-        self.performSegueWithIdentifier("locationServicesDisabled", sender: self)
+    private func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
@@ -245,57 +238,56 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     // MARK: UITableViewDataSource Methods
-    
     // Determine the number of questions.
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.questions.count
     }
     
     // Populate each row of the question table.
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("questionCell", forIndexPath: indexPath) as! TableViewCell_Question
+        let cell = tableView.dequeueReusableCell(withIdentifier: "questionCell", for: indexPath) as! TableViewCell_Question
         
-        cell.questionLabel.text = self.questions.objectAtIndex(indexPath.row) as? String
-        if let q = self.times.objectAtIndex(indexPath.row) as? Float {
-            cell.timeLabel.text = getTime(q)
+        cell.questionLabel.text = self.questions.object(at: indexPath.row) as? String
+        if let q = self.times.object(at: indexPath.row) as? Float {
+            cell.timeLabel.text = getTime(timeDifference: q)
         }
-        cell.voteCountLabel.text = self.votes.objectAtIndex(indexPath.row) as? String
-        cell.Answers = self.answers.objectAtIndex(indexPath.row) as? NSArray
-        cell.QUID = self.quids.objectAtIndex(indexPath.row) as! Int
-        cell.numVote = self.numVote.objectAtIndex(indexPath.row) as! Int
-        cell.qCategory = self.categories.objectAtIndex(indexPath.row) as! String
+        cell.voteCountLabel.text = self.votes.object(at: indexPath.row) as? String
+        cell.Answers = self.answers.object(at: indexPath.row) as? NSArray
+        cell.QUID = self.quids.object(at: indexPath.row) as! Int
+        cell.numVote = self.numVote.object(at: indexPath.row) as! Int
+        cell.qCategory = self.categories.object(at: indexPath.row) as! String
         return cell
     }
 
     // MARK: Methods to transition to another view controller
     
     @IBAction func selectCategory(sender: UIButton) {
-        self.performSegueWithIdentifier("selectCategory", sender: self)
+        self.performSegue(withIdentifier: "selectCategory", sender: self)
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let currentCell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell_Question;
+        let currentCell = tableView.cellForRow(at: indexPath as IndexPath) as! TableViewCell_Question;
         self.questionPass = currentCell.questionLabel!.text
         self.ANSWERS = currentCell.Answers
         self.QUID = currentCell.QUID
         self.totalVote = currentCell.numVote
         self.qCategory = currentCell.qCategory
-        self.ddnt_I = self.did_I.objectAtIndex(indexPath.row) as! Int
-        self.performSegueWithIdentifier("viewQuestionFromHome", sender: self)
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        self.ddnt_I = self.did_I.object(at: indexPath.row) as! Int
+        self.performSegue(withIdentifier: "viewQuestionFromHome", sender: self)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if (segue.identifier == "selectCategory") {
-            var upcoming: ViewController_CategoryMenu = segue.destinationViewController as! ViewController_CategoryMenu
+            let upcoming: ViewController_CategoryMenu = segue.destination as! ViewController_CategoryMenu
             
             upcoming.oldCategory = categoryString
         }
         if (segue.identifier == "viewQuestionFromHome") {
-            var upcoming: ViewController_Voting = segue.destinationViewController as! ViewController_Voting
+            let upcoming: ViewController_Voting = segue.destination as! ViewController_Voting
             upcoming.passed_array = self.ANSWERS
             upcoming.Question_passed = self.questionPass
             upcoming.prevView = "Home"
@@ -305,7 +297,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             upcoming.category = qCategory
         }
         if (segue.identifier == "locationServicesDisabled") {
-            var upcoming: ViewController_NoLocation = segue.destinationViewController as! ViewController_NoLocation
+            var upcoming: ViewController_NoLocation = segue.destination as! ViewController_NoLocation
         }
 
         self.locationManager.stopUpdatingLocation()
