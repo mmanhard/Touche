@@ -14,6 +14,7 @@ import UIKit
 import CoreLocation
 
 class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate {
+    
     @IBOutlet var Answers : UITableView!
     @IBOutlet weak var Category: UIButton!
     @IBOutlet weak var placeholder: UILabel!
@@ -22,7 +23,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var tableHeight: NSLayoutConstraint!
     
-    var keyboardFrame: CGRect = CGRect.nullRect
+    var keyboardFrame: CGRect = CGRect.null
     var keyboardIsShowing: Bool = false
     weak var activeTextField: UITextField?
     weak var activeTextView: UITextView?
@@ -59,16 +60,16 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         if (prevScreen != nil) {
             let image = UIImage(named:"profile.png") as UIImage?
             let size = CGSize(width: 22, height: 22)
-            self.backButton.setImage(RBResizeImage(image!, targetSize: size), forState: .Normal)
+            self.backButton.setImage(RBResizeImage(image: image!, targetSize: size), for: .normal)
         } else {
             let image = UIImage(named:"touche_icon.png") as UIImage?
             let size = CGSize(width: 36, height: 36)
-            self.backButton.setImage(RBResizeImage(image!, targetSize: size), forState: .Normal)
+            self.backButton.setImage(RBResizeImage(image: image!, targetSize: size), for: .normal)
         }
         
         // Change the category label title if there was already one chosen.
         if (self.chosenCategory != nil) {
-            self.Category.setTitle(self.chosenCategory!, forState: UIControlState.Normal)
+            self.Category.setTitle(self.chosenCategory!, for: .normal)
         }
         
         // Change the question text to be the old question text if there was already one.
@@ -77,30 +78,30 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             Question.text = self.qTextSegue
         }
         
-        textCount.text = "\(count(Question.text)) / 160"
-        placeholder.hidden = count(Question.text) > 0
+        textCount.text = "\(Question.text.count) / 160"
+        placeholder.isHidden = Question.text.count > 0
         
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: Selector(("keyboardWillShow:")), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: Selector(("keyboardWillHide:")), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         for subview in self.view.subviews
         {
-            if (subview.isKindOfClass(TableViewCell_AnswerCell))
+            if (subview is TableViewCell_AnswerCell)
             {
                 
-                var cell = subview as! TableViewCell_AnswerCell
-                var textField = cell.Answer
+                let cell = subview as! TableViewCell_AnswerCell
+                let textField = cell.Answer!
                 textField.delegate = self
                 
-                textField.addTarget(self, action: "textFieldDidReturn:", forControlEvents: UIControlEvents.EditingDidEndOnExit)
-                textField.addTarget(self, action: "textFieldDidBeginEditing:", forControlEvents: UIControlEvents.EditingDidBegin)
+                textField.addTarget(self, action: Selector(("textFieldDidReturn:")), for: UIControl.Event.editingDidEndOnExit)
+                textField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingDidBegin)
                 
             }
             
         }
         
-        Category.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        Category.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         
         self.Answers.reloadData()
     }
@@ -116,50 +117,54 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
         if(widthRatio > heightRatio) {
-            newSize = CGSizeMake(size.width * heightRatio, size.height * heightRatio)
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
         } else {
-            newSize = CGSizeMake(size.width * widthRatio,  size.height * widthRatio)
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         }
         
         // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
         // Actually do the resizing to the rect using the ImageContext stuff
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.drawInRect(rect)
+        image.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage
+        // ******************
+        // MUST ADD EXCEPTION CASE!!!!
+        //
+        // ********
+        return newImage!
     }
     
     // MARK: UITextViewDelegate Methods
     
-    func textViewDidChange(textView: UITextView) {
-        placeholder.hidden = (count(textView.text) != 0)
-        textCount.text = "\(count(textView.text)) / 160"
+    func textViewDidChange(_ textView: UITextView) {
+        placeholder.isHidden = (textView.text.count != 0)
+        textCount.text = "\(textView.text.count) / 160"
     }
     
     
     // Restrict the question text to 160 characters.
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        if (contains(text,"\n")) {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if (text.contains("\n")) {
             textView.resignFirstResponder()
             return false
         } else {
             let oldString = textView.text as NSString
-            let newString = oldString.stringByReplacingCharactersInRange(range, withString: text)
+            let newString = oldString.replacingCharacters(in: range, with: text)
         
-            return count(newString) <= maxQuestionLength
+            return newString.count <= maxQuestionLength
         }
     }
     
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) ->
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) ->
         Int{
             let numCells = self.answerArray.count + 1
-            resizeTable(numCells)
+            resizeTable(numCells: numCells)
             return numCells
     }
     
@@ -175,47 +180,47 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     // Populate each cell in the answer table view.
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.row < self.answerArray.count) {
-            var cell: TableViewCell_AnswerCell = tableView.dequeueReusableCellWithIdentifier("answerCell") as! TableViewCell_AnswerCell
+            let cell: TableViewCell_AnswerCell = tableView.dequeueReusableCell(withIdentifier: "answerCell") as! TableViewCell_AnswerCell
             cell.Answer.text = answerArray[indexPath.row]
             return cell
         } else {
-            var cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier("addAnswerCell") as! TableViewCell
+            let cell: TableViewCell = tableView.dequeueReusableCell(withIdentifier: "addAnswerCell") as! TableViewCell
             return cell
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.row == self.answerArray.count) {
             if (self.answerArray.count < maxNumAnswers) {
                 self.answerArray = getAnswerArray()
                 self.answerArray.append("Answer \(indexPath.row + 1)")
             } else {
-                let alertController = UIAlertController(title: "Cannot Add Answer", message: "Max Number of Answers Reached", preferredStyle: UIAlertControllerStyle.Alert)
-                alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+                let alertController = UIAlertController(title: "Cannot Add Answer", message: "Max Number of Answers Reached", preferredStyle: UIAlertController.Style.alert)
+                alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default,handler: nil))
                 
-                self.presentViewController(alertController, animated: true, completion: nil)
+                self.present(alertController, animated: true, completion: nil)
             }
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
         tableView.reloadData()
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         // Must have 2 answers and cannot delete final cell.
         if (self.answerArray.count > 2 && indexPath.row < self.answerArray.count) {
-            if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            if (editingStyle == UITableViewCell.EditingStyle.delete) {
                 answerArray = getAnswerArray()
-                answerArray.removeAtIndex(indexPath.row)
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+                answerArray.remove(at: indexPath.row)
+                tableView.deleteRows(at: [(indexPath as IndexPath)], with: UITableView.RowAnimation.automatic)
             }
             tableView.reloadData()
         } else if (self.answerArray.count <= 2 && indexPath.row < self.answerArray.count) {
-            let alertController = UIAlertController(title: "Cannot Delete Answer", message: "Must have at least 2 answers", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+            let alertController = UIAlertController(title: "Cannot Delete Answer", message: "Must have at least 2 answers", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default,handler: nil))
             
-            self.presentViewController(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -231,7 +236,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             
             // Get the user ID.
             /*** Needs updatings ***/
-            let userID = NSUserDefaults.standardUserDefaults().stringForKey("iuid")!
+            let userID = UserDefaults.standard.string(forKey: "iuid")!
         
             // Get the category text.
             var categoryText: String = "Miscellaneous"
@@ -241,26 +246,23 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         
             // Get the answer text.
             var ansText: String = ""
-            for i in 0...(self.Answers.numberOfRowsInSection(0) - 2) {
-                let ind = NSIndexPath(forRow: i, inSection: 0)
-                let cell = self.Answers.cellForRowAtIndexPath(ind) as! TableViewCell_AnswerCell
-                ansText = ansText + "," + cell.Answer.text
+            for i in 0...(self.Answers.numberOfRows(inSection: 0) - 2) {
+                let ind = NSIndexPath(row: i, section: 0)
+                let cell = self.Answers.cellForRow(at: ind as IndexPath) as! TableViewCell_AnswerCell
+                ansText = ansText + "," + cell.Answer.text!
             }
-            ansText = ansText.stringByReplacingOccurrencesOfString(" ", withString: "_", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            ansText = ansText.replacingOccurrences(of: " ", with: "_")
         
             // Get the question text.
             var qText: String = self.Question.text
-            qText = qText.stringByReplacingOccurrencesOfString(" ", withString: "_", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            qText = qText.replacingOccurrences(of: " ", with: "_")
         
         
             // Create the URL string
             var postString =  "https://proj-333.herokuapp.com/questions/new?user=" + userID + "&category=" + categoryText + "&question=" + qText + "&answers=" + ansText + latitude + longitude;
         
-            println(postString)
             let url = NSURL(string: postString)
-            println("here")
-            let session = NSURLSession.sharedSession()
-            println(session)
+            let session = URLSession.shared
 
             let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:NSURLResponse!, error: NSError!) -> Void in
                 println("Task completed")
@@ -277,19 +279,19 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             
             })
             dataTask.resume()
-            self.performSegueWithIdentifier("postedQuestion", sender: self)
+            self.performSegue(withIdentifier: "postedQuestion", sender: self)
         } else {
             let alertController = UIAlertController(title: "Not a Valid Question!", message:
-                ErrorMessage, preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.Default,handler: nil))
+                ErrorMessage, preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default,handler: nil))
             
-            self.presentViewController(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
     
     // MARK: UITextFieldDelegate Methods
     
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if (self.activeTextField != nil) {
             self.activeTextField!.resignFirstResponder()
             self.activeTextField = nil
@@ -298,7 +300,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         
         if(self.keyboardIsShowing)
         {
-            self.animateTextField(true)
+            self.animateTextField(up: true)
         }
         
         return true
@@ -306,24 +308,24 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     
     func animateTextField(up: Bool) {
         if (self.activeTextField != nil) {
-            var movement = (up ? -kbHeight : kbHeight)
+            let movement = (up ? -kbHeight : kbHeight)
             
-            UIView.animateWithDuration(0.3, animations: {
-                self.view.frame = CGRectOffset(self.view.frame, 0, movement)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement!)
             })
         }
     }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        let newLength = count(textField.text) + count(string) - range.length
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let newLength = textField.text!.count + string.count - range.length
         return newLength <= maxAnswerLength
     }
     
     // MARK: Methods to deal with keyboard popping up.
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func keyboardWillShow(notification: NSNotification)
@@ -331,9 +333,9 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         self.keyboardIsShowing = true
         
         if let userInfo = notification.userInfo {
-            if let keyboardSize =  (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            if let keyboardSize =  (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 kbHeight = keyboardSize.height / 2
-                self.animateTextField(true)
+                self.animateTextField(up: true)
             }
         }
         
@@ -343,10 +345,10 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     {
         self.keyboardIsShowing = false
         
-        self.animateTextField(false)
+        self.animateTextField(up: false)
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         if (self.activeTextField != nil)
         {
@@ -355,7 +357,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         self.activeTextField = nil
         
@@ -364,8 +366,8 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     
     // MARK: CLLocationManagerDelegate Methods
     
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
-        println("Failed to get location")
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to get location")
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
@@ -375,31 +377,31 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     // MARK: Methods to transition to another view controller.
     
     @IBAction func getCategory(sender: UIButton) {
-        self.performSegueWithIdentifier("chooseCategory", sender: self)
+        self.performSegue(withIdentifier: "chooseCategory", sender: self)
     }
     
     @IBAction func cancelPost(sender: UIButton) {
         if (prevScreen != nil) {
-            self.performSegueWithIdentifier("noPostGoProfile", sender: self)
+            self.performSegue(withIdentifier: "noPostGoProfile", sender: self)
         } else {
-            self.performSegueWithIdentifier("noPostGoHome", sender: self)
+            self.performSegue(withIdentifier: "noPostGoHome", sender: self)
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "chooseCategory") {
-            var upcoming: ViewController_chooseCategory = segue.destinationViewController as! ViewController_chooseCategory
+            let upcoming: ViewController_chooseCategory = segue.destination as! ViewController_chooseCategory
             
             upcoming.questionText = Question.text
             upcoming.answerArray = getAnswerArray()
             upcoming.oldCategory = Category.currentTitle!
         } else if (segue.identifier == "noPostGoHome") {
-            var upcoming: ViewController = segue.destinationViewController as! ViewController
+            var upcoming: ViewController = segue.destination as! ViewController
         } else if (segue.identifier == "noPostGoProfile") {
-            var upcoming: ViewController_Profile = segue.destinationViewController as! ViewController_Profile
+            var upcoming: ViewController_Profile = segue.destination as! ViewController_Profile
         }
         else if (segue.identifier == "postedQuestion") {
-            var upcoming: ViewController = segue.destinationViewController as! ViewController
+            var upcoming: ViewController = segue.destination as! ViewController
         }
         locationManager.stopUpdatingLocation()
     }
@@ -408,20 +410,20 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     
     func getAnswerArray() -> Array<String> {
         var answers: Array<String> = []
-        for i in 0...(self.Answers.numberOfRowsInSection(0) - 2) {
-            let ind = NSIndexPath(forRow: i, inSection: 0)
-            let cell = self.Answers.cellForRowAtIndexPath(ind) as! TableViewCell_AnswerCell
-            answers.append(cell.Answer.text)
+        for i in 0...(self.Answers.numberOfRows(inSection: 0) - 2) {
+            let ind = NSIndexPath(row: i, section: 0)
+            let cell = self.Answers.cellForRow(at: ind as IndexPath) as! TableViewCell_AnswerCell
+            answers.append(cell.Answer.text!)
         }
         return answers
     }
     
     func validQuestion() -> (Bool, String?) {
-        if (count(Question.text) <= 0) {
+        if (Question.text.count <= 0) {
             return (false, "Question left blank")
         } else {
             let currentAnswers = getAnswerArray()
-            if contains(currentAnswers,"") {
+            if currentAnswers.contains("") {
                 return (false, "Answer left blank")
             } else if (currentLocation == nil) {
                 return (false, "Location services must be enabled to post")
