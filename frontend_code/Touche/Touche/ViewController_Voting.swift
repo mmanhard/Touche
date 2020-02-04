@@ -110,7 +110,7 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
             let q2text = self.Answers.object(at: indexPath.row) as! String
             let qtext = q2text.replacingOccurrences(of: "_", with: " ")
             cell.textLabel!.text = qtext
-            self.ansNum = self.answersNum.object(at: indexPath.row) as! Int
+            self.ansNum = self.answersNum.object(at: indexPath.row) as? Int
             if (self.voteBool == 1)
             {
                 let scaling = CGFloat(self.ansNum * 100) / CGFloat(self.totVote)

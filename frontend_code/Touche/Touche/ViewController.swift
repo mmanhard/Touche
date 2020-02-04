@@ -254,9 +254,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         cell.voteCountLabel.text = self.votes.object(at: indexPath.row) as? String
         cell.Answers = self.answers.object(at: indexPath.row) as? NSArray
-        cell.QUID = self.quids.object(at: indexPath.row) as! Int
-        cell.numVote = self.numVote.object(at: indexPath.row) as! Int
-        cell.qCategory = self.categories.object(at: indexPath.row) as! String
+        cell.QUID = self.quids.object(at: indexPath.row) as? Int
+        cell.numVote = self.numVote.object(at: indexPath.row) as? Int
+        cell.qCategory = self.categories.object(at: indexPath.row) as? String
         return cell
     }
 
@@ -274,7 +274,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.QUID = currentCell.QUID
         self.totalVote = currentCell.numVote
         self.qCategory = currentCell.qCategory
-        self.ddnt_I = self.did_I.object(at: indexPath.row) as! Int
+        self.ddnt_I = self.did_I.object(at: indexPath.row) as? Int
         self.performSegue(withIdentifier: "viewQuestionFromHome", sender: self)
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
