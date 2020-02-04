@@ -12,6 +12,7 @@
 import UIKit
 
 class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableViewDelegate{
+    
     @IBOutlet var tableView:UITableView!
     @IBOutlet var Question:UILabel!
     @IBOutlet weak var backButton: UIButton!
@@ -29,7 +30,7 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     var selectedIndex = -1
     var voteBool = 0
     var voteChange = 0
-    var uuid:NSString = NSUserDefaults.standardUserDefaults().stringForKey("uuid")!
+    var uuid:String = UserDefaults.standard.string(forKey: "uuid")!
     var firstClick = 0
     
     var prevScreen: String?
@@ -41,11 +42,11 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         if (prevScreen != nil) {
             let image = UIImage(named:"profile.png") as UIImage?
             let size = CGSize(width: 22, height: 22)
-            self.backButton.setImage(RBResizeImage(image!, targetSize: size), forState: .Normal)
+            self.backButton.setImage(RBResizeImage(image: image!, targetSize: size), for: UIControl.State.normal)
         } else {
             let image = UIImage(named:"touche_icon.png") as UIImage?
             let size = CGSize(width: 36, height: 36)
-            self.backButton.setImage(RBResizeImage(image!, targetSize: size), forState: .Normal)
+            self.backButton.setImage(RBResizeImage(image: image!, targetSize: size), for: UIControl.State.normal)
         }
         
         // Do any additional setup after loading the view, typically from a nib.
@@ -53,11 +54,11 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         CategorySlot.text = category
         for answer in passed_array {
             if let ans = answer as? NSDictionary {
-                let answerVotes = ans.valueForKey("text")! as! String
-                self.Answers.addObject(answerVotes)
+                let answerVotes = ans.value(forKey: "text")! as! String
+                self.Answers.add(answerVotes)
                 
-                let answerNum = ans.valueForKey("numvotes")! as! Float
-                self.answersNum.addObject(answerNum)
+                let answerNum = ans.value(forKey: "numvotes")! as! Float
+                self.answersNum.add(answerNum)
             }
         }
         
@@ -75,79 +76,80 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
         if(widthRatio > heightRatio) {
-            newSize = CGSizeMake(size.width * heightRatio, size.height * heightRatio)
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
         } else {
-            newSize = CGSizeMake(size.width * widthRatio,  size.height * widthRatio)
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         }
         
         // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
         // Actually do the resizing to the rect using the ImageContext stuff
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.drawInRect(rect)
+        image.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage
+        // ******************
+        // MUST ADD EXCEPTION CASE!!!!
+        //
+        // ********
+        return newImage!
     }
     
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return self.Answers.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) ->UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if (indexPath.row != 0) {
-            var cell:TableViewCell_Voting = tableView.dequeueReusableCellWithIdentifier("Cell") as! TableViewCell_Voting;
-            let q2text = self.Answers.objectAtIndex(indexPath.row) as! String
-            let qtext = q2text.stringByReplacingOccurrencesOfString("_", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            let cell:TableViewCell_Voting = tableView.dequeueReusableCell(withIdentifier: "Cell") as! TableViewCell_Voting;
+            let q2text = self.Answers.object(at: indexPath.row) as! String
+            let qtext = q2text.replacingOccurrences(of: "_", with: " ")
             cell.textLabel!.text = qtext
-            self.ansNum = self.answersNum.objectAtIndex(indexPath.row) as! Int
+            self.ansNum = self.answersNum.object(at: indexPath.row) as! Int
             if (self.voteBool == 1)
             {
-                println(self.ansNum)
-                println(self.totVote)
                 let scaling = CGFloat(self.ansNum * 100) / CGFloat(self.totVote)
                 cell.Label.backgroundColor =  UIColor(red:CGFloat(1.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(1.0));
                 cell.Label.backgroundColor = UIColor(hue: 1.0, saturation: scaling, brightness: 1.0, alpha: 1.0)
                 let scaling3 = Int(round(scaling))
-                cell.Percentage.hidden = false
+                cell.Percentage.isHidden = false
                 cell.Percentage.text = "\(scaling3)%"
             } else {
-                cell.Percentage.hidden = true
-                cell.Label.backgroundColor = UIColor.whiteColor()
+                cell.Percentage.isHidden = true
+                cell.Label.backgroundColor = UIColor.white
             }
             return cell
         } else {
-            var cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier("otherCell") as! TableViewCell
+            let cell: TableViewCell = tableView.dequeueReusableCell(withIdentifier: "otherCell") as! TableViewCell
             return cell
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.row != 0) {
             let quidPost = quid
             let anidPost = indexPath.row
-            let getString1 =  "https://proj-333.herokuapp.com/vote?question_id=" + String(quidPost)
+            let getString1 =  "https://proj-333.herokuapp.com/vote?question_id=" + String(quidPost!)
             let getString2 = "&answer_id=" + String(anidPost)
-            let getString3 = "&user_id="+NSUserDefaults.standardUserDefaults().stringForKey("iuid")!
+            let getString3 = "&user_id="+UserDefaults.standard.string(forKey: "iuid")!
             let getString = getString1+getString2+getString3
-            println(getString)
             let url = NSURL(string: getString)
-            let session = NSURLSession.sharedSession()
-            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:NSURLResponse!, error: NSError!) -> Void in
-                println("Task completed")
+            let session = URLSession.shared
+            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
+                print("Task completed")
                 if(error != nil) {
                 
                     // If there is an error in the web request, print it to the console
                 
-                    println(error.localizedDescription)
+                    print(error.localizedDescription)
                 
                 }
-                println(NSString(data: data, encoding: NSUTF8StringEncoding)!)
+                print(NSString(data: data, encoding: NSUTF8StringEncoding)!)
                 if (NSString(data: data, encoding: NSUTF8StringEncoding) == "success")
                 {
                     let oldVoteCount = self.answersNum.objectAtIndex(indexPath.row) as! Int
@@ -161,30 +163,30 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
             })
             dataTask.resume()
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
     
     // MARK: Methods to transition to another view controller.
     
     @IBAction func cancelVote(sender: UIButton) {
         if (prevScreen != nil) {
-            self.performSegueWithIdentifier("noVoteGoProfile", sender: self)
+            self.performSegue(withIdentifier: "noVoteGoProfile", sender: self)
         } else {
-            self.performSegueWithIdentifier("noVoteGoHome", sender: self)
+            self.performSegue(withIdentifier: "noVoteGoHome", sender: self)
         }
         
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if (segue.identifier == "noVoteGoHome")
         {
-            var upcoming: ViewController = segue.destinationViewController as! ViewController
+            var upcoming: ViewController = segue.destination as! ViewController
         }
         
         if (segue.identifier == "noVoteGoProfile")
         {
-            var upcoming: ViewController_Profile = segue.destinationViewController as! ViewController_Profile
+            var upcoming: ViewController_Profile = segue.destination as! ViewController_Profile
         }
     }
     
