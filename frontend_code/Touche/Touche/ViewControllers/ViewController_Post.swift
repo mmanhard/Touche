@@ -396,13 +396,6 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             upcoming.questionText = Question.text
             upcoming.answerArray = getAnswerArray()
             upcoming.oldCategory = Category.currentTitle!
-        } else if (segue.identifier == "noPostGoHome") {
-            var upcoming: ViewController = segue.destination as! ViewController
-        } else if (segue.identifier == "noPostGoProfile") {
-            var upcoming: ViewController_Profile = segue.destination as! ViewController_Profile
-        }
-        else if (segue.identifier == "postedQuestion") {
-            var upcoming: ViewController = segue.destination as! ViewController
         }
         locationManager.stopUpdatingLocation()
     }

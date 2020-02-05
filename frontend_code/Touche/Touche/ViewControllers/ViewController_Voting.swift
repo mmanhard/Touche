@@ -177,17 +177,8 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-        if (segue.identifier == "noVoteGoHome")
-        {
-            var upcoming: ViewController = segue.destination as! ViewController
-        }
-        
-        if (segue.identifier == "noVoteGoProfile")
-        {
-            var upcoming: ViewController_Profile = segue.destination as! ViewController_Profile
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+//    {
+//    }
     
 }
