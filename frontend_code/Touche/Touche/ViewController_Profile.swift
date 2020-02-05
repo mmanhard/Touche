@@ -112,32 +112,38 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
                 print(error!.localizedDescription)
             }
             
-            let items = data
-            let s = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            var err: NSError?
-            var myJSON:AnyObject? = JSONSerialization.JSONObjectWithData(data!, options: JSONSerialization.ReadingOptions.MutableContainers)
-            if let parseJSON = myJSON as? NSArray {
-                for dict in parseJSON {
-                    var question = dict.valueForKey("question")! as! String
-                    let qText = question.stringByReplacingOccurrencesOfString("_", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
-                    self.questions_ask.addObject(qText)
-                    let quiddle = dict.valueForKey("id")! as! Int
-                    self.quids_ask.addObject(quiddle)
-                    let time = dict.valueForKey("datetime")! as! Float
-                    self.times_ask.addObject(time)
-                    let answers3 = dict.valueForKey("answers")! as! NSArray
-                    self.answers_ask.addObject(answers3)
-                    let numVotes = dict.valueForKey("total_votes")! as! Int
-                    self.numVote_ask.addObject(numVotes)
+            do {
+                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
+                    let question = myJSON["question"] as! String
+                    
+                    let qText = question.replacingOccurrences(of: "_", with: " ")
+                    self.questions_ask.add(qText)
+                    
+                    let quiddle = myJSON["id"] as! Int
+                    self.quids_ask.add(quiddle)
+                    
+                    let time = myJSON["datetime"] as! Float
+                    self.times_ask.add(time)
+                    
+                    let answers3 = myJSON["answers"] as! [String]
+                    self.answers_ask.addObjects(from: answers3)
+                    
+                    let numVotes = myJSON["total_votes"] as! Int
+                    self.numVote_ask.add(numVotes)
+                    
                     if numVotes == 1 {
                         self.votes_ask.add("\(numVotes) vote")
                     } else {
                         self.votes_ask.add("\(numVotes) votes")
                     }
-                    let cat = dict.valueForKey("category")! as! String
-                    self.categories_ask.addObject(cat)
+                    
+                    let cat = myJSON["category"] as! String
+                    self.categories_ask.add(cat)
                 }
+            } catch let error as NSError {
+                print("Failed to load: \(error.localizedDescription)")
             }
+
             DispatchQueue.main.async {
                 self.asked_tableView.reloadData()
             }
@@ -162,34 +168,38 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
                 print(error!.localizedDescription)
             }
             
-            let items2 = data
-            let s3 = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            var err: NSError?
-            var myJSON2:AnyObject? = JSONSerialization.JSONObjectWithData(data!, options: JSONSerialization.ReadingOptions.MutableContainers)
-            print("myJSON2: ")
-//            print(myJSON2)
-            if let parseJSON2 = myJSON2 as? NSArray {
-                for dict2 in parseJSON2 {
-                    var question2 = dict2.valueForKey("question")! as! String
-                    let qText2 = question2.stringByReplacingOccurrencesOfString("_", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
-                    self.questions_ans.addObject(qText2)
-                    let quiddle2 = dict2.valueForKey("id")! as! Int
-                    self.quids_ans.addObject(quiddle2)
-                    let time2 = dict2.valueForKey("datetime")! as! Float
-                    self.times_ans.addObject(time2)
-                    let answers2 = dict2.valueForKey("answers")! as! NSArray
-                    self.answers_ans.addObject(answers2)
-                    let numVotes2 = dict2.valueForKey("total_votes")! as! Int
-                    self.numVote_ans.addObject(numVotes2)
-                    if numVotes2 == 1 {
-                        self.votes_ans.add("\(numVotes2) vote")
+            do {
+                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
+                    let question = myJSON["question"] as! String
+                    
+                    let qText = question.replacingOccurrences(of: "_", with: " ")
+                    self.questions_ans.add(qText)
+                    
+                    let quiddle = myJSON["id"] as! Int
+                    self.quids_ans.add(quiddle)
+                    
+                    let time = myJSON["datetime"] as! Float
+                    self.times_ans.add(time)
+                    
+                    let answers3 = myJSON["answers"] as! [String]
+                    self.answers_ans.addObjects(from: answers3)
+                    
+                    let numVotes = myJSON["total_votes"] as! Int
+                    self.numVote_ans.add(numVotes)
+                    
+                    if numVotes == 1 {
+                        self.votes_ans.add("\(numVotes) vote")
                     } else {
-                        self.votes_ans.add("\(numVotes2) votes")
+                        self.votes_ans.add("\(numVotes) votes")
                     }
-                    let cat2 = dict2.valueForKey("category")! as! String
-                    self.categories_ans.addObject(cat2)
+                    
+                    let cat = myJSON["category"] as! String
+                    self.categories_ans.add(cat)
                 }
+            } catch let error as NSError {
+                print("Failed to load: \(error.localizedDescription)")
             }
+
             DispatchQueue.main.async {
                 self.answered_tableView.reloadData()
             }

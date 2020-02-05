@@ -179,44 +179,47 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 // If there is an error in the web request, print it to the console
                 print(error!.localizedDescription)
             }
-
-            let items = data
-            let s = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            var err: NSError?
-            var myJSON:AnyObject? = JSONSerialization.JSONObjectWithData(data!, options: JSONSerialization.ReadingOptions.MutableContainers)
-
-            if let parseJSON = myJSON as? NSArray {
-                for dict in parseJSON {
-                    var question = dict.valueForKey("question")! as! String
-                    let qText = question.stringByReplacingOccurrencesOfString("_", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
-                    self.questions.addObject(qText)
-                    let quiddle = dict.valueForKey("id")! as! Int
-                    self.quids.addObject(quiddle)
-                    let time = dict.valueForKey("datetime")! as! Float
-                    self.times.addObject(time)
-                    let answers3 = dict.valueForKey("answers")! as! NSArray
-                    self.answers.addObject(answers3)
-                    let numVotes = dict.valueForKey("total_votes")! as! Int
-                    self.numVote.addObject(numVotes)
+            do {
+                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
+                    let question = myJSON["question"] as! String
+                    
+                    let qText = question.replacingOccurrences(of: "_", with: " ")
+                    self.questions.add(qText)
+                    
+                    let quiddle = myJSON["id"] as! Int
+                    self.quids.add(quiddle)
+                    
+                    let time = myJSON["datetime"] as! Float
+                    self.times.add(time)
+                    
+                    let answers3 = myJSON["answers"] as! [String]
+                    self.answers.addObjects(from: answers3)
+                    
+                    let numVotes = myJSON["total_votes"] as! Int
+                    self.numVote.add(numVotes)
+                    
                     if numVotes == 1 {
                         self.votes.add("\(numVotes) vote")
                     } else {
                         self.votes.add("\(numVotes) votes")
                     }
-                    let responders = dict.valueForKey("responders") as! NSArray
+                    
+                    let responders = myJSON["responders"] as! [Int]
                     var will_I = 0
                     for responder in responders
                     {
-                        let responded = responder as! Int
+                        let responded = responder
                         if (responded == self.myID)
                         {
                             will_I = 1
                         }
                     }
                     self.did_I.add(will_I)
-                    let cat = dict.valueForKey("category")! as! String
-                    self.categories.addObject(cat)
+                    let cat = myJSON["category"] as! String
+                    self.categories.add(cat)
                 }
+            } catch let error as NSError {
+                print("Failed to load: \(error.localizedDescription)")
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
