@@ -107,7 +107,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func registerUser()
     {
-        if let uuid: NSString = UserDefaults.standard.string(forKey: "uuid") as NSString?
+        if let _: NSString = UserDefaults.standard.string(forKey: "uuid") as NSString?
         {
             self.myID = Int(UserDefaults.standard.string(forKey: "iuid")!)
         }
@@ -264,7 +264,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     // MARK: Methods to transition to another view controller
     
-    @IBAction func selectCategory(sender: UIButton) {
+    @IBAction func selectCategory(with sender: UIButton) {
         self.performSegue(withIdentifier: "selectCategory", sender: self)
     }
     
@@ -298,9 +298,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             upcoming.voteBool = ddnt_I
             upcoming.category = qCategory
         }
-        if (segue.identifier == "locationServicesDisabled") {
-            var upcoming: ViewController_NoLocation = segue.destination as! ViewController_NoLocation
-        }
 
         self.locationManager.stopUpdatingLocation()
     }
@@ -308,7 +305,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Miscellaneous methods
 
     // Changes the table to either be sorted by how recent they are or how popular they are.
-    @IBAction func changeSorting(sender: UISegmentedControl) {
+    @IBAction func changeSorting(with sender: UISegmentedControl) {
         if (sender.selectedSegmentIndex == 0) {
             hot = false
             updateTable()
