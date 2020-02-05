@@ -87,6 +87,48 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2712B3A623EB4AE3008FE70A /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				BA63EF591AFB0CC400E47C2C /* ViewController_Post.swift */,
+				BA63EF5A1AFB0CC400E47C2C /* ViewController_Profile.swift */,
+				BA63EF5C1AFB0CC400E47C2C /* ViewController_Voting.swift */,
+				BA63EF561AFB0CC400E47C2C /* ViewController_chooseCategory.swift */,
+				BA63EF5B1AFB0CC400E47C2C /* ViewController_CategoryMenu.swift */,
+				27B471C61B0122F8003F7B1C /* ViewController_NoLocation.swift */,
+				BA63EF581AFB0CC400E47C2C /* ViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		2712B3A723EB4B06008FE70A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2712B3A823EB4B26008FE70A /* Storyboards */,
+				2712B3A923EB4B37008FE70A /* TableViewCells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2712B3A823EB4B26008FE70A /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				2782D8061AFA8F8100549F29 /* Main.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		2712B3A923EB4B37008FE70A /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				BA63EF571AFB0CC400E47C2C /* TableViewCell_AnswerCell.swift */,
+				BA63EF551AFB0CC400E47C2C /* TableViewCell_Question.swift */,
+				BA63EF671AFB0EE300E47C2C /* TableViewCell.swift */,
+				2782D8401AFB5D1000549F29 /* TableViewCell_Voting.swift */,
+			);
+			path = TableViewCells;
+			sourceTree = "<group>";
+		};
 		2782D7F41AFA8F8100549F29 = {
 			isa = PBXGroup;
 			children = (
@@ -109,18 +151,8 @@
 		2782D7FF1AFA8F8100549F29 /* Touche */ = {
 			isa = PBXGroup;
 			children = (
-				BA63EF591AFB0CC400E47C2C /* ViewController_Post.swift */,
-				BA63EF5A1AFB0CC400E47C2C /* ViewController_Profile.swift */,
-				BA63EF5C1AFB0CC400E47C2C /* ViewController_Voting.swift */,
-				BA63EF561AFB0CC400E47C2C /* ViewController_chooseCategory.swift */,
-				BA63EF5B1AFB0CC400E47C2C /* ViewController_CategoryMenu.swift */,
-				27B471C61B0122F8003F7B1C /* ViewController_NoLocation.swift */,
-				BA63EF581AFB0CC400E47C2C /* ViewController.swift */,
-				BA63EF571AFB0CC400E47C2C /* TableViewCell_AnswerCell.swift */,
-				BA63EF551AFB0CC400E47C2C /* TableViewCell_Question.swift */,
-				BA63EF671AFB0EE300E47C2C /* TableViewCell.swift */,
-				2782D8401AFB5D1000549F29 /* TableViewCell_Voting.swift */,
-				2782D8061AFA8F8100549F29 /* Main.storyboard */,
+				2712B3A723EB4B06008FE70A /* Views */,
+				2712B3A623EB4AE3008FE70A /* ViewControllers */,
 				2782D8001AFA8F8100549F29 /* Supporting Files */,
 			);
 			path = Touche;
