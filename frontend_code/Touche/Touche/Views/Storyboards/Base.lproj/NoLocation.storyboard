@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="A30-it-ZKH">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="MuseoSans_500.otf">
+            <string>MuseoSans-500</string>
+        </array>
+        <array key="ThirstyScriptExtraBoldDemo.otf">
+            <string>ThirstyScriptExtraboldDemo</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="mBt-P0-S0Z">
+            <objects>
+                <navigationController id="A30-it-ZKH" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xU2-by-iw1">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ahC-0Q-eYe" kind="relationship" relationship="rootViewController" id="Tgt-tX-Yjw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LtF-Da-alH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-29" y="640"/>
+        </scene>
+        <!--View Controller No Location-->
+        <scene sceneID="Uui-oO-gpp">
+            <objects>
+                <viewController id="ahC-0Q-eYe" customClass="ViewController_NoLocation" customModule="Touche" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="98h-Zg-cfV"/>
+                        <viewControllerLayoutGuide type="bottom" id="eRj-Gq-7C4"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nWj-Cz-JlV">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7ie-zR-PsS">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l4Y-Y1-LA4">
+                                        <rect key="frame" x="8" y="173" width="584" height="60"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="l4Y-Y1-LA4" secondAttribute="height" multiplier="73:9" constant="97.333333333333371" id="SQp-lk-aLA"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Location Services Disabled" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a42-yv-r8C">
+                                        <rect key="frame" x="0.0" y="88" width="414" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="434" id="AWH-U2-7mW"/>
+                                            <constraint firstAttribute="height" constant="40" id="c5T-Kf-rOr"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="ThirstyScriptExtraboldDemo" family="Thirsty Script Extrabold Demo" pointSize="20"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Steps to Fix This Problem" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9BG-Qq-KDv">
+                                        <rect key="frame" x="8" y="222" width="584" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="1ju-51-7qn"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="MuseoSans-500" family="Museo Sans" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1. Open Settings." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fnV-wf-5pk">
+                                        <rect key="frame" x="23" y="290" width="569" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="gku-oF-cEM"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="MuseoSans-500" family="Museo Sans" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="3. Choose the Location icon." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PtX-yk-rKG">
+                                        <rect key="frame" x="23" y="426" width="569" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="blI-PG-6gk"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="MuseoSans-500" family="Museo Sans" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="2. Scroll down to and choose the Touché icon." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IBd-H6-RmX">
+                                        <rect key="frame" x="23" y="358" width="569" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="wM0-4F-Z3W"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="MuseoSans-500" family="Museo Sans" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="4. Choose the &quot;While Using the App&quot; option." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eD7-p1-GzO">
+                                        <rect key="frame" x="23" y="494" width="569" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="esm-wV-fID"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="MuseoSans-500" family="Museo Sans" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Touché needs your location in order to function properly." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZMF-NQ-DWT">
+                                        <rect key="frame" x="93" y="108" width="228" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="ez7-Nr-1Ul"/>
+                                            <constraint firstAttribute="width" constant="228" id="fkM-jd-2OU"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="MuseoSans-500" family="Museo Sans" pointSize="14"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="l4Y-Y1-LA4" secondAttribute="trailing" constant="8" id="4CY-q7-cCP"/>
+                                    <constraint firstItem="l4Y-Y1-LA4" firstAttribute="leading" secondItem="7ie-zR-PsS" secondAttribute="leading" constant="8" id="5Ga-fb-cC5"/>
+                                    <constraint firstAttribute="trailing" secondItem="fnV-wf-5pk" secondAttribute="trailing" constant="8" id="68w-9v-Pk4"/>
+                                    <constraint firstAttribute="trailing" secondItem="PtX-yk-rKG" secondAttribute="trailing" constant="8" id="6sb-mD-VKQ"/>
+                                    <constraint firstItem="l4Y-Y1-LA4" firstAttribute="top" secondItem="ZMF-NQ-DWT" secondAttribute="bottom" constant="-5" id="9Da-OE-b9Y"/>
+                                    <constraint firstItem="PtX-yk-rKG" firstAttribute="leading" secondItem="7ie-zR-PsS" secondAttribute="leading" constant="23" id="Br8-B5-QR9"/>
+                                    <constraint firstAttribute="trailing" secondItem="9BG-Qq-KDv" secondAttribute="trailing" constant="8" id="Ce8-0P-NS3"/>
+                                    <constraint firstItem="fnV-wf-5pk" firstAttribute="top" secondItem="9BG-Qq-KDv" secondAttribute="bottom" constant="8" id="F9m-Gf-Kez"/>
+                                    <constraint firstItem="eD7-p1-GzO" firstAttribute="leading" secondItem="7ie-zR-PsS" secondAttribute="leading" constant="23" id="IYm-9b-GyY"/>
+                                    <constraint firstAttribute="trailing" secondItem="eD7-p1-GzO" secondAttribute="trailing" constant="8" id="Ihi-nM-7y8"/>
+                                    <constraint firstItem="fnV-wf-5pk" firstAttribute="top" secondItem="9BG-Qq-KDv" secondAttribute="bottom" constant="8" id="PTT-YV-M4Y"/>
+                                    <constraint firstItem="IBd-H6-RmX" firstAttribute="leading" secondItem="7ie-zR-PsS" secondAttribute="leading" constant="23" id="Qir-vN-kgC"/>
+                                    <constraint firstAttribute="centerX" secondItem="a42-yv-r8C" secondAttribute="centerX" id="RHM-Ja-FDx"/>
+                                    <constraint firstAttribute="trailing" secondItem="IBd-H6-RmX" secondAttribute="trailing" constant="8" id="SVE-sQ-dlE"/>
+                                    <constraint firstAttribute="centerX" secondItem="ZMF-NQ-DWT" secondAttribute="centerX" id="Whe-lu-hgk"/>
+                                    <constraint firstItem="eD7-p1-GzO" firstAttribute="top" secondItem="PtX-yk-rKG" secondAttribute="bottom" constant="8" id="ZQb-kl-sBy"/>
+                                    <constraint firstAttribute="centerY" secondItem="9BG-Qq-KDv" secondAttribute="centerY" constant="55" id="bDO-78-NvA"/>
+                                    <constraint firstItem="9BG-Qq-KDv" firstAttribute="top" secondItem="l4Y-Y1-LA4" secondAttribute="bottom" constant="-11" id="gqY-w3-FyT"/>
+                                    <constraint firstAttribute="centerY" secondItem="fnV-wf-5pk" secondAttribute="centerY" constant="-13" id="gwm-aj-vge"/>
+                                    <constraint firstItem="fnV-wf-5pk" firstAttribute="leading" secondItem="7ie-zR-PsS" secondAttribute="leading" constant="23" id="h4J-y6-tAf"/>
+                                    <constraint firstItem="9BG-Qq-KDv" firstAttribute="leading" secondItem="7ie-zR-PsS" secondAttribute="leading" constant="8" id="ks5-xQ-cyR"/>
+                                    <constraint firstItem="IBd-H6-RmX" firstAttribute="top" secondItem="fnV-wf-5pk" secondAttribute="bottom" constant="8" id="m92-u2-GKh"/>
+                                    <constraint firstItem="PtX-yk-rKG" firstAttribute="top" secondItem="IBd-H6-RmX" secondAttribute="bottom" constant="8" id="mzL-2W-F27"/>
+                                    <constraint firstItem="ZMF-NQ-DWT" firstAttribute="top" secondItem="a42-yv-r8C" secondAttribute="bottom" constant="-11" id="nE4-yP-yHZ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="eRj-Gq-7C4" firstAttribute="top" secondItem="7ie-zR-PsS" secondAttribute="bottom" constant="-14" id="1bb-Qr-Vg1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="7ie-zR-PsS" secondAttribute="trailing" constant="-16" id="ALp-ev-w7x"/>
+                            <constraint firstItem="7ie-zR-PsS" firstAttribute="leading" secondItem="nWj-Cz-JlV" secondAttribute="leadingMargin" constant="-16" id="SOc-gZ-LAS"/>
+                            <constraint firstItem="7ie-zR-PsS" firstAttribute="top" secondItem="98h-Zg-cfV" secondAttribute="bottom" constant="-20" id="ciF-zt-XYY"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="VQ8-gi-wzY"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="BsH-8R-dmI"/>
+                    <connections>
+                        <segue destination="7yP-4t-3kS" kind="show" identifier="locationServicesEnabled" id="k1y-mW-7lU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P6W-6d-AX1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="771" y="640"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="rU8-pO-7po">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main" id="7yP-4t-3kS" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="WBW-bZ-Azy"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="e3J-h4-q7j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1436" y="640"/>
+        </scene>
+    </scenes>
+</document>

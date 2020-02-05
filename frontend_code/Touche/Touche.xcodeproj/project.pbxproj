@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2712B3AC23EB6C68008FE70A /* NoLocation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2712B3AA23EB6C68008FE70A /* NoLocation.storyboard */; };
 		275A45441AFD2E20004A19A4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 275A45431AFD2E20004A19A4 /* CoreLocation.framework */; };
 		2782D8031AFA8F8100549F29 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782D8021AFA8F8100549F29 /* AppDelegate.swift */; };
 		2782D8081AFA8F8100549F29 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2782D8061AFA8F8100549F29 /* Main.storyboard */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2712B3AB23EB6C68008FE70A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/NoLocation.storyboard; sourceTree = "<group>"; };
 		275A45431AFD2E20004A19A4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2782D7FD1AFA8F8100549F29 /* Touche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Touche.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2782D8011AFA8F8100549F29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				2782D8061AFA8F8100549F29 /* Main.storyboard */,
+				2712B3AA23EB6C68008FE70A /* NoLocation.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			files = (
 				2782D8081AFA8F8100549F29 /* Main.storyboard in Resources */,
 				2782D80D1AFA8F8100549F29 /* LaunchScreen.xib in Resources */,
+				2712B3AC23EB6C68008FE70A /* NoLocation.storyboard in Resources */,
 				27DF176F1B0294F1003B2B49 /* touche_icon.png in Resources */,
 				27DF176B1B0294A4003B2B49 /* MuseoSans_500.otf in Resources */,
 				27DF176D1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf in Resources */,
@@ -328,6 +332,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2712B3AA23EB6C68008FE70A /* NoLocation.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2712B3AB23EB6C68008FE70A /* Base */,
+			);
+			name = NoLocation.storyboard;
+			sourceTree = "<group>";
+		};
 		2782D8061AFA8F8100549F29 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
