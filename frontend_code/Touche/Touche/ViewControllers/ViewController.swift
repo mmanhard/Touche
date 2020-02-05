@@ -231,11 +231,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // MARK: CLLocationManagerDelegate Methods
     
-    private func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
     }
     
-    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: NSArray) {
+        let newLocation = locations[0] as? CLLocation
         currentLocation = newLocation
     }
     

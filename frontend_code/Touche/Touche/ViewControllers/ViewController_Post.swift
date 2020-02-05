@@ -367,10 +367,11 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     // MARK: CLLocationManagerDelegate Methods
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Failed to get location")
+        self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
     }
     
-    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: NSArray) {
+        let newLocation = locations[0] as? CLLocation
         currentLocation = newLocation
     }
 

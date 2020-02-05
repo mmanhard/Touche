@@ -27,12 +27,12 @@ class ViewController_NoLocation: UIViewController, CLLocationManagerDelegate {
     }
     
     // MARK: CLLocationManagerDelegate Methods
-    
-    func locationManager(_manager: CLLocationManager!, didFailWithError error: Error) {
-        print("Failed to get location")
+        
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
     }
     
-    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: NSArray) {
         self.performSegue(withIdentifier: "gotLocation", sender: self)
     }
     
