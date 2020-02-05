@@ -36,7 +36,7 @@
                                             <constraint firstAttribute="height" constant="36" id="QF8-tA-rZH"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="cancelCategorySelection:" destination="Azl-Ed-N8g" eventType="touchUpInside" id="DAV-MS-8xp"/>
+                                            <action selector="cancelCategorySelectionWithSender:" destination="Azl-Ed-N8g" eventType="touchUpInside" id="ivS-4d-9es"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Select a Category" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nAq-Zq-bjB">
@@ -385,7 +385,6 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="cancelCategorySelection:" destination="Azl-Ed-N8g" eventType="touchUpInside" id="m51-dU-abx"/>
                                             <action selector="cancelPost:" destination="jMq-f5-wjs" eventType="touchUpInside" id="tov-9b-31w"/>
                                         </connections>
                                     </button>
@@ -948,7 +947,6 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="cancelCategorySelection:" destination="Azl-Ed-N8g" eventType="touchUpInside" id="GeF-Uo-DHS"/>
                                             <action selector="cancelPost:" destination="jMq-f5-wjs" eventType="touchUpInside" id="g4n-o4-8QE"/>
                                             <action selector="cancelVote:" destination="84J-i2-fDS" eventType="touchUpInside" id="ZBl-N5-c2j"/>
                                         </connections>
@@ -1269,9 +1267,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="N6X-tk-CX6"/>
         <segue reference="Zmo-Ca-LlW"/>
         <segue reference="H0e-EO-KIA"/>
-        <segue reference="5gg-Oh-QYw"/>
-        <segue reference="vQF-i8-hQr"/>
+        <segue reference="GLO-8t-bUk"/>
+        <segue reference="8qg-E0-43c"/>
     </inferredMetricsTieBreakers>
 </document>

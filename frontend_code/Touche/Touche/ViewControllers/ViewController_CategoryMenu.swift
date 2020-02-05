@@ -81,7 +81,7 @@ class ViewController_CategoryMenu: UIViewController, UITableViewDataSource, UITa
         return cell
     }
     
-    private func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let barHeight = Float(self.bar.frame.size.height)
         let viewHeight = Float(self.view.frame.height)
         let rowHeight = (viewHeight - barHeight) / Float(categories.count)
@@ -89,12 +89,14 @@ class ViewController_CategoryMenu: UIViewController, UITableViewDataSource, UITa
         if (CGFloat(rowHeight) < minRowHeight) {
             return minRowHeight
         } else {
+            print(CGFloat(rowHeight))
             return CGFloat(rowHeight)
         }
     }
     
-    private func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
+        print("HELLO")
         self.performSegue(withIdentifier: "categorySelected", sender: self)
     }
     
