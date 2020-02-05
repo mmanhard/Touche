@@ -138,27 +138,27 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
             let getString2 = "&answer_id=" + String(anidPost)
             let getString3 = "&user_id="+UserDefaults.standard.string(forKey: "iuid")!
             let getString = getString1+getString2+getString3
-            let url = NSURL(string: getString)
+            let url = URL(string: getString)
             let session = URLSession.shared
-            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
+            let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
                 print("Task completed")
                 if(error != nil) {
                 
                     // If there is an error in the web request, print it to the console
                 
-                    print(error.localizedDescription)
+                    print(error!.localizedDescription)
                 
                 }
-                print(NSString(data: data, encoding: NSUTF8StringEncoding)!)
-                if (NSString(data: data, encoding: NSUTF8StringEncoding) == "success")
+                print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+                if (NSString(data: data!, encoding: String.Encoding.utf8.rawValue) == "success")
                 {
-                    let oldVoteCount = self.answersNum.objectAtIndex(indexPath.row) as! Int
-                    self.answersNum.replaceObjectAtIndex(indexPath.row, withObject: oldVoteCount + 1)
+                    let oldVoteCount = self.answersNum.object(at: indexPath.row) as! Int
+                    self.answersNum.replaceObject(at: indexPath.row, with: oldVoteCount + 1)
                     self.totVote = self.totVote + 1
                 }
                     self.voteBool = 1
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.tableView.reloadData()
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
                 }
             })
             dataTask.resume()

@@ -104,19 +104,18 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         self.categories_ask.removeAllObjects()
         
         let getString = "https://proj-333.herokuapp.com/questions/get_user_asked?user=" + UserDefaults.standard.string(forKey: "iuid")!
-        let url = NSURL(string: getString)
+        let url = URL(string: getString)
         let session = URLSession.shared
-        let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
+        let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             if(error != nil) {
                 // If there is an error in the web request, print it to the console
-                println(error.localizedDescription)
+                print(error!.localizedDescription)
             }
             
             let items = data
-            let s = NSString(data: data, encoding: NSUTF8StringEncoding)
+            let s = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
             var err: NSError?
-            var myJSON:AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            println(myJSON);
+            var myJSON:AnyObject? = JSONSerialization.JSONObjectWithData(data!, options: JSONSerialization.ReadingOptions.MutableContainers)
             if let parseJSON = myJSON as? NSArray {
                 for dict in parseJSON {
                     var question = dict.valueForKey("question")! as! String
@@ -131,15 +130,15 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
                     let numVotes = dict.valueForKey("total_votes")! as! Int
                     self.numVote_ask.addObject(numVotes)
                     if numVotes == 1 {
-                        self.votes_ask.addObject("\(numVotes) vote")
+                        self.votes_ask.add("\(numVotes) vote")
                     } else {
-                        self.votes_ask.addObject("\(numVotes) votes")
+                        self.votes_ask.add("\(numVotes) votes")
                     }
                     let cat = dict.valueForKey("category")! as! String
                     self.categories_ask.addObject(cat)
                 }
             }
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.asked_tableView.reloadData()
             }
             
@@ -155,20 +154,20 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         self.categories_ans.removeAllObjects()
         
         let getString2 = "https://proj-333.herokuapp.com/questions/get_user_answered?user=" + UserDefaults.standard.string(forKey: "iuid")!
-        let url2 = NSURL(string: getString2)
+        let url2 = URL(string: getString2)
         let session2 = URLSession.shared
-        let dataTask2 = session2.dataTaskWithURL(url2!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
+        let dataTask2 = session2.dataTask(with: url2!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             if(error != nil) {
                 // If there is an error in the web request, print it to the console
-                println(error.localizedDescription)
+                print(error!.localizedDescription)
             }
             
             let items2 = data
-            let s3 = NSString(data: data, encoding: NSUTF8StringEncoding)
+            let s3 = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
             var err: NSError?
-            var myJSON2:AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            println("myJSON2: ")
-            println(myJSON2);
+            var myJSON2:AnyObject? = JSONSerialization.JSONObjectWithData(data!, options: JSONSerialization.ReadingOptions.MutableContainers)
+            print("myJSON2: ")
+//            print(myJSON2)
             if let parseJSON2 = myJSON2 as? NSArray {
                 for dict2 in parseJSON2 {
                     var question2 = dict2.valueForKey("question")! as! String
@@ -183,17 +182,18 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
                     let numVotes2 = dict2.valueForKey("total_votes")! as! Int
                     self.numVote_ans.addObject(numVotes2)
                     if numVotes2 == 1 {
-                        self.votes_ans.addObject("\(numVotes2) vote")
+                        self.votes_ans.add("\(numVotes2) vote")
                     } else {
-                        self.votes_ans.addObject("\(numVotes2) votes")
+                        self.votes_ans.add("\(numVotes2) votes")
                     }
                     let cat2 = dict2.valueForKey("category")! as! String
                     self.categories_ans.addObject(cat2)
                 }
             }
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.answered_tableView.reloadData()
             }
+
             
         })
         dataTask2.resume()

@@ -40,7 +40,7 @@ class ViewController_NoLocation: UIViewController, CLLocationManagerDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "gotLocation") {
-            var upcoming: ViewController = segue.destination as! ViewController
+            let upcoming: ViewController = segue.destination as! ViewController
             self.locationManager.stopUpdatingLocation()
         }
     }

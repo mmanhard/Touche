@@ -259,22 +259,22 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         
         
             // Create the URL string
-            var postString =  "https://proj-333.herokuapp.com/questions/new?user=" + userID + "&category=" + categoryText + "&question=" + qText + "&answers=" + ansText + latitude + longitude;
+            let postString =  "https://proj-333.herokuapp.com/questions/new?user=" + userID + "&category=" + categoryText + "&question=" + qText + "&answers=" + ansText + latitude + longitude;
         
-            let url = NSURL(string: postString)
+            let url = URL(string: postString)
             let session = URLSession.shared
 
-            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
-                println("Task completed")
+            let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+                print("Task completed")
                 if(error != nil) {
                 
                     // If there is an error in the web request, print it to the console
                 
-                    println(error.localizedDescription)
+                    print(error!.localizedDescription)
                 
                 }
             
-                let s = NSString(data: data, encoding: NSUTF8StringEncoding)
+//                let s = NSString(data: data!, encoding: NSUTF8StringEncoding.rawValue)
             
             
             })

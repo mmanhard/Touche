@@ -120,23 +120,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             UserDefaults.standard.set(NSString(), forKey: "iuid")
             self.myID = Int(UserDefaults.standard.string(forKey: "iuid")!)
             let postString =  "https://proj-333.herokuapp.com/users/new?number=" + (duid as String);
-            let url = NSURL(string: postString)
+            let url = URL(string: postString)
             let session = URLSession.shared
             // Compose a query string
             //let postString2 = "";
-            let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
-                println("Task completed")
+            let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
                 if(error != nil) {
                     
                     // If there is an error in the web request, print it to the console
                     
-                    println(error.localizedDescription)
+                    print(error!.localizedDescription)
                     
                 }
                 
-                let s2 = NSString(data: data, encoding: NSUTF8StringEncoding)!
-                NSUserDefaults.standardUserDefaults().setValue(s2, forKey:"iuid")
-                NSUserDefaults.standardUserDefaults().synchronize()
+                let s2 = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
+                UserDefaults.standard.setValue(s2, forKey:"iuid")
+                UserDefaults.standard.synchronize()
                 
             })
             dataTask.resume()
@@ -173,19 +172,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let lonValue = longitude
         getString += latValue + lonValue
         
-        let url = NSURL(string: getString)
+        let url = URL(string: getString)
         let session = URLSession.shared
-        let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data: NSData!, response:URLResponse!, error: NSError!) -> Void in
+        let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             if(error != nil) {
                 // If there is an error in the web request, print it to the console
-                println(error.localizedDescription)
+                print(error!.localizedDescription)
             }
-            
+
             let items = data
-            let s = NSString(data: data, encoding: NSUTF8StringEncoding)
+            let s = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
             var err: NSError?
-            var myJSON:AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            
+            var myJSON:AnyObject? = JSONSerialization.JSONObjectWithData(data!, options: JSONSerialization.ReadingOptions.MutableContainers)
+
             if let parseJSON = myJSON as? NSArray {
                 for dict in parseJSON {
                     var question = dict.valueForKey("question")! as! String
@@ -200,9 +199,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     let numVotes = dict.valueForKey("total_votes")! as! Int
                     self.numVote.addObject(numVotes)
                     if numVotes == 1 {
-                        self.votes.addObject("\(numVotes) vote")
+                        self.votes.add("\(numVotes) vote")
                     } else {
-                        self.votes.addObject("\(numVotes) votes")
+                        self.votes.add("\(numVotes) votes")
                     }
                     let responders = dict.valueForKey("responders") as! NSArray
                     var will_I = 0
@@ -214,16 +213,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             will_I = 1
                         }
                     }
-                    self.did_I.addObject(will_I)
+                    self.did_I.add(will_I)
                     let cat = dict.valueForKey("category")! as! String
                     self.categories.addObject(cat)
                 }
             }
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-            
         })
+        
         dataTask.resume()
     }
     
