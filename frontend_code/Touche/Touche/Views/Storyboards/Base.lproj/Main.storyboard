@@ -118,7 +118,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="flm-YW-ebe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1318" y="1416"/>
+            <point key="canvasLocation" x="-534" y="2442"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
@@ -188,6 +188,9 @@
                                             <constraint firstAttribute="height" constant="36" id="4ZF-5o-1k1"/>
                                             <constraint firstAttribute="width" constant="36" id="cFe-96-8YJ"/>
                                         </constraints>
+                                        <connections>
+                                            <segue destination="xX5-zJ-QDT" kind="show" identifier="showProfile" id="wVj-bt-W9O"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aEN-Gd-Wtv">
                                         <rect key="frame" x="652" y="23" width="36" height="36"/>
@@ -200,6 +203,9 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
+                                        <connections>
+                                            <segue destination="jMq-f5-wjs" kind="show" identifier="postFromHome" id="ehm-o5-375"/>
+                                        </connections>
                                     </button>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zxt-jG-lUA">
                                         <rect key="frame" x="282.5" y="24" width="140" height="32"/>
@@ -315,6 +321,7 @@
                         <outlet property="tableView" destination="aoX-4W-6Bx" id="tsS-oJ-yed"/>
                         <segue destination="Azl-Ed-N8g" kind="show" identifier="selectCategory" id="bOP-ip-B25"/>
                         <segue destination="Dwz-3l-2FN" kind="show" identifier="locationServicesDisabled" id="lqe-Sd-1ys"/>
+                        <segue destination="84J-i2-fDS" kind="show" identifier="viewQuestionFromHome" id="Cnc-tH-i8u"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -348,7 +355,7 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="getCategory:" destination="jMq-f5-wjs" eventType="touchUpInside" id="ytt-hf-8OG"/>
+                                            <action selector="getCategoryWith:" destination="jMq-f5-wjs" eventType="touchUpInside" id="BXa-Tg-BiI"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0 / 160" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uOq-6f-c4R">
@@ -385,7 +392,7 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="cancelPost:" destination="jMq-f5-wjs" eventType="touchUpInside" id="tov-9b-31w"/>
+                                            <action selector="cancelPostWith:" destination="jMq-f5-wjs" eventType="touchUpInside" id="D6f-MO-Tqm"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ytB-eQ-Os5">
@@ -400,7 +407,7 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="postQuestion:" destination="jMq-f5-wjs" eventType="touchUpInside" id="y10-d4-3YI"/>
+                                            <action selector="postQuestionWith:" destination="jMq-f5-wjs" eventType="touchUpInside" id="fg3-ai-WNT"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Create a Question" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iKL-CN-hFI">
@@ -573,7 +580,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fze-ue-dAg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1408" y="363"/>
+            <point key="canvasLocation" x="1376" y="1416"/>
         </scene>
         <!--View Controller choose Category-->
         <scene sceneID="uHE-E4-1t7">
@@ -612,7 +619,7 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="cancel:" destination="X5Q-wh-jgx" eventType="touchUpInside" id="z3I-2e-Cri"/>
+                                            <action selector="cancelWith:" destination="X5Q-wh-jgx" eventType="touchUpInside" id="Rpd-ES-2H5"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -683,7 +690,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OmV-iy-QL7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2391" y="-369"/>
+            <point key="canvasLocation" x="2394" y="1414"/>
         </scene>
         <!--View Controller Profile-->
         <scene sceneID="3qq-Vw-eLA">
@@ -773,7 +780,7 @@
                                         </segments>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
-                                            <action selector="askedOrAnswered:" destination="xX5-zJ-QDT" eventType="valueChanged" id="Ht8-4d-c5e"/>
+                                            <action selector="askedOrAnsweredWith:" destination="xX5-zJ-QDT" eventType="valueChanged" id="zLd-H8-oWD"/>
                                         </connections>
                                     </segmentedControl>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uS2-1E-fY0">
@@ -801,7 +808,7 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="postQuestion:" destination="xX5-zJ-QDT" eventType="touchUpInside" id="s1n-xL-fen"/>
+                                            <action selector="postQuestionWith:" destination="xX5-zJ-QDT" eventType="touchUpInside" id="o9E-38-vRh"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -908,7 +915,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qPQ-ll-WmR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-196" y="622"/>
+            <point key="canvasLocation" x="1376" y="599"/>
         </scene>
         <!--View Controller Voting-->
         <scene sceneID="Ljj-8X-zZx">
@@ -946,8 +953,7 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="cancelPost:" destination="jMq-f5-wjs" eventType="touchUpInside" id="g4n-o4-8QE"/>
-                                            <action selector="cancelVote:" destination="84J-i2-fDS" eventType="touchUpInside" id="ZBl-N5-c2j"/>
+                                            <action selector="cancelVoteWith:" destination="84J-i2-fDS" eventType="touchUpInside" id="PQk-8z-tRZ"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1112,7 +1118,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wXQ-kW-RCS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="785" y="-301"/>
+            <point key="canvasLocation" x="1376" y="2213"/>
         </scene>
         <!--NoLocation-->
         <scene sceneID="CQS-uf-l1Z">
@@ -1142,8 +1148,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="AVD-iH-LRi"/>
-        <segue reference="GLO-8t-bUk"/>
-        <segue reference="mf4-t3-hJW"/>
+        <segue reference="Cnc-tH-i8u"/>
+        <segue reference="H0e-EO-KIA"/>
+        <segue reference="5gg-Oh-QYw"/>
+        <segue reference="wBZ-13-kis"/>
     </inferredMetricsTieBreakers>
 </document>
