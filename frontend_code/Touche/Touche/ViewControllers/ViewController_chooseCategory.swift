@@ -57,7 +57,7 @@ class ViewController_chooseCategory: UIViewController, UITableViewDataSource, UI
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
 
-    @IBAction func cancel(sender: UIButton) {
+    @IBAction func cancel(with sender: UIButton) {
         self.performSegue(withIdentifier: "chosen", sender: self)
     }
     

@@ -52,7 +52,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let image = UIImage(named:"profile.png") as UIImage?
         let size = CGSize(width: 22, height: 22)
-        self.profile.setImage(RBResizeImage(image: image!, targetSize: size), for: UIControl.State.normal)
+        self.profile.setImage(RBResizeImage(image: image!, targetSize: size), for: .normal)
         
         self.tableView.rowHeight = UITableView.automaticDimension
         
@@ -110,6 +110,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if let _: NSString = UserDefaults.standard.string(forKey: "uuid") as NSString?
         {
             self.myID = Int(UserDefaults.standard.string(forKey: "iuid")!)
+            print(UserDefaults.standard.string(forKey: "iuid")!)
         }
         else
         {

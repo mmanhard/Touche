@@ -168,7 +168,7 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     
     // MARK: Methods to transition to another view controller.
     
-    @IBAction func cancelVote(sender: UIButton) {
+    @IBAction func cancelVote(with sender: UIButton) {
         if (prevScreen != nil) {
             self.performSegue(withIdentifier: "noVoteGoProfile", sender: self)
         } else {

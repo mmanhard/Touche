@@ -82,8 +82,8 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         placeholder.isHidden = Question.text.count > 0
         
         
-        NotificationCenter.default.addObserver(self, selector: Selector(("keyboardWillShow:")), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: Selector(("keyboardWillHide:")), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         for subview in self.view.subviews
         {
@@ -226,7 +226,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     
     // MARK: Method to post a question.
     
-    @IBAction func postQuestion(sender: UIButton) {
+    @IBAction func postQuestion(with sender: UIButton) {
         
         let (isValid, ErrorMessage) = validQuestion()
         if isValid {
@@ -328,7 +328,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         NotificationCenter.default.removeObserver(self)
     }
     
-    func keyboardWillShow(notification: NSNotification)
+    @objc func keyboardWillShow(notification: NSNotification)
     {
         self.keyboardIsShowing = true
         
@@ -341,7 +341,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         
     }
     
-    func keyboardWillHide(notification: NSNotification)
+    @objc func keyboardWillHide(notification: NSNotification)
     {
         self.keyboardIsShowing = false
         
@@ -377,11 +377,11 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
 
     // MARK: Methods to transition to another view controller.
     
-    @IBAction func getCategory(sender: UIButton) {
+    @IBAction func getCategory(with sender: UIButton) {
         self.performSegue(withIdentifier: "chooseCategory", sender: self)
     }
     
-    @IBAction func cancelPost(sender: UIButton) {
+    @IBAction func cancelPost(with sender: UIButton) {
         if (prevScreen != nil) {
             self.performSegue(withIdentifier: "noPostGoProfile", sender: self)
         } else {

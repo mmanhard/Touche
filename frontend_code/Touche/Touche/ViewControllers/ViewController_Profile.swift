@@ -103,110 +103,111 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         self.quids_ask.removeAllObjects()
         self.categories_ask.removeAllObjects()
         
-        let getString = "https://proj-333.herokuapp.com/questions/get_user_asked?user=" + UserDefaults.standard.string(forKey: "iuid")!
-        let url = URL(string: getString)
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            if(error != nil) {
-                // If there is an error in the web request, print it to the console
-                print(error!.localizedDescription)
-            }
-            
-            do {
-                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
-                    let question = myJSON["question"] as! String
-                    
-                    let qText = question.replacingOccurrences(of: "_", with: " ")
-                    self.questions_ask.add(qText)
-                    
-                    let quiddle = myJSON["id"] as! Int
-                    self.quids_ask.add(quiddle)
-                    
-                    let time = myJSON["datetime"] as! Float
-                    self.times_ask.add(time)
-                    
-                    let answers3 = myJSON["answers"] as! [String]
-                    self.answers_ask.addObjects(from: answers3)
-                    
-                    let numVotes = myJSON["total_votes"] as! Int
-                    self.numVote_ask.add(numVotes)
-                    
-                    if numVotes == 1 {
-                        self.votes_ask.add("\(numVotes) vote")
-                    } else {
-                        self.votes_ask.add("\(numVotes) votes")
-                    }
-                    
-                    let cat = myJSON["category"] as! String
-                    self.categories_ask.add(cat)
-                }
-            } catch let error as NSError {
-                print("Failed to load: \(error.localizedDescription)")
-            }
-
-            DispatchQueue.main.async {
-                self.asked_tableView.reloadData()
-            }
-            
-        })
-        dataTask.resume()
-        
-        self.answers_ans.removeAllObjects()
-        self.questions_ans.removeAllObjects()
-        self.times_ans.removeAllObjects()
-        self.votes_ans.removeAllObjects()
-        self.numVote_ans.removeAllObjects()
-        self.quids_ans.removeAllObjects()
-        self.categories_ans.removeAllObjects()
-        
-        let getString2 = "https://proj-333.herokuapp.com/questions/get_user_answered?user=" + UserDefaults.standard.string(forKey: "iuid")!
-        let url2 = URL(string: getString2)
-        let session2 = URLSession.shared
-        let dataTask2 = session2.dataTask(with: url2!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            if(error != nil) {
-                // If there is an error in the web request, print it to the console
-                print(error!.localizedDescription)
-            }
-            
-            do {
-                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
-                    let question = myJSON["question"] as! String
-                    
-                    let qText = question.replacingOccurrences(of: "_", with: " ")
-                    self.questions_ans.add(qText)
-                    
-                    let quiddle = myJSON["id"] as! Int
-                    self.quids_ans.add(quiddle)
-                    
-                    let time = myJSON["datetime"] as! Float
-                    self.times_ans.add(time)
-                    
-                    let answers3 = myJSON["answers"] as! [String]
-                    self.answers_ans.addObjects(from: answers3)
-                    
-                    let numVotes = myJSON["total_votes"] as! Int
-                    self.numVote_ans.add(numVotes)
-                    
-                    if numVotes == 1 {
-                        self.votes_ans.add("\(numVotes) vote")
-                    } else {
-                        self.votes_ans.add("\(numVotes) votes")
-                    }
-                    
-                    let cat = myJSON["category"] as! String
-                    self.categories_ans.add(cat)
-                }
-            } catch let error as NSError {
-                print("Failed to load: \(error.localizedDescription)")
-            }
-
-            DispatchQueue.main.async {
-                self.answered_tableView.reloadData()
-            }
-
-            
-        })
-        dataTask2.resume()
+//        let getString = "https://proj-333.herokuapp.com/questions/get_user_asked?user=" + UserDefaults.standard.string(forKey: "iuid")!
+//        print(getString)
+//        let url = URL(string: getString)
+//        let session = URLSession.shared
+//        let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+//            if(error != nil) {
+//                // If there is an error in the web request, print it to the console
+//                print(error!.localizedDescription)
+//            }
+//            
+//            do {
+//                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
+//                    let question = myJSON["question"] as! String
+//                    
+//                    let qText = question.replacingOccurrences(of: "_", with: " ")
+//                    self.questions_ask.add(qText)
+//                    
+//                    let quiddle = myJSON["id"] as! Int
+//                    self.quids_ask.add(quiddle)
+//                    
+//                    let time = myJSON["datetime"] as! Float
+//                    self.times_ask.add(time)
+//                    
+//                    let answers3 = myJSON["answers"] as! [String]
+//                    self.answers_ask.addObjects(from: answers3)
+//                    
+//                    let numVotes = myJSON["total_votes"] as! Int
+//                    self.numVote_ask.add(numVotes)
+//                    
+//                    if numVotes == 1 {
+//                        self.votes_ask.add("\(numVotes) vote")
+//                    } else {
+//                        self.votes_ask.add("\(numVotes) votes")
+//                    }
+//                    
+//                    let cat = myJSON["category"] as! String
+//                    self.categories_ask.add(cat)
+//                }
+//            } catch let error as NSError {
+//                print("Failed to load: \(error.localizedDescription)")
+//            }
+//
+//            DispatchQueue.main.async {
+//                self.asked_tableView.reloadData()
+//            }
+//            
+//        })
+//        dataTask.resume()
+//        
+//        self.answers_ans.removeAllObjects()
+//        self.questions_ans.removeAllObjects()
+//        self.times_ans.removeAllObjects()
+//        self.votes_ans.removeAllObjects()
+//        self.numVote_ans.removeAllObjects()
+//        self.quids_ans.removeAllObjects()
+//        self.categories_ans.removeAllObjects()
+//        
+//        let getString2 = "https://proj-333.herokuapp.com/questions/get_user_answered?user=" + UserDefaults.standard.string(forKey: "iuid")!
+//        let url2 = URL(string: getString2)
+//        let session2 = URLSession.shared
+//        let dataTask2 = session2.dataTask(with: url2!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+//            if(error != nil) {
+//                // If there is an error in the web request, print it to the console
+//                print(error!.localizedDescription)
+//            }
+//            
+//            do {
+//                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
+//                    let question = myJSON["question"] as! String
+//                    
+//                    let qText = question.replacingOccurrences(of: "_", with: " ")
+//                    self.questions_ans.add(qText)
+//                    
+//                    let quiddle = myJSON["id"] as! Int
+//                    self.quids_ans.add(quiddle)
+//                    
+//                    let time = myJSON["datetime"] as! Float
+//                    self.times_ans.add(time)
+//                    
+//                    let answers3 = myJSON["answers"] as! [String]
+//                    self.answers_ans.addObjects(from: answers3)
+//                    
+//                    let numVotes = myJSON["total_votes"] as! Int
+//                    self.numVote_ans.add(numVotes)
+//                    
+//                    if numVotes == 1 {
+//                        self.votes_ans.add("\(numVotes) vote")
+//                    } else {
+//                        self.votes_ans.add("\(numVotes) votes")
+//                    }
+//                    
+//                    let cat = myJSON["category"] as! String
+//                    self.categories_ans.add(cat)
+//                }
+//            } catch let error as NSError {
+//                print("Failed to load: \(error.localizedDescription)")
+//            }
+//
+//            DispatchQueue.main.async {
+//                self.answered_tableView.reloadData()
+//            }
+//
+//            
+//        })
+//        dataTask2.resume()
     }
     
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
@@ -270,7 +271,7 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     
     // MARK: Methods to transition to another view controller.
     
-    @IBAction func postQuestion(sender: UIButton) {
+    @IBAction func postQuestion(with sender: UIButton) {
         self.performSegue(withIdentifier: "postFromProfile", sender: self)
     }
 
@@ -308,10 +309,15 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         }
     }
     
-    @IBAction func askedOrAnswered(sender: AnyObject) {
+    @IBAction func askedOrAnswered(with sender: AnyObject) {
         asked = !asked
-        asked_tableView.isHidden = asked
-        answered_tableView.isHidden = asked
+        if asked {
+            self.asked_tableView.isHidden = asked
+            self.answered_tableView.isHidden = !asked
+        } else {
+            self.answered_tableView.isHidden = !asked
+            self.asked_tableView.isHidden = asked
+        }
     }
     
 }
