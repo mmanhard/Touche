@@ -1,20 +1,29 @@
-from flask import Blueprint
+from flask import Blueprint, request, redirect, session, jsonify, render_template
+from models import Base, User, Question
+import json
+from database import db
 
 user_api = Blueprint('user_api', __name__)
 
-# Handle users
-@user_api.route("/", methods=['GET','POST'])
+###########################################################################
+# Show all users
+###########################################################################
+@user_api.route("/", methods=['GET'])
 # @auth.login_required
-def users():
-    return 'Users Home'
+def index():
+    all_users = db.session.query(User).all()
+    s = []
+    for u in all_users:
+        s.append(u.serialize())
+    return json.dumps(s, sort_keys=True, indent=4)
 
 ###########################################################################
-# Add new user
+# Create new user
 ###########################################################################
-@user_api.route("/new", methods=['GET'])
+@user_api.route("/", methods=['POST'])
 # @auth.login_required
-def new_user():
-    cell = request.args.get('number')
+def create_new_user():
+    cell = request.form['number']
     print(cell)
     if cell is None:
         return 'No Number Provided'
@@ -31,26 +40,12 @@ def new_user():
     else:
         return 'Already Registered'
 
-
-###########################################################################
-# Request all users
-###########################################################################
-@user_api.route("/get_all", methods=['GET'])
-# @auth.login_required
-def get_all_users():
-    all_users = db.session.query(User).all()
-    s = []
-    for u in all_users:
-        s.append(u.serialize())
-    return json.dumps(s, sort_keys=True, indent=4)
-
 ###########################################################################
 # Request all info about a user
 ###########################################################################
-@user_api.route("/get", methods=['GET'])
+@user_api.route("/<uid>", methods=['GET'])
 # @auth.login_required
-def get_user():
-    uid = request.args.get('id')
+def get_user_by_id(uid):
     number = request.args.get('number')
     if number is None and uid is None:
         return "No Number or Id Provided"
@@ -63,3 +58,10 @@ def get_user():
         return "This User does not exist"
 
     return repr(user)
+
+###########################################################################
+# DEPRECATED METHODS
+###########################################################################
+
+# @user_api.route("/get_all", methods=['GET'])
+# # @auth.login_required
