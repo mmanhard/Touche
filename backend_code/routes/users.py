@@ -45,7 +45,7 @@ def create_new_user():
 ###########################################################################
 @user_api.route("/<uid>", methods=['GET'])
 # @auth.login_required
-def get_user_by_id(uid):
+def show_user_by_id(uid):
     number = request.args.get('number')
     if number is None and uid is None:
         return "No Number or Id Provided"
@@ -58,6 +58,44 @@ def get_user_by_id(uid):
         return "This User does not exist"
 
     return repr(user)
+
+###########################################################################
+# Show all questions asked by user
+###########################################################################
+@user_api.route("/<uid>/asked", methods=['GET'])
+# @auth.login_required
+def get_questions_asked_by_user(uid):
+    if uid is None:
+        return 'need user id'
+    uid = int(uid)
+    user = db.session.query(User).get(uid)
+    asked = json.loads(user.askQuest)
+    s = []
+    for a in asked:
+        question = db.session.query(Question).get(a)
+        s.append(question.serialize())
+
+    sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
+    return json.dumps(sorted_questions, sort_keys=True, indent=4)
+
+###########################################################################
+# Show all questions answered by user
+###########################################################################
+@user_api.route("/<uid>/answered", methods=['GET'])
+# @auth.login_required
+def get_questions_answered_by_user(uid):
+        if uid is None:
+            return 'need user id'
+        uid = int(uid)
+        user = db.session.query(User).get(uid)
+        answered = json.loads(user.ansQuest)
+        s = []
+        for a in answered:
+            question = db.session.query(Question).get(a)
+            s.append(question.serialize())
+
+        sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
+        return json.dumps(sorted_questions, sort_keys=True, indent=4)
 
 ###########################################################################
 # DEPRECATED METHODS
