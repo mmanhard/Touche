@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="of7-B8-l4u">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller Login-->
+        <scene sceneID="4ec-mJ-bFb">
+            <objects>
+                <viewController id="of7-B8-l4u" customClass="ViewController_Login" customModule="Touche" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nJr-mz-gzj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="27g-4a-EdQ">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7C-Xk-OrJ" customClass="FBSDKLoginButton">
+                                        <rect key="frame" x="192" y="630" width="30" height="34"/>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon" translatesAutoresizingMaskIntoConstraints="NO" id="iI4-1j-he0">
+                                        <rect key="frame" x="49" y="177" width="316" height="264"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="iI4-1j-he0" secondAttribute="height" multiplier="79:66" id="IYs-HK-hy8"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="iI4-1j-he0" firstAttribute="centerX" secondItem="27g-4a-EdQ" secondAttribute="centerX" id="5RR-Yj-Ubz"/>
+                                    <constraint firstAttribute="bottom" secondItem="f7C-Xk-OrJ" secondAttribute="bottom" constant="232" id="AVL-H8-o55"/>
+                                    <constraint firstItem="f7C-Xk-OrJ" firstAttribute="centerX" secondItem="27g-4a-EdQ" secondAttribute="centerX" id="BTQ-9U-STK"/>
+                                    <constraint firstItem="iI4-1j-he0" firstAttribute="top" secondItem="27g-4a-EdQ" secondAttribute="top" constant="177" id="LFH-Ga-e9K"/>
+                                    <constraint firstItem="f7C-Xk-OrJ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iI4-1j-he0" secondAttribute="bottom" constant="50" id="OLU-hb-Mpk"/>
+                                    <constraint firstAttribute="trailing" secondItem="iI4-1j-he0" secondAttribute="trailing" constant="49" id="ada-lT-3Hd"/>
+                                    <constraint firstItem="iI4-1j-he0" firstAttribute="leading" secondItem="27g-4a-EdQ" secondAttribute="leading" constant="49" id="xJJ-Js-Xcg"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="27g-4a-EdQ" firstAttribute="centerY" secondItem="nJr-mz-gzj" secondAttribute="centerY" id="BMX-9r-khZ"/>
+                            <constraint firstItem="27g-4a-EdQ" firstAttribute="top" secondItem="nJr-mz-gzj" secondAttribute="topMargin" constant="-44" id="Mhd-mE-JNh"/>
+                            <constraint firstItem="27g-4a-EdQ" firstAttribute="leading" secondItem="nJr-mz-gzj" secondAttribute="leading" id="TIV-4s-7pX"/>
+                            <constraint firstAttribute="trailing" secondItem="27g-4a-EdQ" secondAttribute="trailing" id="U5L-n1-qcn"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="R60-Rl-VW2"/>
+                    </view>
+                    <connections>
+                        <outlet property="loginButtonFB" destination="f7C-Xk-OrJ" id="UFh-GW-NOn"/>
+                        <segue destination="WIx-wM-w7q" kind="show" identifier="signedInWithFb" id="bkY-Sv-3Nu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VYI-lB-VuL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-832" y="-214"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="nja-kn-gUK">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main" id="WIx-wM-w7q" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="4nE-4Y-VgW"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H0X-9b-Jpa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="88" y="-214"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Icon" width="512" height="512"/>
+    </resources>
+</document>

@@ -10,6 +10,8 @@
 
 import UIKit
 import CoreLocation
+import FacebookCore
+import FacebookLogin
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
@@ -44,6 +46,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var currentLocation: CLLocation!
     
     // MARK: Methods to setup current view
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let _ = AccessToken.current {
+            print("Logged In")
+        } else {
+            self.performSegue(withIdentifier: "needsLogin", sender: self)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

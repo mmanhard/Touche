@@ -323,6 +323,7 @@
                         <segue destination="Azl-Ed-N8g" kind="show" identifier="selectCategory" id="bOP-ip-B25"/>
                         <segue destination="Dwz-3l-2FN" kind="show" identifier="locationServicesDisabled" id="lqe-Sd-1ys"/>
                         <segue destination="84J-i2-fDS" kind="show" identifier="viewQuestionFromHome" id="Cnc-tH-i8u"/>
+                        <segue destination="gYc-2x-s0j" kind="show" identifier="needsLogin" id="3QM-G5-9ED"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -1141,7 +1142,17 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9X3-km-Kov" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="177" y="1845"/>
+            <point key="canvasLocation" x="101" y="1921"/>
+        </scene>
+        <!--LogIn-->
+        <scene sceneID="L1h-dg-s3j">
+            <objects>
+                <viewControllerPlaceholder storyboardName="LogIn" id="gYc-2x-s0j" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="w7k-cm-CE9"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iza-hl-sAr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="297" y="1921"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5Pe-iJ-obg">
@@ -1163,8 +1174,8 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Cnc-tH-i8u"/>
-        <segue reference="H0e-EO-KIA"/>
-        <segue reference="5gg-Oh-QYw"/>
-        <segue reference="8qg-E0-43c"/>
+        <segue reference="wVj-bt-W9O"/>
+        <segue reference="ehm-o5-375"/>
+        <segue reference="mf4-t3-hJW"/>
     </inferredMetricsTieBreakers>
 </document>

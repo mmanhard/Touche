@@ -20,6 +20,11 @@
 		27DF176B1B0294A4003B2B49 /* MuseoSans_500.otf in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176A1B0294A4003B2B49 /* MuseoSans_500.otf */; };
 		27DF176D1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176C1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf */; };
 		27DF176F1B0294F1003B2B49 /* touche_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176E1B0294F1003B2B49 /* touche_icon.png */; };
+		27FA9FF123F1C9DD00242397 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF023F1C9DD00242397 /* User.swift */; };
+		27FA9FF323F1D3B900242397 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF223F1D3B900242397 /* Question.swift */; };
+		27FA9FF623F1EEAC00242397 /* LogIn.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27FA9FF423F1EEAC00242397 /* LogIn.storyboard */; };
+		27FA9FF823F1EF8600242397 /* ViewController_Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF723F1EF8600242397 /* ViewController_Login.swift */; };
+		27FA9FFB23F1F48E00242397 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 27FA9FFA23F1F48E00242397 /* FacebookLogin */; };
 		BA63EF5E1AFB0CC400E47C2C /* TableViewCell_Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA63EF551AFB0CC400E47C2C /* TableViewCell_Question.swift */; };
 		BA63EF5F1AFB0CC400E47C2C /* ViewController_chooseCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA63EF561AFB0CC400E47C2C /* ViewController_chooseCategory.swift */; };
 		BA63EF601AFB0CC400E47C2C /* TableViewCell_AnswerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA63EF571AFB0CC400E47C2C /* TableViewCell_AnswerCell.swift */; };
@@ -59,6 +64,10 @@
 		27DF176A1B0294A4003B2B49 /* MuseoSans_500.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MuseoSans_500.otf; sourceTree = "<group>"; };
 		27DF176C1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThirstyScriptExtraBoldDemo.otf; sourceTree = "<group>"; };
 		27DF176E1B0294F1003B2B49 /* touche_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touche_icon.png; sourceTree = "<group>"; };
+		27FA9FF023F1C9DD00242397 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		27FA9FF223F1D3B900242397 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		27FA9FF523F1EEAC00242397 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LogIn.storyboard; sourceTree = "<group>"; };
+		27FA9FF723F1EF8600242397 /* ViewController_Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController_Login.swift; sourceTree = "<group>"; };
 		BA63EF551AFB0CC400E47C2C /* TableViewCell_Question.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell_Question.swift; sourceTree = "<group>"; };
 		BA63EF561AFB0CC400E47C2C /* ViewController_chooseCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController_chooseCategory.swift; sourceTree = "<group>"; };
 		BA63EF571AFB0CC400E47C2C /* TableViewCell_AnswerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell_AnswerCell.swift; sourceTree = "<group>"; };
@@ -75,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27FA9FFB23F1F48E00242397 /* FacebookLogin in Frameworks */,
 				275A45441AFD2E20004A19A4 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,6 +109,7 @@
 				BA63EF5B1AFB0CC400E47C2C /* ViewController_CategoryMenu.swift */,
 				27B471C61B0122F8003F7B1C /* ViewController_NoLocation.swift */,
 				BA63EF581AFB0CC400E47C2C /* ViewController.swift */,
+				27FA9FF723F1EF8600242397 /* ViewController_Login.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -106,6 +117,7 @@
 		2712B3A723EB4B06008FE70A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2782D80B1AFA8F8100549F29 /* LaunchScreen.xib */,
 				2712B3A823EB4B26008FE70A /* Storyboards */,
 				2712B3A923EB4B37008FE70A /* TableViewCells */,
 			);
@@ -117,6 +129,7 @@
 			children = (
 				2782D8061AFA8F8100549F29 /* Main.storyboard */,
 				2712B3AA23EB6C68008FE70A /* NoLocation.storyboard */,
+				27FA9FF423F1EEAC00242397 /* LogIn.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -154,6 +167,8 @@
 		2782D7FF1AFA8F8100549F29 /* Touche */ = {
 			isa = PBXGroup;
 			children = (
+				27FA9FFC23F1F6B400242397 /* Application */,
+				27FA9FEF23F1C82400242397 /* Models */,
 				2712B3A723EB4B06008FE70A /* Views */,
 				2712B3A623EB4AE3008FE70A /* ViewControllers */,
 				2782D8001AFA8F8100549F29 /* Supporting Files */,
@@ -167,11 +182,8 @@
 				2782D83A1AFB157200549F29 /* profile.png */,
 				27DF176A1B0294A4003B2B49 /* MuseoSans_500.otf */,
 				27DF176E1B0294F1003B2B49 /* touche_icon.png */,
-				2782D80B1AFA8F8100549F29 /* LaunchScreen.xib */,
 				27DF176C1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf */,
 				2782D8091AFA8F8100549F29 /* Images.xcassets */,
-				2782D8021AFA8F8100549F29 /* AppDelegate.swift */,
-				2782D8011AFA8F8100549F29 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -193,6 +205,24 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		27FA9FEF23F1C82400242397 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				27FA9FF023F1C9DD00242397 /* User.swift */,
+				27FA9FF223F1D3B900242397 /* Question.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		27FA9FFC23F1F6B400242397 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				2782D8021AFA8F8100549F29 /* AppDelegate.swift */,
+				2782D8011AFA8F8100549F29 /* Info.plist */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -209,6 +239,9 @@
 			dependencies = (
 			);
 			name = Touche;
+			packageProductDependencies = (
+				27FA9FFA23F1F48E00242397 /* FacebookLogin */,
+			);
 			productName = Touche;
 			productReference = 2782D7FD1AFA8F8100549F29 /* Touche.app */;
 			productType = "com.apple.product-type.application";
@@ -258,6 +291,9 @@
 				Base,
 			);
 			mainGroup = 2782D7F41AFA8F8100549F29;
+			packageReferences = (
+				27FA9FF923F1F48D00242397 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+			);
 			productRefGroup = 2782D7FE1AFA8F8100549F29 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -280,6 +316,7 @@
 				27DF176B1B0294A4003B2B49 /* MuseoSans_500.otf in Resources */,
 				27DF176D1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf in Resources */,
 				2782D80A1AFA8F8100549F29 /* Images.xcassets in Resources */,
+				27FA9FF623F1EEAC00242397 /* LogIn.storyboard in Resources */,
 				2782D83B1AFB157200549F29 /* profile.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,16 +335,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27FA9FF123F1C9DD00242397 /* User.swift in Sources */,
 				BA63EF631AFB0CC400E47C2C /* ViewController_Profile.swift in Sources */,
 				BA63EF621AFB0CC400E47C2C /* ViewController_Post.swift in Sources */,
 				27B471C71B0122F8003F7B1C /* ViewController_NoLocation.swift in Sources */,
 				BA63EF611AFB0CC400E47C2C /* ViewController.swift in Sources */,
+				27FA9FF323F1D3B900242397 /* Question.swift in Sources */,
 				2782D8031AFA8F8100549F29 /* AppDelegate.swift in Sources */,
 				BA63EF5F1AFB0CC400E47C2C /* ViewController_chooseCategory.swift in Sources */,
 				2782D8411AFB5D1000549F29 /* TableViewCell_Voting.swift in Sources */,
 				BA63EF681AFB0EE300E47C2C /* TableViewCell.swift in Sources */,
 				BA63EF5E1AFB0CC400E47C2C /* TableViewCell_Question.swift in Sources */,
 				BA63EF601AFB0CC400E47C2C /* TableViewCell_AnswerCell.swift in Sources */,
+				27FA9FF823F1EF8600242397 /* ViewController_Login.swift in Sources */,
 				BA63EF641AFB0CC400E47C2C /* ViewController_CategoryMenu.swift in Sources */,
 				BA63EF651AFB0CC400E47C2C /* ViewController_Voting.swift in Sources */,
 			);
@@ -354,6 +394,14 @@
 				2782D80C1AFA8F8100549F29 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		27FA9FF423F1EEAC00242397 /* LogIn.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27FA9FF523F1EEAC00242397 /* Base */,
+			);
+			name = LogIn.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -472,7 +520,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = Touche/Info.plist;
+				INFOPLIST_FILE = Touche/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -493,7 +541,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = Touche/Info.plist;
+				INFOPLIST_FILE = Touche/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -581,6 +629,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		27FA9FF923F1F48D00242397 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		27FA9FFA23F1F48E00242397 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27FA9FF923F1F48D00242397 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2782D7F51AFA8F8100549F29 /* Project object */;
 }
