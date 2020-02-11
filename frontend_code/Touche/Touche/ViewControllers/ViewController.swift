@@ -156,12 +156,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func updateTable() {
-        var latitude = ""
-        var longitude = ""
-        if (currentLocation != nil) {
-            latitude = String(format: "&lat=%.8f", currentLocation.coordinate.latitude)
-            longitude = String(format: "&lng=%.8f", currentLocation.coordinate.longitude)
-        }
+//        var latitude = ""
+//        var longitude = ""
         
         self.questions.removeAllObjects()
         self.times.removeAllObjects()
@@ -171,53 +167,48 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.quids.removeAllObjects()
         self.categories.removeAllObjects()
         
-        var getString = "https://proj-333.herokuapp.com/questions/get_all?"
-        if hot {
-            getString += "sort=hot"
-        }
-        if (categoryString != "All Categories") {
-            getString += "&category=" + categoryString
-        }
+//        if (currentLocation != nil) {
+//            latitude = String(format: "&lat=%.8f", currentLocation.coordinate.latitude)
+//            longitude = String(format: "&lng=%.8f", currentLocation.coordinate.longitude)
+//            Question.getAllQuestions(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, sortBy: "sort=hot")
+//        }
         
-        let latValue = latitude
-        let lonValue = longitude
-        getString += latValue + lonValue
+        let request = Question.formatHTTPRequest(urlDomain: "http://127.0.0.1:5000/questions", httpMethod: "GET", args: [:], parameters: [:])
         
-        let url = URL(string: getString)
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            if(error != nil) {
-                // If there is an error in the web request, print it to the console
-                print(error!.localizedDescription)
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data,
+                let response = response as? HTTPURLResponse,
+                error == nil else {                                              // check for fundamental networking error
+                print("error", error ?? "Unknown error")
+                return
             }
+
+            guard (200 ... 299) ~= response.statusCode else {                    // check for http errors
+                print("statusCode should be 2xx, but is \(response.statusCode)")
+                print("response = \(response)")
+                return
+            }
+
             do {
-                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
-                    let question = myJSON["question"] as! String
-                    
-                    let qText = question.replacingOccurrences(of: "_", with: " ")
-                    self.questions.add(qText)
-                    
-                    let quiddle = myJSON["id"] as! Int
-                    self.quids.add(quiddle)
-                    
-                    let time = myJSON["datetime"] as! Float
-                    self.times.add(time)
-                    
-                    let answers3 = myJSON["answers"] as! [String]
-                    self.answers.addObjects(from: answers3)
-                    
-                    let numVotes = myJSON["total_votes"] as! Int
-                    self.numVote.add(numVotes)
-                    
+                let decoder = JSONDecoder()
+                let questions = try decoder.decode([QuestionTest].self, from: data)
+
+                for question in questions {
+                    self.questions.add(question.question)
+                    self.quids.add(question.id)
+                    self.times.add(question.datetime)
+                    self.answers.addObjects(from: question.answers)
+                    self.numVote.add(question.total_votes)
+
+                    let numVotes = question.total_votes
                     if numVotes == 1 {
                         self.votes.add("\(numVotes) vote")
                     } else {
                         self.votes.add("\(numVotes) votes")
                     }
-                    
-                    let responders = myJSON["responders"] as! [Int]
+
                     var will_I = 0
-                    for responder in responders
+                    for responder in question.responders
                     {
                         let responded = responder
                         if (responded == self.myID)
@@ -226,18 +217,42 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         }
                     }
                     self.did_I.add(will_I)
-                    let cat = myJSON["category"] as! String
-                    self.categories.add(cat)
+                    self.categories.add(question.category)
                 }
-            } catch let error as NSError {
-                print("Failed to load: \(error.localizedDescription)")
+            } catch {
+                print("JSON error: \(error.localizedDescription)")
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-        })
+            
+        }
+
+        task.resume()
         
-        dataTask.resume()
+//        if hot {
+//            getString += "sort=hot"
+//        }
+//        if (categoryString != "All Categories") {
+//            getString += "&category=" + categoryString
+//        }
+    }
+    
+    struct QuestionTest : Decodable {
+        struct Answer : Decodable {
+            var numvotes: Int
+            var text: String
+        }
+        var answers: [Answer]
+        var asker: Int
+        var category: String
+        var datetime: Int
+        var id: Int
+        var lat: Double
+        var lng: Double
+        var question: String
+        var responders: [Int]
+        var total_votes: Int
     }
     
     // MARK: CLLocationManagerDelegate Methods
