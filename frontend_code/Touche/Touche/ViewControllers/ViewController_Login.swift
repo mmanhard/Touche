@@ -14,6 +14,7 @@ class ViewController_Login: UIViewController {
     
 
     @IBOutlet weak var loginButtonFB: FBLoginButton!
+    @IBOutlet weak var cellFieldText: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +23,14 @@ class ViewController_Login: UIViewController {
         loginButtonFB.delegate = self
     }
     
-
+    @IBAction func didTapSignUp(sender: AnyObject) {
+        User.signUp(cellNumber: self.cellFieldText.text!) { data in
+            print("SUCCESS - NEW USER w/ ID: \(UserDefaults.standard.string(forKey: "userID")!)")
+            
+            self.navigationController?.popViewController(animated: true)
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
 }
 
 extension ViewController_Login: LoginButtonDelegate {

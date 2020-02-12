@@ -18,19 +18,11 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var CategorySlot: UILabel!
     
-    var Answers: NSMutableArray = NSMutableArray()
-    var answersNum: NSMutableArray = NSMutableArray()
-    var Question_passed: String = "Hello"
-    var passed_array:NSArray = []
+    var question: Question!
     var prevView:String!
-    var quid:Int!
-    var totVote:Int!
-    var ansNum:Int!
-    var category:String!
     var selectedIndex = -1
     var voteBool = 0
     var voteChange = 0
-    var uuid:String = UserDefaults.standard.string(forKey: "uuid")!
     var firstClick = 0
     
     var prevScreen: String?
@@ -49,18 +41,8 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
             self.backButton.setImage(RBResizeImage(image: image!, targetSize: size), for: UIControl.State.normal)
         }
         
-        // Do any additional setup after loading the view, typically from a nib.
-        Question.text = Question_passed
-        CategorySlot.text = category
-        for answer in passed_array {
-            if let ans = answer as? NSDictionary {
-                let answerVotes = ans.value(forKey: "text")! as! String
-                self.Answers.add(answerVotes)
-                
-                let answerNum = ans.value(forKey: "numvotes")! as! Float
-                self.answersNum.add(answerNum)
-            }
-        }
+        self.Question.text = self.question.question
+        self.CategorySlot.text = self.question.category
         
         self.tableView.reloadData()
     }
@@ -100,22 +82,20 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        return self.Answers.count
+        return self.question.answers.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if (indexPath.row != 0) {
+            let answerID = indexPath.row - 1
             let cell:TableViewCell_Voting = tableView.dequeueReusableCell(withIdentifier: "Cell") as! TableViewCell_Voting;
-            let q2text = self.Answers.object(at: indexPath.row) as! String
-            let qtext = q2text.replacingOccurrences(of: "_", with: " ")
-            cell.textLabel!.text = qtext
-            self.ansNum = self.answersNum.object(at: indexPath.row) as? Int
+            cell.textLabel!.text = self.question.answers[answerID].text
             if (self.voteBool == 1)
             {
-                let scaling = CGFloat(self.ansNum * 100) / CGFloat(self.totVote)
+                let scaling = CGFloat(self.question.answers[answerID].numvotes * 100) / CGFloat(self.question.total_votes)
                 cell.Label.backgroundColor =  UIColor(red:CGFloat(1.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(1.0));
-                cell.Label.backgroundColor = UIColor(hue: 1.0, saturation: scaling, brightness: 1.0, alpha: 1.0)
+                //cell.Label.backgroundColor = UIColor(hue: 1.0, saturation: scaling / 100, brightness: 1.0, alpha: 1.0)
                 let scaling3 = Int(round(scaling))
                 cell.Percentage.isHidden = false
                 cell.Percentage.text = "\(scaling3)%"
@@ -132,36 +112,17 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.row != 0) {
-            let quidPost = quid
-            let anidPost = indexPath.row
-            let getString1 =  "https://proj-333.herokuapp.com/vote?question_id=" + String(quidPost!)
-            let getString2 = "&answer_id=" + String(anidPost)
-            let getString3 = "&user_id="+UserDefaults.standard.string(forKey: "iuid")!
-            let getString = getString1+getString2+getString3
-            let url = URL(string: getString)
-            let session = URLSession.shared
-            let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-                print("Task completed")
-                if(error != nil) {
-                
-                    // If there is an error in the web request, print it to the console
-                
-                    print(error!.localizedDescription)
-                
-                }
-                print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-                if (NSString(data: data!, encoding: String.Encoding.utf8.rawValue) == "success")
-                {
-                    let oldVoteCount = self.answersNum.object(at: indexPath.row) as! Int
-                    self.answersNum.replaceObject(at: indexPath.row, with: oldVoteCount + 1)
-                    self.totVote = self.totVote + 1
-                }
-                    self.voteBool = 1
+            let answerID = indexPath.row-1
+            let userID = UserDefaults.standard.string(forKey: "userID")!
+            
+            QuestionData.voteOnQuestion(userID: userID, questionId: self.question.id, answerID: answerID) { data in
+                self.question.total_votes = self.question.total_votes + 1
+                self.question.answers[answerID].numvotes = self.question.answers[answerID].numvotes + 1
+                self.voteBool = 1
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-            })
-            dataTask.resume()
+            }
         }
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
@@ -176,9 +137,4 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         }
         
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-//    {
-//    }
-    
 }

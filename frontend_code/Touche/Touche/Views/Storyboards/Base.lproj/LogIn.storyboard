@@ -21,6 +21,21 @@
                                     <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7C-Xk-OrJ" customClass="FBSDKLoginButton">
                                         <rect key="frame" x="192" y="630" width="30" height="34"/>
                                     </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="8479464239" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tyt-KD-sto">
+                                        <rect key="frame" x="141" y="77" width="133" height="34"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="133" id="dXl-hL-IBS"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" textContentType="tel"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mjG-cc-ceq">
+                                        <rect key="frame" x="177" y="139" width="60" height="30"/>
+                                        <state key="normal" title="SIGN UP"/>
+                                        <connections>
+                                            <action selector="didTapSignUpWithSender:" destination="of7-B8-l4u" eventType="touchUpInside" id="avq-rc-0TA"/>
+                                        </connections>
+                                    </button>
                                     <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon" translatesAutoresizingMaskIntoConstraints="NO" id="iI4-1j-he0">
                                         <rect key="frame" x="49" y="177" width="316" height="264"/>
                                         <constraints>
@@ -35,7 +50,11 @@
                                     <constraint firstItem="f7C-Xk-OrJ" firstAttribute="centerX" secondItem="27g-4a-EdQ" secondAttribute="centerX" id="BTQ-9U-STK"/>
                                     <constraint firstItem="iI4-1j-he0" firstAttribute="top" secondItem="27g-4a-EdQ" secondAttribute="top" constant="177" id="LFH-Ga-e9K"/>
                                     <constraint firstItem="f7C-Xk-OrJ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iI4-1j-he0" secondAttribute="bottom" constant="50" id="OLU-hb-Mpk"/>
+                                    <constraint firstItem="mjG-cc-ceq" firstAttribute="top" secondItem="Tyt-KD-sto" secondAttribute="bottom" constant="28" id="WYo-OW-ooU"/>
+                                    <constraint firstItem="iI4-1j-he0" firstAttribute="top" secondItem="mjG-cc-ceq" secondAttribute="bottom" constant="8" id="ZT2-OT-v5F"/>
                                     <constraint firstAttribute="trailing" secondItem="iI4-1j-he0" secondAttribute="trailing" constant="49" id="ada-lT-3Hd"/>
+                                    <constraint firstItem="Tyt-KD-sto" firstAttribute="centerX" secondItem="mjG-cc-ceq" secondAttribute="centerX" id="inT-Ub-3Lw"/>
+                                    <constraint firstItem="mjG-cc-ceq" firstAttribute="centerX" secondItem="iI4-1j-he0" secondAttribute="centerX" id="jNM-hT-fVb"/>
                                     <constraint firstItem="iI4-1j-he0" firstAttribute="leading" secondItem="27g-4a-EdQ" secondAttribute="leading" constant="49" id="xJJ-Js-Xcg"/>
                                 </constraints>
                             </view>
@@ -50,13 +69,14 @@
                         <viewLayoutGuide key="safeArea" id="R60-Rl-VW2"/>
                     </view>
                     <connections>
+                        <outlet property="cellFieldText" destination="Tyt-KD-sto" id="VHp-oT-smR"/>
                         <outlet property="loginButtonFB" destination="f7C-Xk-OrJ" id="UFh-GW-NOn"/>
                         <segue destination="WIx-wM-w7q" kind="show" identifier="signedInWithFb" id="bkY-Sv-3Nu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VYI-lB-VuL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-832" y="-214"/>
+            <point key="canvasLocation" x="-833.33333333333337" y="-214.28571428571428"/>
         </scene>
         <!--Main-->
         <scene sceneID="nja-kn-gUK">

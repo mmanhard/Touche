@@ -1,5 +1,6 @@
 from flask import Blueprint, request, redirect, session, jsonify, render_template
 from models import Base, User, Question
+from sqlalchemy import func
 import json
 from database import db
 import datetime

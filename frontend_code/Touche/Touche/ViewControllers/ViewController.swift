@@ -21,22 +21,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var currentCategory: UILabel!
     @IBOutlet weak var categoryRectangle: UIView!
     
-    var questions: NSMutableArray = NSMutableArray()
-    var times: NSMutableArray = NSMutableArray()
-    var votes: NSMutableArray = NSMutableArray()
-    var quids: NSMutableArray = NSMutableArray()
-    var answers: NSMutableArray = NSMutableArray()
-    var numVote: NSMutableArray = NSMutableArray()
-    var categories: NSMutableArray = NSMutableArray()
+    var questions: [Question] = []
     
     var hot: Bool = false
     var categoryString = "All Categories"
     
-    var questionPass:String!
-    var ANSWERS:NSArray = []
-    var QUID : Int!
-    var totalVote: Int!
-    var qCategory: String!
+    var questionPass: Question!
     
     var did_I: NSMutableArray = NSMutableArray()
     var ddnt_I: Int!
@@ -48,7 +38,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Methods to setup current view
     
     override func viewWillAppear(_ animated: Bool) {
-        if let _ = AccessToken.current {
+//        if let _ = AccessToken.current {
+        if let _ = UserDefaults.standard.string(forKey: "userID") {
             print("Logged In")
         } else {
             self.performSegue(withIdentifier: "needsLogin", sender: self)
@@ -57,7 +48,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerUser()
         self.currentCategory.text = categoryString
         
         let image = UIImage(named:"profile.png") as UIImage?
@@ -114,99 +104,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return newImage!
     }
     
-    
-    func registerUser()
-    {
-        if let _: NSString = UserDefaults.standard.string(forKey: "uuid") as NSString?
-        {
-            self.myID = Int(UserDefaults.standard.string(forKey: "iuid")!)
-            print(UserDefaults.standard.string(forKey: "iuid")!)
-        }
-        else
-        {
-            let duid2 = NSUUID().uuidString
-            let duid = getSubstring(str: duid2, beginOffset: 24, endOffset: 0)
-            UserDefaults.standard.set(NSString(), forKey: "uuid")
-            UserDefaults.standard.setValue(duid, forKey:"uuid")
-            UserDefaults.standard.set(NSString(), forKey: "iuid")
-            self.myID = Int(UserDefaults.standard.string(forKey: "iuid")!)
-            let postString =  "https://proj-333.herokuapp.com/users/new?number=" + (duid as String);
-            let url = URL(string: postString)
-            let session = URLSession.shared
-            // Compose a query string
-            //let postString2 = "";
-            let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-                if(error != nil) {
-                    
-                    // If there is an error in the web request, print it to the console
-                    
-                    print(error!.localizedDescription)
-                    
-                }
-                
-                let s2 = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
-                UserDefaults.standard.setValue(s2, forKey:"iuid")
-                UserDefaults.standard.synchronize()
-                
-            })
-            dataTask.resume()
-            UserDefaults.standard.synchronize()
-        }
-    }
-    
-    
     func updateTable() {
-//        var latitude = ""
-//        var longitude = ""
-        
-        self.questions.removeAllObjects()
-        self.times.removeAllObjects()
-        self.votes.removeAllObjects()
-        self.numVote.removeAllObjects()
-        self.answers.removeAllObjects()
-        self.quids.removeAllObjects()
-        self.categories.removeAllObjects()
+        var lat: Double?
+        var lng: Double?
+        var sortBy: String?
+        var category: String?
         
 //        if (currentLocation != nil) {
-//            latitude = String(format: "&lat=%.8f", currentLocation.coordinate.latitude)
-//            longitude = String(format: "&lng=%.8f", currentLocation.coordinate.longitude)
-//            Question.getAllQuestions(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, sortBy: "sort=hot")
+//            lat = currentLocation.coordinate.latitude
+//            lng = currentLocation.coordinate.longitude
 //        }
         
-        let request = Question.formatHTTPRequest(urlDomain: "http://127.0.0.1:5000/questions", httpMethod: "GET", args: [:], parameters: [:])
+        if hot {
+            sortBy = "hot"
+        }
+
+        if (categoryString != "All Categories") {
+            category = categoryString
+        }
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data,
-                let response = response as? HTTPURLResponse,
-                error == nil else {                                              // check for fundamental networking error
-                print("error", error ?? "Unknown error")
-                return
-            }
-
-            guard (200 ... 299) ~= response.statusCode else {                    // check for http errors
-                print("statusCode should be 2xx, but is \(response.statusCode)")
-                print("response = \(response)")
-                return
-            }
-
+        QuestionData.getAllQuestions(latitude: lat, longitude: lng, sortBy: sortBy, category: category) { data in
             do {
-                let decoder = JSONDecoder()
-                let questions = try decoder.decode([QuestionTest].self, from: data)
-
-                for question in questions {
-                    self.questions.add(question.question)
-                    self.quids.add(question.id)
-                    self.times.add(question.datetime)
-                    self.answers.addObjects(from: question.answers)
-                    self.numVote.add(question.total_votes)
-
-                    let numVotes = question.total_votes
-                    if numVotes == 1 {
-                        self.votes.add("\(numVotes) vote")
-                    } else {
-                        self.votes.add("\(numVotes) votes")
-                    }
-
+                self.questions = QuestionData(data: data!).questionData!
+                
+                for question in self.questions {
                     var will_I = 0
                     for responder in question.responders
                     {
@@ -217,7 +138,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         }
                     }
                     self.did_I.add(will_I)
-                    self.categories.add(question.category)
                 }
             } catch {
                 print("JSON error: \(error.localizedDescription)")
@@ -225,34 +145,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-            
         }
-
-        task.resume()
-        
-//        if hot {
-//            getString += "sort=hot"
-//        }
-//        if (categoryString != "All Categories") {
-//            getString += "&category=" + categoryString
-//        }
-    }
-    
-    struct QuestionTest : Decodable {
-        struct Answer : Decodable {
-            var numvotes: Int
-            var text: String
-        }
-        var answers: [Answer]
-        var asker: Int
-        var category: String
-        var datetime: Int
-        var id: Int
-        var lat: Double
-        var lng: Double
-        var question: String
-        var responders: [Int]
-        var total_votes: Int
     }
     
     // MARK: CLLocationManagerDelegate Methods
@@ -276,16 +169,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "questionCell", for: indexPath) as! TableViewCell_Question
+        let question = self.questions[indexPath.row]
         
-        cell.questionLabel.text = self.questions.object(at: indexPath.row) as? String
-        if let q = self.times.object(at: indexPath.row) as? Float {
-            cell.timeLabel.text = getTime(timeDifference: q)
+        cell.questionLabel.text = question.question
+        cell.timeLabel.text = getTime(timeDifference: question.datetime)
+        cell.Answers = question.answers as NSArray
+        cell.QUID = question.id
+        cell.numVote = question.total_votes
+        cell.qCategory = question.category
+        
+        let numVotes = question.total_votes
+        if numVotes == 1 {
+            cell.voteCountLabel.text = "\(numVotes) vote"
+        } else {
+            cell.voteCountLabel.text = "\(numVotes) votes"
         }
-        cell.voteCountLabel.text = self.votes.object(at: indexPath.row) as? String
-        cell.Answers = self.answers.object(at: indexPath.row) as? NSArray
-        cell.QUID = self.quids.object(at: indexPath.row) as? Int
-        cell.numVote = self.numVote.object(at: indexPath.row) as? Int
-        cell.qCategory = self.categories.object(at: indexPath.row) as? String
+        
         return cell
     }
 
@@ -296,14 +195,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let currentCell = tableView.cellForRow(at: indexPath as IndexPath) as! TableViewCell_Question;
-        self.questionPass = currentCell.questionLabel!.text
-        self.ANSWERS = currentCell.Answers
-        self.QUID = currentCell.QUID
-        self.totalVote = currentCell.numVote
-        self.qCategory = currentCell.qCategory
-        self.ddnt_I = self.did_I.object(at: indexPath.row) as? Int
+        self.questionPass = self.questions[indexPath.row]
         self.performSegue(withIdentifier: "viewQuestionFromHome", sender: self)
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
@@ -317,13 +209,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         if (segue.identifier == "viewQuestionFromHome") {
             let upcoming: ViewController_Voting = segue.destination as! ViewController_Voting
-            upcoming.passed_array = self.ANSWERS
-            upcoming.Question_passed = self.questionPass
-            upcoming.prevView = "Home"
-            upcoming.quid = QUID
-            upcoming.totVote = totalVote
-            upcoming.voteBool = ddnt_I
-            upcoming.category = qCategory
+            upcoming.question = self.questionPass
         }
 
         self.locationManager.stopUpdatingLocation()

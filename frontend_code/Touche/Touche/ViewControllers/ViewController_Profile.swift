@@ -10,33 +10,14 @@ import UIKit
 
 class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet var asked_tableView:UITableView!
-    var askedArray = ["eggs"]
-    @IBOutlet var answered_tableView:UITableView!
+    @IBOutlet var tableView:UITableView!
     @IBOutlet weak var homeButton: UIButton!
-    var answeredArray = ["bacon"]
-    var selectedIndex = -1;
-    var questionPass : String!
+    var selectedIndex = -1
     
-    var answers_ask: NSMutableArray = NSMutableArray()
-    var answers_ans: NSMutableArray = NSMutableArray()
-    var questions_ask: NSMutableArray = NSMutableArray()
-    var questions_ans: NSMutableArray = NSMutableArray()
-    var times_ask: NSMutableArray = NSMutableArray()
-    var times_ans: NSMutableArray = NSMutableArray()
-    var votes_ask: NSMutableArray = NSMutableArray()
-    var votes_ans: NSMutableArray = NSMutableArray()
-    var numVote_ask: NSMutableArray = NSMutableArray()
-    var numVote_ans: NSMutableArray = NSMutableArray()
-    var quids_ask: NSMutableArray = NSMutableArray()
-    var quids_ans: NSMutableArray = NSMutableArray()
-    var categories_ask: NSMutableArray = NSMutableArray()
-    var categories_ans: NSMutableArray = NSMutableArray()
+    var questions_asked: [Question] = []
+    var questions_answered: [Question] = []
     
-    var QUID : Int!
-    var totVotes: Int!
-    var ANSWERS_pass: NSArray = []
-    var qCategory: String!
+    var questionPass : Question!
     
     var asked: Bool = true
     
@@ -52,13 +33,8 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         
         updateTable()
         
-        asked_tableView.isHidden = !asked
-        answered_tableView.isHidden = asked
-        
-        asked_tableView.rowHeight = UITableView.automaticDimension
-        asked_tableView.estimatedRowHeight = 160.0
-        answered_tableView.rowHeight = UITableView.automaticDimension
-        answered_tableView.estimatedRowHeight = 160.0
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 160.0
     }
     
     // Auxiliary function to resize an image.
@@ -94,177 +70,75 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     }
     
     func updateTable() {
-        
-        self.answers_ask.removeAllObjects()
-        self.questions_ask.removeAllObjects()
-        self.times_ask.removeAllObjects()
-        self.votes_ask.removeAllObjects()
-        self.numVote_ask.removeAllObjects()
-        self.quids_ask.removeAllObjects()
-        self.categories_ask.removeAllObjects()
-        
-//        let getString = "https://proj-333.herokuapp.com/questions/get_user_asked?user=" + UserDefaults.standard.string(forKey: "iuid")!
-//        print(getString)
-//        let url = URL(string: getString)
-//        let session = URLSession.shared
-//        let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-//            if(error != nil) {
-//                // If there is an error in the web request, print it to the console
-//                print(error!.localizedDescription)
-//            }
-//            
-//            do {
-//                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
-//                    let question = myJSON["question"] as! String
-//                    
-//                    let qText = question.replacingOccurrences(of: "_", with: " ")
-//                    self.questions_ask.add(qText)
-//                    
-//                    let quiddle = myJSON["id"] as! Int
-//                    self.quids_ask.add(quiddle)
-//                    
-//                    let time = myJSON["datetime"] as! Float
-//                    self.times_ask.add(time)
-//                    
-//                    let answers3 = myJSON["answers"] as! [String]
-//                    self.answers_ask.addObjects(from: answers3)
-//                    
-//                    let numVotes = myJSON["total_votes"] as! Int
-//                    self.numVote_ask.add(numVotes)
-//                    
-//                    if numVotes == 1 {
-//                        self.votes_ask.add("\(numVotes) vote")
-//                    } else {
-//                        self.votes_ask.add("\(numVotes) votes")
-//                    }
-//                    
-//                    let cat = myJSON["category"] as! String
-//                    self.categories_ask.add(cat)
-//                }
-//            } catch let error as NSError {
-//                print("Failed to load: \(error.localizedDescription)")
-//            }
-//
-//            DispatchQueue.main.async {
-//                self.asked_tableView.reloadData()
-//            }
-//            
-//        })
-//        dataTask.resume()
-//        
-//        self.answers_ans.removeAllObjects()
-//        self.questions_ans.removeAllObjects()
-//        self.times_ans.removeAllObjects()
-//        self.votes_ans.removeAllObjects()
-//        self.numVote_ans.removeAllObjects()
-//        self.quids_ans.removeAllObjects()
-//        self.categories_ans.removeAllObjects()
-//        
-//        let getString2 = "https://proj-333.herokuapp.com/questions/get_user_answered?user=" + UserDefaults.standard.string(forKey: "iuid")!
-//        let url2 = URL(string: getString2)
-//        let session2 = URLSession.shared
-//        let dataTask2 = session2.dataTask(with: url2!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-//            if(error != nil) {
-//                // If there is an error in the web request, print it to the console
-//                print(error!.localizedDescription)
-//            }
-//            
-//            do {
-//                if let myJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any] {
-//                    let question = myJSON["question"] as! String
-//                    
-//                    let qText = question.replacingOccurrences(of: "_", with: " ")
-//                    self.questions_ans.add(qText)
-//                    
-//                    let quiddle = myJSON["id"] as! Int
-//                    self.quids_ans.add(quiddle)
-//                    
-//                    let time = myJSON["datetime"] as! Float
-//                    self.times_ans.add(time)
-//                    
-//                    let answers3 = myJSON["answers"] as! [String]
-//                    self.answers_ans.addObjects(from: answers3)
-//                    
-//                    let numVotes = myJSON["total_votes"] as! Int
-//                    self.numVote_ans.add(numVotes)
-//                    
-//                    if numVotes == 1 {
-//                        self.votes_ans.add("\(numVotes) vote")
-//                    } else {
-//                        self.votes_ans.add("\(numVotes) votes")
-//                    }
-//                    
-//                    let cat = myJSON["category"] as! String
-//                    self.categories_ans.add(cat)
-//                }
-//            } catch let error as NSError {
-//                print("Failed to load: \(error.localizedDescription)")
-//            }
-//
-//            DispatchQueue.main.async {
-//                self.answered_tableView.reloadData()
-//            }
-//
-//            
-//        })
-//        dataTask2.resume()
+        if let userID = UserDefaults.standard.string(forKey: "userID") {
+            print("GETTING QUESTIONS FOR USER WITH ID: \(userID)")
+            User.getQuestionsAskedByUser(userID: userID) { data in
+                self.questions_asked = QuestionData(data: data!).questionData!
+                
+                User.getQuestionsAnsweredByUser(userID: userID) { data in
+                    self.questions_answered = QuestionData(data: data!).questionData!
+
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
+            }
+        } else {
+            // ******************
+            // MUST ADD EXCEPTION CASE!!!!
+            // ********
+            print("SHOULD HANDLE ERROR")
+        }
     }
     
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (tableView == asked_tableView)
+        if (asked)
         {
-            return self.questions_ask.count
+            return self.questions_asked.count
         }
         else
         {
-            return self.questions_ans.count
+            return self.questions_answered.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "questionCell", for: indexPath) as! TableViewCell_Question
         
-        if (tableView == asked_tableView)
-        {
-            let cell = self.asked_tableView.dequeueReusableCell(withIdentifier: "cell_asked", for: indexPath as IndexPath) as! TableViewCell_Question
-            
-            cell.questionLabel.text = self.questions_ask.object(at: indexPath.row) as? String
-            if let q = self.times_ask.object(at: indexPath.row) as? Float {
-                cell.timeLabel.text = getTime(timeDifference: q)
-            }
-            cell.voteCountLabel.text = self.votes_ask.object(at: indexPath.row) as? String
-            cell.Answers = self.answers_ask.object(at: indexPath.row) as? NSArray
-            cell.QUID = self.quids_ask.object(at: indexPath.row) as? Int
-            cell.numVote = self.numVote_ask.object(at: indexPath.row) as? Int
-            cell.qCategory = self.categories_ask.object(at: indexPath.row) as? String
-            return cell
+        var question : Question
+        if (asked) {
+            question = self.questions_asked[indexPath.row]
+        } else {
+            question = self.questions_answered[indexPath.row]
         }
-        else
-        {
-            let cell = self.answered_tableView.dequeueReusableCell(withIdentifier: "cell_answered", for: indexPath as IndexPath) as! TableViewCell_Question
             
-            cell.questionLabel.text = self.questions_ans.object(at: indexPath.row) as? String
-            if let q = self.times_ans.object(at: indexPath.row) as? Float {
-                cell.timeLabel.text = getTime(timeDifference: q)
-            }
-            cell.voteCountLabel.text = self.votes_ans.object(at: indexPath.row) as? String
-            cell.Answers = self.answers_ans.object(at: indexPath.row) as? NSArray
-            cell.QUID = self.quids_ans.object(at: indexPath.row) as? Int
-            cell.numVote = self.numVote_ans.object(at: indexPath.row) as? Int
-            cell.qCategory = self.categories_ans.object(at: indexPath.row) as? String
-            return cell
+        cell.questionLabel.text = question.question
+        cell.timeLabel.text = getTime(timeDifference: question.datetime)
+        cell.Answers = question.answers as NSArray
+        cell.QUID = question.id
+        cell.numVote = question.total_votes
+        cell.qCategory = question.category
+        
+        let numVotes = question.total_votes
+        if numVotes == 1 {
+            cell.voteCountLabel.text = "\(numVotes) vote"
+        } else {
+            cell.voteCountLabel.text = "\(numVotes) votes"
         }
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-        let currentCell = tableView.cellForRow(at: indexPath as IndexPath) as! TableViewCell_Question;
-        self.questionPass = currentCell.questionLabel!.text
-        self.ANSWERS_pass = currentCell.Answers
-        self.QUID = currentCell.QUID
-        self.totVotes = currentCell.numVote
-        self.qCategory = currentCell.qCategory
+        if asked {
+            self.questionPass = self.questions_asked[indexPath.row]
+        } else {
+            self.questionPass = self.questions_answered[indexPath.row]
+        }
+        
         self.performSegue(withIdentifier: "viewQuestionFromProfile", sender: self)
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
@@ -279,14 +153,7 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         if (segue.identifier == "viewQuestionFromProfile")
         {
             let upcoming: ViewController_Voting = segue.destination as! ViewController_Voting
-            upcoming.passed_array = ANSWERS_pass
-            upcoming.Question_passed = questionPass
-            upcoming.prevView = "Profile"
-            upcoming.quid = QUID
-            upcoming.totVote = totVotes
-            upcoming.voteBool = 1
-            upcoming.prevScreen = "Profile"
-            upcoming.category = qCategory
+            upcoming.question = self.questionPass
         } else if (segue.identifier == "postFromProfile") {
             let upcoming: ViewController_Post = segue.destination as! ViewController_Post
             upcoming.prevScreen = "Profile"
@@ -311,13 +178,7 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     
     @IBAction func askedOrAnswered(with sender: AnyObject) {
         asked = !asked
-        if asked {
-            self.asked_tableView.isHidden = asked
-            self.answered_tableView.isHidden = !asked
-        } else {
-            self.answered_tableView.isHidden = !asked
-            self.asked_tableView.isHidden = asked
-        }
+        self.tableView.reloadData()
     }
     
 }

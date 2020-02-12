@@ -9,44 +9,60 @@
 import Foundation
 
 class User {
-    let userDomain = "http://127.0.0.1:5000/users/"
+    private var cellNumber: String
+    private var userID: Int?
     
+    static var userDomain = "http://127.0.0.1:5000/users/"
     
-    /* NOT IMPLEMENTED */
-//    func getAllUsers()->Void {
+    init(cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
+        self.cellNumber = cellNumber
+        let params = ["number": cellNumber]
+        
+        Utility.performDataTask(urlDomain: User.userDomain, httpMethod: "POST", args: [:], parameters: params) { data in
+            self.userID = Int.init(String.init(data: data!, encoding: String.Encoding.utf8) ?? "")
+            UserDefaults.standard.set(NSString(), forKey: "userID")
+            UserDefaults.standard.setValue(self.userID!, forKey:"userID")
+            doOnSuccess(data)
+        }
+    }
+    
+    class func signUp(cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
+        let _ = User(cellNumber: cellNumber, doOnSuccess: doOnSuccess)
+    }
+    
+    class func getQuestionsAskedByUser(userID: String, doOnSuccess: @escaping (Data?)->Void)->Void {
+        let urlDomain = userDomain + "\(UserDefaults.standard.string(forKey: "userID")!)/asked"
+        
+        Utility.performDataTask(urlDomain: urlDomain, httpMethod: "GET", args: [:], parameters: [:]) { data in
+            doOnSuccess(data)
+        }
+    }
+    
+    class func getQuestionsAnsweredByUser(userID: String, doOnSuccess: @escaping (Data?)->Void)->Void {
+        let urlDomain = userDomain + "\(UserDefaults.standard.string(forKey: "userID")!)/answered"
+        
+        Utility.performDataTask(urlDomain: urlDomain, httpMethod: "GET", args: [:], parameters: [:]) { data in
+            doOnSuccess(data)
+        }
+    }
+
+//    class func userDataTask(with request: URLRequest, doOnCompletion: @escaping (Data?)->Void) -> Void {
+//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+//            guard let _ = data,
+//            let response = response as? HTTPURLResponse,
+//            error == nil else {                                              // check for fundamental networking error
+//            print("error", error ?? "Unknown error")
+//            return
+//            }
 //
+//            guard (200 ... 299) ~= response.statusCode else {                    // check for http errors
+//                print("statusCode should be 2xx, but is \(response.statusCode)")
+//                print("response = \(response)")
+//                return
+//            }
+//                
+//            doOnCompletion(data)
+//        }
+//        task.resume()
 //    }
-    
-    func createNewUser()->Void {
-        
-    }
-    
-    func getQuestionsAskedByUser()->Void {
-        
-    }
-    
-    func getQuestionsAnsweredByUser()->Void {
-        
-    }
-    
-    private func getUser()->Void {
-        
-    }
-    
-    private func userDataTask(with URLString: String, doOnCompletion: @escaping () -> Void) -> Data? {
-        let url = URL(string: URLString)
-        let session = URLSession.shared
-        
-        let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            if(error != nil) {
-                print(error!.localizedDescription)
-                
-            } else {
-                doOnCompletion()
-            }
-        })
-        dataTask.resume()
-        
-        return nil
-    }
 }

@@ -231,12 +231,9 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         let (isValid, ErrorMessage) = validQuestion()
         if isValid {
             
-            let latitude = String(format: "&lat=%.8f", currentLocation.coordinate.latitude)
-            let longitude = String(format: "&lng=%.8f", currentLocation.coordinate.longitude)
-            
-            // Get the user ID.
-            /*** Needs updatings ***/
-            let userID = UserDefaults.standard.string(forKey: "iuid")!
+            let latitude = currentLocation.coordinate.latitude
+            let longitude = currentLocation.coordinate.longitude
+            let userID = UserDefaults.standard.string(forKey: "userID")!
         
             // Get the category text.
             var categoryText: String = "Miscellaneous"
@@ -246,40 +243,25 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         
             // Get the answer text.
             var ansText: String = ""
+            
+            print("HELLO")
             for i in 0...(self.Answers.numberOfRows(inSection: 0) - 2) {
                 let ind = NSIndexPath(row: i, section: 0)
                 let cell = self.Answers.cellForRow(at: ind as IndexPath) as! TableViewCell_AnswerCell
-                ansText = ansText + "," + cell.Answer.text!
-            }
-            ansText = ansText.replacingOccurrences(of: " ", with: "_")
-        
-            // Get the question text.
-            var qText: String = self.Question.text
-            qText = qText.replacingOccurrences(of: " ", with: "_")
-        
-        
-            // Create the URL string
-            let postString =  "https://proj-333.herokuapp.com/questions/new?user=" + userID + "&category=" + categoryText + "&question=" + qText + "&answers=" + ansText + latitude + longitude;
-        
-            let url = URL(string: postString)
-            let session = URLSession.shared
-
-            let dataTask = session.dataTask(with: url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-                print("Task completed")
-                if(error != nil) {
-                
-                    // If there is an error in the web request, print it to the console
-                
-                    print(error!.localizedDescription)
-                
+                if i == 0 {
+                    ansText = ansText + cell.Answer.text!
+                } else {
+                    ansText = ansText + "," + cell.Answer.text!
                 }
-            
-//                let s = NSString(data: data!, encoding: NSUTF8StringEncoding.rawValue)
-            
-            
-            })
-            dataTask.resume()
-            self.performSegue(withIdentifier: "postedQuestion", sender: self)
+            }
+        
+            let qText: String = self.Question.text
+
+            QuestionData.createNewQuestion(userID: userID, question: qText, answers: ansText, latitude: latitude, longitude: longitude, category: categoryText) { data in
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: "postedQuestion", sender: self)
+                }
+            }
         } else {
             let alertController = UIAlertController(title: "Not a Valid Question!", message:
                 ErrorMessage, preferredStyle: UIAlertController.Style.alert)
