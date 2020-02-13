@@ -44,11 +44,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         } else {
             self.performSegue(withIdentifier: "needsLogin", sender: self)
         }
+        
+        self.currentCategory.text = self.categoryString
+        if (currentLocation != nil) {
+            updateTable()
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.currentCategory.text = categoryString
+        self.currentCategory.text = self.categoryString
         
         let image = UIImage(named:"profile.png") as UIImage?
         let size = CGSize(width: 22, height: 22)

@@ -19,7 +19,7 @@ class ViewController_CategoryMenu: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var homeButton: UIButton!
     
     
-    let categories = ["Academics", "Business", "Food", "Health", "Humor", "Movies", "Music", "Sex", "Social", "Sports", "Miscellaneous", "All Categories"]
+    let categories = ["All Categories", "Academics", "Business", "Food", "Health", "Humor", "Movies", "Music", "Sex", "Social", "Sports", "Miscellaneous"]
     var oldCategory: String?
     
     let minRowHeight: CGFloat = 36.0
@@ -96,34 +96,19 @@ class ViewController_CategoryMenu: UIViewController, UITableViewDataSource, UITa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        print("HELLO")
-        self.performSegue(withIdentifier: "categorySelected", sender: self)
+        let rootVC = self.navigationController?.viewControllers[0] as! ViewController
+        rootVC.categoryString = self.categories[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: Methods to transition to another view controller
     
     @IBAction func cancelCategorySelection(sender: UIButton) {
-        self.performSegue(withIdentifier: "categoryNotSelected", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "categoryNotSelected")
-        {
-            let upcoming: ViewController = segue.destination as! ViewController
-            
-            upcoming.categoryString = oldCategory!
-        }
-        if (segue.identifier == "categorySelected")
-        {
-            let upcoming: ViewController = segue.destination as! ViewController
-            
-            let indexPath = self.tableView.indexPathForSelectedRow!
-            
-            upcoming.categoryString = self.categories[indexPath.row]
-            
-            self.tableView.deselectRow(at: indexPath, animated: true)
-        }
-        
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
 
 }

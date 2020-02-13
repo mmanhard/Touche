@@ -148,12 +148,18 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     @IBAction func postQuestion(with sender: UIButton) {
         self.performSegue(withIdentifier: "postFromProfile", sender: self)
     }
+    
+    @IBAction func goHome(with sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "viewQuestionFromProfile")
         {
             let upcoming: ViewController_Voting = segue.destination as! ViewController_Voting
             upcoming.question = self.questionPass
+            upcoming.prevScreen = "Profile"
         } else if (segue.identifier == "postFromProfile") {
             let upcoming: ViewController_Post = segue.destination as! ViewController_Post
             upcoming.prevScreen = "Profile"

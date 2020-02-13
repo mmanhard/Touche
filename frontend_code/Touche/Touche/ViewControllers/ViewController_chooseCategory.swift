@@ -17,9 +17,7 @@ class ViewController_chooseCategory: UIViewController, UITableViewDataSource, UI
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bar: UIView!
     
-    var categoryArray = ["Academics", "Business", "Food", "Health", "Humor", "Movies", "Music", "Sex", "Social", "Sports", "Miscellaneous"]
-    var questionText: String?
-    var answerArray: Array<String>?
+    var categories = ["Academics", "Business", "Food", "Health", "Humor", "Movies", "Music", "Sex", "Social", "Sports", "Miscellaneous"]
     var oldCategory: String?
     
     let minRowHeight: CGFloat = 36.0
@@ -28,20 +26,20 @@ class ViewController_chooseCategory: UIViewController, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) ->
         Int{
-            return self.categoryArray.count
+            return self.categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell:TableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "categoryCell") as! TableViewCell;
-        cell.titleLabel.text = self.categoryArray[indexPath.row]
+        cell.titleLabel.text = self.categories[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let barHeight = Float(self.bar.frame.size.height)
         let viewHeight = Float(self.view.frame.height)
-        let rowHeight = (viewHeight - barHeight) / Float(categoryArray.count)
+        let rowHeight = (viewHeight - barHeight) / Float(categories.count)
         
         if (CGFloat(rowHeight) < minRowHeight) {
             return minRowHeight
@@ -53,32 +51,18 @@ class ViewController_chooseCategory: UIViewController, UITableViewDataSource, UI
     // MARK: Transition to Other VC
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "chosen", sender: self)
-        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
+        let numVCs = self.navigationController?.viewControllers.count
+        let nextVC = self.navigationController?.viewControllers[numVCs! - 2] as! ViewController_Post
+        nextVC.chosenCategory = self.self.categories[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
 
     @IBAction func cancel(with sender: UIButton) {
-        self.performSegue(withIdentifier: "chosen", sender: self)
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "chosen") {
-            let upcoming: ViewController_Post = segue.destination as! ViewController_Post
-            if (self.tableView.indexPathForSelectedRow != nil) {
-                let indexPath = self.tableView.indexPathForSelectedRow!
-                
-                let title = self.categoryArray[indexPath.row]
-                
-                upcoming.chosenCategory = title
-                
-                self.tableView.deselectRow(at: indexPath, animated: true)
-            } else {
-                upcoming.chosenCategory = self.oldCategory!
-            }
-            
-            upcoming.qTextSegue = self.questionText!
-            upcoming.answerArray = self.answerArray!
-        }
-    }
-
 }

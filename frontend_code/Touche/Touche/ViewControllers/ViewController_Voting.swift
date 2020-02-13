@@ -130,11 +130,7 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     // MARK: Methods to transition to another view controller.
     
     @IBAction func cancelVote(with sender: UIButton) {
-        if (prevScreen != nil) {
-            self.performSegue(withIdentifier: "noVoteGoProfile", sender: self)
-        } else {
-            self.performSegue(withIdentifier: "noVoteGoHome", sender: self)
-        }
-        
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
 }

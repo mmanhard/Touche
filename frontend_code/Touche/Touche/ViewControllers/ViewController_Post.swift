@@ -45,6 +45,12 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     
     // MARK: Methods to set up current view.
     
+    override func viewWillAppear(_ animated: Bool) {
+        if (self.chosenCategory != nil) {
+            self.Category.setTitle(self.chosenCategory!, for: .normal)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -364,19 +370,14 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     @IBAction func cancelPost(with sender: UIButton) {
-        if (prevScreen != nil) {
-            self.performSegue(withIdentifier: "noPostGoProfile", sender: self)
-        } else {
-            self.performSegue(withIdentifier: "noPostGoHome", sender: self)
-        }
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "chooseCategory") {
             let upcoming: ViewController_chooseCategory = segue.destination as! ViewController_chooseCategory
             
-            upcoming.questionText = Question.text
-            upcoming.answerArray = getAnswerArray()
             upcoming.oldCategory = Category.currentTitle!
         }
         locationManager.stopUpdatingLocation()
