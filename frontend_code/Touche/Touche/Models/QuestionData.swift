@@ -63,12 +63,7 @@ class QuestionData  {
         Utility.performDataTask(urlDomain: urlDomain, httpMethod: "PATCH", args: [:], parameters: parameters) { data in
             doOnSuccess(data)
         }
-    }
-//        
-//        func getQuestionInfo()->Void {
-//            
-//        }
-//        
+    } 
 
 }
 

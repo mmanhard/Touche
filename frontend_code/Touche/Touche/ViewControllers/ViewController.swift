@@ -115,10 +115,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var sortBy: String?
         var category: String?
         
-//        if (currentLocation != nil) {
-//            lat = currentLocation.coordinate.latitude
-//            lng = currentLocation.coordinate.longitude
-//        }
+        if (currentLocation != nil) {
+            lat = currentLocation.coordinate.latitude
+            lng = currentLocation.coordinate.longitude
+        }
         
         if hot {
             sortBy = "hot"

@@ -45,24 +45,4 @@ class User {
             doOnSuccess(data)
         }
     }
-
-//    class func userDataTask(with request: URLRequest, doOnCompletion: @escaping (Data?)->Void) -> Void {
-//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//            guard let _ = data,
-//            let response = response as? HTTPURLResponse,
-//            error == nil else {                                              // check for fundamental networking error
-//            print("error", error ?? "Unknown error")
-//            return
-//            }
-//
-//            guard (200 ... 299) ~= response.statusCode else {                    // check for http errors
-//                print("statusCode should be 2xx, but is \(response.statusCode)")
-//                print("response = \(response)")
-//                return
-//            }
-//                
-//            doOnCompletion(data)
-//        }
-//        task.resume()
-//    }
 }
