@@ -17,12 +17,9 @@ def index():
     lat = request.args.get('lat', None)
     lng = request.args.get('lng', None)
 
-    print(lat)
-    print(lng)
-
     #filter by location or not
     if lat is None or lng is None:
-        valid_questions = db.session.query(Question)
+        return 'need lat and lng'
     else:
         lat = float(lat)
         lng = float(lng)
