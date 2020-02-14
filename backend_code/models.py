@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, func, Float, Numeric
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 import json
 import datetime
-from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
 Base = declarative_base()
 
@@ -43,7 +43,6 @@ class Question(Base):
 
 	@hybrid_method
 	def within(self, l1, l2, dist):
-		print(self.lat)
 		me = func.ll_to_earth(self.lat, self.lng)
 		you = func.ll_to_earth(l1, l2)
 		return func.earth_distance(me, you) < dist

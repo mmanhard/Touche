@@ -11,6 +11,7 @@ def create_app(db_string):
 
     # Set up database
     app.config['SQLALCHEMY_DATABASE_URI'] = db_string
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
     # Set up routes
