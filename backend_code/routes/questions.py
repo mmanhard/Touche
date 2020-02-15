@@ -2,10 +2,11 @@ from flask import Blueprint, request, redirect, session, jsonify, render_templat
 from models import Base, User, Question
 from sqlalchemy import func
 import json
-from database import db
+from application import app, db
 import datetime
 
 question_api = Blueprint('question_api', __name__)
+app.register_blueprint(question_api, url_prefix='/questions')
 
 ###########################################################################
 # Show all questions
