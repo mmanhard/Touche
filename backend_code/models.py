@@ -4,7 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 import json
 import datetime
 
-from application import db
+from app import db
 
 Base = declarative_base()
 

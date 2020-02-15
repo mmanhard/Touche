@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect, session, jsonify, render_template
 from models import Base, User, Question
 import json
-from application import app, db
+from app import app, db
 
 user_api = Blueprint('user_api', __name__)
 app.register_blueprint(user_api, url_prefix='/users')

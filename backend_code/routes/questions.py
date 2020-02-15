@@ -2,7 +2,7 @@ from flask import Blueprint, request, redirect, session, jsonify, render_templat
 from models import Base, User, Question
 from sqlalchemy import func
 import json
-from application import app, db
+from app import app, db
 import datetime
 
 question_api = Blueprint('question_api', __name__)

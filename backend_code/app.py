@@ -17,3 +17,6 @@ app = create_app(db_string)
 db = SQLAlchemy(app)
 
 from models import Base, User, Question
+
+if __name__ == "__main__":
+    app.run(debug=True)
