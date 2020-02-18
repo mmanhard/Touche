@@ -38,7 +38,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Methods to setup current view
     
     override func viewWillAppear(_ animated: Bool) {
-        if let _ = UserDefaults.standard.value(forKey: "CurrentUser"){
+        if User.getCurrentUser() != nil {
             print("Logged In")
         } else {
             self.performSegue(withIdentifier: "needsLogin", sender: self)
@@ -66,7 +66,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         currentLocation = self.locationManager.location
         
-        if (currentLocation != nil) {
+        if (currentLocation != nil) && (User.getCurrentUser() != nil) {
             updateTable()
         }
         

@@ -40,6 +40,21 @@ class ViewController_Login: UIViewController {
             }
         }
     }
+    
+    @IBAction func didTapLogIn(sender: AnyObject) {
+        User.logIn(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!) { data in
+            
+            if let user = User.getCurrentUser() {
+                print("SUCCESS - USER SIGNED IN w/ USERNAME: \(user.username)")
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                    self.dismiss(animated: true, completion: nil)
+                }
+            } else {
+                print("COULD NOT RETRIEVE USER")
+            }
+        }
+    }
 }
 
 extension ViewController_Login: LoginButtonDelegate {

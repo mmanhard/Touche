@@ -15,34 +15,48 @@ class User : Codable {
     var userID: Int?
     
     private var userDomain = "http://127.0.0.1:5000/users/"
+    static var userDomain = "http://127.0.0.1:5000/users/"
     
-    init(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
+    init(username: String, password: String, cellNumber: String, signUp: Bool, doOnSuccess: @escaping (Data?)->Void) {
         self.cellNumber = cellNumber
         self.username = username
         self.password = password
         
-        let params = ["number": cellNumber,
-                      "username": username,
-                      "password": password]
+        var auth : [String : String] = [:]
+        var params : [String : String] = [:]
+        var urlDomain = self.userDomain
+        var httpMethod = "POST"
+        if signUp {
+            params = ["number": cellNumber,
+                          "username": username,
+                          "password": password]
+        } else {
+            urlDomain += "login"
+            auth = ["username": username,
+                    "password": password]
+            httpMethod = "GET"
+        }
         
-        Utility.performDataTask(urlDomain: self.userDomain, httpMethod: "POST", args: [:], parameters: params, auth: [:]) { data in
+        Utility.performDataTask(urlDomain: urlDomain, httpMethod: httpMethod, args: [:], parameters: params, auth: auth) { data in
             self.userID = Int.init(String.init(data: data!, encoding: String.Encoding.utf8) ?? "")
             
-            UserDefaults.standard.set(try? PropertyListEncoder().encode(self), forKey: "CurrentUser")
-            
-            doOnSuccess(data)
+            if (self.userID != nil) {
+                UserDefaults.standard.set(try? PropertyListEncoder().encode(self), forKey: "CurrentUser")
+                
+                doOnSuccess(data)
+            }
         }
     }
     
     // MARK: Static methods
     
     class func signUp(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
-        let _ = User(username: username, password: password, cellNumber: cellNumber, doOnSuccess: doOnSuccess)
+        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: true, doOnSuccess: doOnSuccess)
     }
     
-//    class func signIn(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
-//
-//    }
+    class func logIn(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
+        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: false, doOnSuccess: doOnSuccess)
+    }
     
     class func logOut() {
         UserDefaults.standard.removeObject(forKey: "CurrentUser")
