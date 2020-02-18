@@ -50,12 +50,14 @@ class User : Codable {
     
     class func getCurrentUser() -> User? {
         do {
-            let data = UserDefaults.standard.value(forKey: "CurrentUser") as? Data
-            let user = try PropertyListDecoder().decode(User.self, from: data!)
-            return user
+            if let data = UserDefaults.standard.value(forKey: "CurrentUser") as? Data {
+                let user = try PropertyListDecoder().decode(User.self, from: data)
+                return user
+            }
         } catch {
-            return nil
+            print("Could not decode user")
         }
+        return nil
     }
     
     class func getUserAuthorization() -> [String : String] {

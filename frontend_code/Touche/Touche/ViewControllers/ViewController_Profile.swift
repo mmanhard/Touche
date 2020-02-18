@@ -152,7 +152,13 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
     }
-
+    
+    @IBAction func logOut(with sender: UIButton) {
+        User.logOut()
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "viewQuestionFromProfile")
         {
