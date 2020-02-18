@@ -38,8 +38,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Methods to setup current view
     
     override func viewWillAppear(_ animated: Bool) {
-//        if let _ = AccessToken.current {
-        if let _ = UserDefaults.standard.string(forKey: "userID") {
+        if let _ = UserDefaults.standard.value(forKey: "CurrentUser"){
             print("Logged In")
         } else {
             self.performSegue(withIdentifier: "needsLogin", sender: self)

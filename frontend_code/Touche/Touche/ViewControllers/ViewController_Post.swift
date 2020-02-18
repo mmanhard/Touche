@@ -239,7 +239,6 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             
             let latitude = currentLocation.coordinate.latitude
             let longitude = currentLocation.coordinate.longitude
-            let userID = UserDefaults.standard.string(forKey: "userID")!
         
             // Get the category text.
             var categoryText: String = "Miscellaneous"
@@ -263,9 +262,10 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         
             let qText: String = self.Question.text
 
-            QuestionData.createNewQuestion(userID: userID, question: qText, answers: ansText, latitude: latitude, longitude: longitude, category: categoryText) { data in
+            QuestionData.createNewQuestion(question: qText, answers: ansText, latitude: latitude, longitude: longitude, category: categoryText) { data in
                 DispatchQueue.main.async {
-                    self.performSegue(withIdentifier: "postedQuestion", sender: self)
+                    self.navigationController?.popViewController(animated: true)
+                    self.dismiss(animated: true, completion: nil)
                 }
             }
         } else {

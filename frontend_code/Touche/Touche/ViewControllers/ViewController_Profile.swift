@@ -70,12 +70,11 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     }
     
     func updateTable() {
-        if let userID = UserDefaults.standard.string(forKey: "userID") {
-            print("GETTING QUESTIONS FOR USER WITH ID: \(userID)")
-            User.getQuestionsAskedByUser(userID: userID) { data in
+        if let user = User.getCurrentUser() {
+            user.getQuestionsAsked() { data in
                 self.questions_asked = QuestionData(data: data!).questionData!
                 
-                User.getQuestionsAnsweredByUser(userID: userID) { data in
+                user.getQuestionsAnswered() { data in
                     self.questions_answered = QuestionData(data: data!).questionData!
 
                     DispatchQueue.main.async {
