@@ -15,7 +15,7 @@ class User(db.Model, Base):
 	id = Column(Integer, primary_key=True)
 	cell_number = Column(String(16))
 	username = Column(String)
-	password = Column(String)
+	hash = Column(String)
 	ansQuest = Column(String, default="{}")
 	askQuest = Column(String, default="[]")
 
