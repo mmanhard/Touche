@@ -7,6 +7,5 @@ other_api = Blueprint('other_api', __name__)
 # Place holders
 ###########################################################################
 @other_api.route('/')
-# @auth.login_required
 def index():
     return 'index'

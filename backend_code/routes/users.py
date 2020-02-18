@@ -1,7 +1,10 @@
 from flask import Blueprint, request, redirect, session, jsonify, render_template
+from werkzeug.security import generate_password_hash
 from models import Base, User, Question
 import json
-from database import db
+
+from app import app, db
+from auth import auth_required
 
 user_api = Blueprint('user_api', __name__)
 
@@ -9,7 +12,7 @@ user_api = Blueprint('user_api', __name__)
 # Show all users
 ###########################################################################
 @user_api.route("/", methods=['GET'])
-# @auth.login_required
+@auth_required
 def index():
     all_users = db.session.query(User).all()
     s = []
@@ -21,17 +24,24 @@ def index():
 # Create new user
 ###########################################################################
 @user_api.route("/", methods=['POST'])
-# @auth.login_required
 def create_new_user():
     cell = request.form['number']
-    print(cell)
+    new_username = request.form['username']
+    password = request.form['password']
+
     if cell is None:
         return 'No Number Provided'
+    if new_username is None:
+        return 'No Username Provided'
+    if password is None:
+        return 'No Password Provided'
 
     # See if user has registered, register if not
     number = db.session.query(User).filter_by(cell_number=cell).scalar()
     if number is None:
         newuser = User(
+        username=new_username,
+        hash=generate_password_hash(password),
         cell_number=cell
         )
         db.session.add(newuser)
@@ -44,7 +54,7 @@ def create_new_user():
 # Request all info about a user
 ###########################################################################
 @user_api.route("/<uid>", methods=['GET'])
-# @auth.login_required
+@auth_required
 def show_user_by_id(uid):
     number = request.args.get('number')
     if number is None and uid is None:
@@ -63,7 +73,7 @@ def show_user_by_id(uid):
 # Show all questions asked by user
 ###########################################################################
 @user_api.route("/<uid>/asked", methods=['GET'])
-# @auth.login_required
+@auth_required
 def get_questions_asked_by_user(uid):
     if uid is None:
         return 'need user id'
@@ -82,7 +92,7 @@ def get_questions_asked_by_user(uid):
 # Show all questions answered by user
 ###########################################################################
 @user_api.route("/<uid>/answered", methods=['GET'])
-# @auth.login_required
+@auth_required
 def get_questions_answered_by_user(uid):
         if uid is None:
             return 'need user id'
@@ -96,10 +106,3 @@ def get_questions_answered_by_user(uid):
 
         sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
         return json.dumps(sorted_questions, sort_keys=True, indent=4)
-
-###########################################################################
-# DEPRECATED METHODS
-###########################################################################
-
-# @user_api.route("/get_all", methods=['GET'])
-# # @auth.login_required

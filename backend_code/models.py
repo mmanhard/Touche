@@ -1,23 +1,28 @@
 from sqlalchemy import Column, Integer, String, DateTime, func, Float, Numeric
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 import json
 import datetime
-from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+
+from app import db
 
 Base = declarative_base()
 
 # Represents the users
-class User(Base):
+class User(db.Model, Base):
 	__tablename__ = 'users'
 
 	id = Column(Integer, primary_key=True)
 	cell_number = Column(String(16))
+	username = Column(String)
+	hash = Column(String)
 	ansQuest = Column(String, default="{}")
 	askQuest = Column(String, default="[]")
 
 	def serialize(self):
 		return {
 		'id':self.id,
+		'username':self.username,
 		'cell_number':self.cell_number,
 		'ansQuest':json.loads(self.ansQuest),
 		'askQuest':json.loads(self.askQuest)
@@ -27,7 +32,7 @@ class User(Base):
 		return json.dumps(self.serialize())
 
 # Represents the questions
-class Question(Base):
+class Question(db.Model, Base):
 	__tablename__ = 'questions'
 
 	id = Column(Integer, primary_key=True)
@@ -43,7 +48,6 @@ class Question(Base):
 
 	@hybrid_method
 	def within(self, l1, l2, dist):
-		print(self.lat)
 		me = func.ll_to_earth(self.lat, self.lng)
 		you = func.ll_to_earth(l1, l2)
 		return func.earth_distance(me, you) < dist

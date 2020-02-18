@@ -1,9 +1,11 @@
 from flask import Blueprint, request, redirect, session, jsonify, render_template
-from models import Base, User, Question
 from sqlalchemy import func
 import json
-from database import db
 import datetime
+
+from models import Base, User, Question
+from app import app, db
+from auth import auth_required
 
 question_api = Blueprint('question_api', __name__)
 
@@ -11,18 +13,15 @@ question_api = Blueprint('question_api', __name__)
 # Show all questions
 ###########################################################################
 @question_api.route("/", methods=['GET'])
-# @auth.login_required
+@auth_required
 def index():
     #location
     lat = request.args.get('lat', None)
     lng = request.args.get('lng', None)
 
-    print(lat)
-    print(lng)
-
     #filter by location or not
     if lat is None or lng is None:
-        valid_questions = db.session.query(Question)
+        return 'need lat and lng'
     else:
         lat = float(lat)
         lng = float(lng)
@@ -60,7 +59,7 @@ def index():
 # Create a new question
 ###########################################################################
 @question_api.route("/", methods=['POST'])
-# @auth.login_required
+@auth_required
 def create_new_question():
     #error checking
     u_id = request.form['user']
@@ -124,7 +123,7 @@ def create_new_question():
 # Show all information about a specific question
 ###########################################################################
 @question_api.route("/<q_id>", methods=['GET'])
-# @auth.login_required
+@auth_required
 def show_question_by_id(q_id):
     if q_id is None :
         return "None"
@@ -138,7 +137,7 @@ def show_question_by_id(q_id):
 # vote on a new question
 ###########################################################################
 @question_api.route("/<q_id>/vote", methods=['PATCH'])
-# @auth.login_required
+@auth_required
 def vote(q_id):
     # check fields
     u_id = request.form['user_id']
@@ -184,9 +183,3 @@ def vote(q_id):
     #commit
     db.session.commit()
     return "success"
-
-###########################################################################
-# DEPRECATED METHODS
-###########################################################################
-# @question_api.route("/get_user_asked", methods=['GET'])
-# @question_api.route("/get_user_answered", methods=['GET'])
