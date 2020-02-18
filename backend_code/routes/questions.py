@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, session, jsonify, render_template
+from flask import Blueprint, request, redirect, session, jsonify, render_template, make_response
 from sqlalchemy import func
 import json
 import datetime
@@ -21,7 +21,7 @@ def index():
 
     #filter by location or not
     if lat is None or lng is None:
-        return 'need lat and lng'
+        return make_response('Need location', 400)
     else:
         lat = float(lat)
         lng = float(lng)
@@ -52,8 +52,7 @@ def index():
     else:
         sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
 
-    #return
-    return json.dumps(sorted_questions, sort_keys=True, indent=4)
+    return make_response(json.dumps(sorted_questions, sort_keys=True, indent=4), 200)
 
 ###########################################################################
 # Create a new question
@@ -64,23 +63,23 @@ def create_new_question():
     #error checking
     u_id = request.form['user']
     if u_id is None:
-        return 'need user id'
+        return make_response("No user id provided", 400)
     user_entry = db.session.query(User).get(u_id)
     if user_entry is None:
-        return 'need registered user id'
+        return make_response("User not found", 404)
     new_category = request.form['category']
     if new_category is None:
-        return 'need category'
+        return make_response("No category provided", 400)
     all_answers = request.form['answers']
     if all_answers is None:
-        return 'need answers'
+        return make_response("No answers provided", 400)
     question_text = request.form['question']
     if question_text is None:
-        return 'need question text'
+        return make_response("No question text provided", 400)
     lat = request.form['lat']
     lng = request.form['lng']
     if lat is None or lng is None:
-        return 'need lat and lng'
+        return make_response('Need location', 400)
 
     #location
     new_lat = float(lat)
@@ -117,7 +116,7 @@ def create_new_question():
     db.session.commit()
 
     #return
-    return 'success'
+    return make_response('Question created succesfully!', 201)
 
 ###########################################################################
 # Show all information about a specific question
@@ -126,12 +125,12 @@ def create_new_question():
 @auth_required
 def show_question_by_id(q_id):
     if q_id is None :
-        return "None"
+        return make_response("No question id provided!", 400)
     question = db.session.query(Question).get(q_id)
     if(question != None):
-        return repr(question)
+        return make_response(repr(question), 200)
     else:
-        return "None"
+        return make_response("Question not found!", 404)
 
 ###########################################################################
 # vote on a new question
@@ -143,7 +142,7 @@ def vote(q_id):
     u_id = request.form['user_id']
     a_id = request.form['answer_id']
     if u_id is None or q_id is None or a_id is None :
-        return "need to supply all id's"
+        return make_response("No question or user or answer id provided!", 400)
 
     # check database
     u_id = int(u_id)
@@ -152,17 +151,17 @@ def vote(q_id):
     question = db.session.query(Question).get(q_id)
     user = db.session.query(User).get(u_id)
     if question is None:
-        return "question doesn't exist"
+        return make_response("Question not found!", 404)
     if user is None:
-        return "user doesn't exist"
+        return make_response("User not found!", 404)
 
     #error check
     responders = json.loads(question.responders)
     if u_id in responders:
-        return "user already responded"
+        return make_response("Question not found!", 404)
     answers = json.loads(question.answers)
     if a_id >= len(answers):
-        return "answer id not legitimate"
+        return make_response("Answer id not legitimate!", 400)
 
     #update total_votes
     question.total_votes += 1
@@ -182,4 +181,4 @@ def vote(q_id):
 
     #commit
     db.session.commit()
-    return "success"
+    return make_response("Vote added succesfully!", 200)
