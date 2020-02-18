@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class Utility {
 
@@ -38,25 +39,28 @@ class Utility {
         return request
     }
     
-    class func performDataTask(urlDomain: String, httpMethod: String, args: [String: String], parameters: [String: Any], auth: [String: String], doOnSuccess: @escaping (Data?)->Void) -> Void {
+    class func performDataTask(urlDomain: String, httpMethod: String, args: [String: String], parameters: [String: Any], auth: [String: String], doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) -> Void {
         let request = Utility.formatHTTPRequest(urlDomain: urlDomain, httpMethod: httpMethod, args: args, parameters: parameters, auth: auth)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let _ = data,
             let response = response as? HTTPURLResponse,
-            error == nil else {                                              // check for fundamental networking error
-            print("error", error ?? "Unknown error")
+            error == nil else { // check for fundamental networking error
+            doOnFailure(data, nil, error)
             return
             }
 
-            guard (200 ... 299) ~= response.statusCode else {                    // check for http errors
-                print("statusCode should be 2xx, but is \(response.statusCode)")
-                print("response = \(response)")
+            guard (200 ... 299) ~= response.statusCode else { // check for http errors
+                doOnFailure(data, response, error)
                 return
             }
             doOnSuccess(data)
         }
         task.resume()
+    }
+    
+    class func performDataTask(urlDomain: String, httpMethod: String, args: [String: String], parameters: [String: Any], auth: [String: String], doOnSuccess: @escaping (Data?)->Void) {
+        performDataTask(urlDomain: urlDomain, httpMethod: httpMethod, args: args, parameters: parameters, auth: auth, doOnSuccess: doOnSuccess) { _,_,_  in }
     }
 }
 

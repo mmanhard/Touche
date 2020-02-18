@@ -17,7 +17,7 @@ class User : Codable {
     private var userDomain = "http://127.0.0.1:5000/users/"
     static var userDomain = "http://127.0.0.1:5000/users/"
     
-    init(username: String, password: String, cellNumber: String, signUp: Bool, doOnSuccess: @escaping (Data?)->Void) {
+    init(username: String, password: String, cellNumber: String, signUp: Bool, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
         self.cellNumber = cellNumber
         self.username = username
         self.password = password
@@ -37,7 +37,7 @@ class User : Codable {
             httpMethod = "GET"
         }
         
-        Utility.performDataTask(urlDomain: urlDomain, httpMethod: httpMethod, args: [:], parameters: params, auth: auth) { data in
+        Utility.performDataTask(urlDomain: urlDomain, httpMethod: httpMethod, args: [:], parameters: params, auth: auth, doOnSuccess: { data in
             self.userID = Int.init(String.init(data: data!, encoding: String.Encoding.utf8) ?? "")
             
             if (self.userID != nil) {
@@ -45,17 +45,17 @@ class User : Codable {
                 
                 doOnSuccess(data)
             }
-        }
+        }, doOnFailure: doOnFailure)
     }
     
     // MARK: Static methods
     
-    class func signUp(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
-        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: true, doOnSuccess: doOnSuccess)
+    class func signUp(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
+        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: true, doOnSuccess: doOnSuccess, doOnFailure: doOnFailure)
     }
     
-    class func logIn(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
-        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: false, doOnSuccess: doOnSuccess)
+    class func logIn(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
+        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: false, doOnSuccess: doOnSuccess, doOnFailure: doOnFailure)
     }
     
     class func logOut() {

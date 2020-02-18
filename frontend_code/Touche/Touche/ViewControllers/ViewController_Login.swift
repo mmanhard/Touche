@@ -26,23 +26,33 @@ class ViewController_Login: UIViewController {
     }
     
     @IBAction func didTapSignUp(sender: AnyObject) {
-        User.signUp(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!) { data in
-            
-            if let user = User.getCurrentUser() {
-                print("SUCCESS - NEW USER w/ USERNAME: \(user.username)")
-            } else {
-                print("COULD NOT RETRIEVE USER")
-            }
-            
+        User.signUp(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!, doOnSuccess: { data in
+                if let user = User.getCurrentUser() {
+                    print("SUCCESS - NEW USER w/ USERNAME: \(user.username)")
+                } else {
+                    print("COULD NOT RETRIEVE USER")
+                }
+                
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                    self.dismiss(animated: true, completion: nil)
+                }
+        }, doOnFailure: { data, response, error in
             DispatchQueue.main.async {
-                self.navigationController?.popViewController(animated: true)
-                self.dismiss(animated: true, completion: nil)
+                var message = "Sign up failed."
+                let decodedMessage = String(decoding: data!, as: UTF8.self)
+                if decodedMessage != "" {
+                    message = decodedMessage
+                }
+                let alert = UIAlertController(title: "Please try again.", message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
+                self.present(alert, animated: true, completion: nil)
             }
-        }
+        })
     }
     
     @IBAction func didTapLogIn(sender: AnyObject) {
-        User.logIn(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!) { data in
+        User.logIn(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!, doOnSuccess: { data in
             
             if let user = User.getCurrentUser() {
                 print("SUCCESS - USER SIGNED IN w/ USERNAME: \(user.username)")
@@ -53,7 +63,9 @@ class ViewController_Login: UIViewController {
             } else {
                 print("COULD NOT RETRIEVE USER")
             }
-        }
+        }, doOnFailure: { data, response, error in
+            print("Could not log in")
+        })
     }
 }
 
