@@ -25,6 +25,15 @@ class ViewController_Login: UIViewController {
         loginButtonFB.delegate = self
     }
     
+    private func logInOrSignUpFailed(data: Data?, response: URLResponse?, error: Error?) {
+        DispatchQueue.main.async {
+            let message = String(decoding: data!, as: UTF8.self)
+            let alert = UIAlertController(title: "Please try again.", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func didTapSignUp(sender: AnyObject) {
         User.signUp(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!, doOnSuccess: { data in
                 if let user = User.getCurrentUser() {
@@ -37,18 +46,7 @@ class ViewController_Login: UIViewController {
                     self.navigationController?.popViewController(animated: true)
                     self.dismiss(animated: true, completion: nil)
                 }
-        }, doOnFailure: { data, response, error in
-            DispatchQueue.main.async {
-                var message = "Sign up failed."
-                let decodedMessage = String(decoding: data!, as: UTF8.self)
-                if decodedMessage != "" {
-                    message = decodedMessage
-                }
-                let alert = UIAlertController(title: "Please try again.", message: message, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
-                self.present(alert, animated: true, completion: nil)
-            }
-        })
+        }, doOnFailure: logInOrSignUpFailed(data:response:error:))
     }
     
     @IBAction func didTapLogIn(sender: AnyObject) {
@@ -63,9 +61,7 @@ class ViewController_Login: UIViewController {
             } else {
                 print("COULD NOT RETRIEVE USER")
             }
-        }, doOnFailure: { data, response, error in
-            print("Could not log in")
-        })
+        }, doOnFailure: logInOrSignUpFailed(data:response:error:))
     }
 }
 
