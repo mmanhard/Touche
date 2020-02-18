@@ -8,40 +8,102 @@
 
 import Foundation
 
-class User {
+class User : Codable {
+    var username: String
+    var password: String
     private var cellNumber: String
-    private var userID: Int?
+    var userID: Int?
     
+    private var userDomain = "http://127.0.0.1:5000/users/"
     static var userDomain = "http://127.0.0.1:5000/users/"
     
-    init(cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
+    init(username: String, password: String, cellNumber: String, signUp: Bool, doOnSuccess: @escaping (Data?)->Void) {
         self.cellNumber = cellNumber
-        let params = ["number": cellNumber]
+        self.username = username
+        self.password = password
         
-        Utility.performDataTask(urlDomain: User.userDomain, httpMethod: "POST", args: [:], parameters: params) { data in
+        var auth : [String : String] = [:]
+        var params : [String : String] = [:]
+        var urlDomain = self.userDomain
+        var httpMethod = "POST"
+        if signUp {
+            params = ["number": cellNumber,
+                          "username": username,
+                          "password": password]
+        } else {
+            urlDomain += "login"
+            auth = ["username": username,
+                    "password": password]
+            httpMethod = "GET"
+        }
+        
+        Utility.performDataTask(urlDomain: urlDomain, httpMethod: httpMethod, args: [:], parameters: params, auth: auth) { data in
             self.userID = Int.init(String.init(data: data!, encoding: String.Encoding.utf8) ?? "")
-            UserDefaults.standard.set(NSString(), forKey: "userID")
-            UserDefaults.standard.setValue(self.userID!, forKey:"userID")
+            
+            if (self.userID != nil) {
+                UserDefaults.standard.set(try? PropertyListEncoder().encode(self), forKey: "CurrentUser")
+                
+                doOnSuccess(data)
+            }
+        }
+    }
+    
+    // MARK: Static methods
+    
+    class func signUp(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
+        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: true, doOnSuccess: doOnSuccess)
+    }
+    
+    class func logIn(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
+        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: false, doOnSuccess: doOnSuccess)
+    }
+    
+    class func logOut() {
+        UserDefaults.standard.removeObject(forKey: "CurrentUser")
+    }
+    
+    class func getCurrentUser() -> User? {
+        do {
+            if let data = UserDefaults.standard.value(forKey: "CurrentUser") as? Data {
+                let user = try PropertyListDecoder().decode(User.self, from: data)
+                return user
+            }
+        } catch {
+            print("Could not decode user")
+        }
+        return nil
+    }
+    
+    class func getUserAuthorization() -> [String : String] {
+        if let user = getCurrentUser() {
+            let auth = ["username": user.username,
+                        "password": user.password]
+            return auth
+        } else {
+            return [:]
+        }
+    }
+    
+    // MARK: Instance methods
+    
+    func getQuestionsAsked(doOnSuccess: @escaping (Data?)->Void)->Void {
+        let urlDomain = self.userDomain + "\(String(describing: self.userID!))/asked"
+        
+        let auth = ["username": self.username,
+                    "password": self.password]
+        
+        Utility.performDataTask(urlDomain: urlDomain, httpMethod: "GET", args: [:], parameters: [:], auth: auth) { data in
             doOnSuccess(data)
         }
     }
     
-    class func signUp(cellNumber: String, doOnSuccess: @escaping (Data?)->Void) {
-        let _ = User(cellNumber: cellNumber, doOnSuccess: doOnSuccess)
-    }
-    
-    class func getQuestionsAskedByUser(userID: String, doOnSuccess: @escaping (Data?)->Void)->Void {
-        let urlDomain = userDomain + "\(UserDefaults.standard.string(forKey: "userID")!)/asked"
+    func getQuestionsAnswered(doOnSuccess: @escaping (Data?)->Void)->Void {
+        let urlDomain = self.userDomain + "\(String(describing: self.userID!))/answered"
         
-        Utility.performDataTask(urlDomain: urlDomain, httpMethod: "GET", args: [:], parameters: [:]) { data in
-            doOnSuccess(data)
-        }
-    }
-    
-    class func getQuestionsAnsweredByUser(userID: String, doOnSuccess: @escaping (Data?)->Void)->Void {
-        let urlDomain = userDomain + "\(UserDefaults.standard.string(forKey: "userID")!)/answered"
+        let auth = ["username": self.username,
+                    "password": self.password]
         
-        Utility.performDataTask(urlDomain: urlDomain, httpMethod: "GET", args: [:], parameters: [:]) { data in
+        Utility.performDataTask(urlDomain: urlDomain, httpMethod: "GET", args: [:], parameters: [:], auth: auth) { data in
             doOnSuccess(data)
         }
     }

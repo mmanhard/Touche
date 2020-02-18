@@ -70,12 +70,11 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     }
     
     func updateTable() {
-        if let userID = UserDefaults.standard.string(forKey: "userID") {
-            print("GETTING QUESTIONS FOR USER WITH ID: \(userID)")
-            User.getQuestionsAskedByUser(userID: userID) { data in
+        if let user = User.getCurrentUser() {
+            user.getQuestionsAsked() { data in
                 self.questions_asked = QuestionData(data: data!).questionData!
                 
-                User.getQuestionsAnsweredByUser(userID: userID) { data in
+                user.getQuestionsAnswered() { data in
                     self.questions_answered = QuestionData(data: data!).questionData!
 
                     DispatchQueue.main.async {
@@ -153,7 +152,13 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
     }
-
+    
+    @IBAction func logOut(with sender: UIButton) {
+        User.logOut()
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "viewQuestionFromProfile")
         {

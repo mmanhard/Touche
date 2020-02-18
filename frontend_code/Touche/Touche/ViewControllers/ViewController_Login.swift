@@ -14,6 +14,8 @@ class ViewController_Login: UIViewController {
     
 
     @IBOutlet weak var loginButtonFB: FBLoginButton!
+    @IBOutlet weak var usernameFieldText: UITextField!
+    @IBOutlet weak var passwordFieldText: UITextField!
     @IBOutlet weak var cellFieldText: UITextField!
     
     override func viewDidLoad() {
@@ -24,11 +26,33 @@ class ViewController_Login: UIViewController {
     }
     
     @IBAction func didTapSignUp(sender: AnyObject) {
-        User.signUp(cellNumber: self.cellFieldText.text!) { data in
-            print("SUCCESS - NEW USER w/ ID: \(UserDefaults.standard.string(forKey: "userID")!)")
+        User.signUp(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!) { data in
             
-            self.navigationController?.popViewController(animated: true)
-            self.dismiss(animated: true, completion: nil)
+            if let user = User.getCurrentUser() {
+                print("SUCCESS - NEW USER w/ USERNAME: \(user.username)")
+            } else {
+                print("COULD NOT RETRIEVE USER")
+            }
+            
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
+    @IBAction func didTapLogIn(sender: AnyObject) {
+        User.logIn(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!) { data in
+            
+            if let user = User.getCurrentUser() {
+                print("SUCCESS - USER SIGNED IN w/ USERNAME: \(user.username)")
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                    self.dismiss(animated: true, completion: nil)
+                }
+            } else {
+                print("COULD NOT RETRIEVE USER")
+            }
         }
     }
 }

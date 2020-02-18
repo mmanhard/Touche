@@ -113,9 +113,8 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.row != 0) {
             let answerID = indexPath.row-1
-            let userID = UserDefaults.standard.string(forKey: "userID")!
             
-            QuestionData.voteOnQuestion(userID: userID, questionId: self.question.id, answerID: answerID) { data in
+            QuestionData.voteOnQuestion(questionId: self.question.id, answerID: answerID) { data in
                 self.question.total_votes = self.question.total_votes + 1
                 self.question.answers[answerID].numvotes = self.question.answers[answerID].numvotes + 1
                 self.voteBool = 1

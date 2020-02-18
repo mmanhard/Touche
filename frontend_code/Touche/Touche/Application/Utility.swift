@@ -10,7 +10,7 @@ import Foundation
 
 class Utility {
 
-    class func formatHTTPRequest(urlDomain: String, httpMethod: String, args: [String: String], parameters: [String: Any]) -> URLRequest {
+    class func formatHTTPRequest(urlDomain: String, httpMethod: String, args: [String: String], parameters: [String: Any], auth: [String: String]) -> URLRequest {
         var urlString = urlDomain
         var count = 0
         for arg in args {
@@ -28,11 +28,18 @@ class Utility {
         request.httpMethod = httpMethod
         request.httpBody = parameters.percentEncoded()
         
+        if (auth["username"] != nil) && (auth["password"] != nil) {
+            let loginString = String(format: "%@:%@", auth["username"]!, auth["password"]!)
+            let loginData = loginString.data(using: String.Encoding.utf8)!
+            let base64LoginString = loginData.base64EncodedString()
+            request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        }
+        
         return request
     }
     
-    class func performDataTask(urlDomain: String, httpMethod: String, args: [String: String], parameters: [String: Any], doOnSuccess: @escaping (Data?)->Void) -> Void {
-        let request = Utility.formatHTTPRequest(urlDomain: urlDomain, httpMethod: httpMethod, args: args, parameters: parameters)
+    class func performDataTask(urlDomain: String, httpMethod: String, args: [String: String], parameters: [String: Any], auth: [String: String], doOnSuccess: @escaping (Data?)->Void) -> Void {
+        let request = Utility.formatHTTPRequest(urlDomain: urlDomain, httpMethod: httpMethod, args: args, parameters: parameters, auth: auth)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let _ = data,
