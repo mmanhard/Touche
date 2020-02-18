@@ -4,7 +4,7 @@ from models import Base, User, Question
 import json
 
 from app import app, db
-from auth import auth_required
+from auth import auth_required, verify_password
 
 user_api = Blueprint('user_api', __name__)
 
@@ -68,6 +68,23 @@ def show_user_by_id(uid):
         return "This User does not exist"
 
     return repr(user)
+
+###########################################################################
+# Login user (checks if user exists and is authorized)
+###########################################################################
+@user_api.route("/login", methods=['GET'])
+def login_user():
+
+    auth = request.authorization
+    if (auth is None) or (auth.username is None) or (auth.password is None):
+        return make_response('Could not login!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required"'})
+    else:
+        username = auth.username
+
+    if not verify_password(username, auth.password):
+        return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Incorrect username or password"'})
+    else:
+        return repr(user)
 
 ###########################################################################
 # Show all questions asked by user
