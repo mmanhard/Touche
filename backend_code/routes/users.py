@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, session, jsonify, render_template
+from flask import Blueprint, request, redirect, session, jsonify, render_template, make_response
 from werkzeug.security import generate_password_hash
 from models import Base, User, Question
 import json
@@ -18,37 +18,54 @@ def index():
     s = []
     for u in all_users:
         s.append(u.serialize())
-    return json.dumps(s, sort_keys=True, indent=4)
+    return make_response(json.dumps(s, sort_keys=True, indent=4),200)
 
 ###########################################################################
 # Create new user
 ###########################################################################
 @user_api.route("/", methods=['POST'])
 def create_new_user():
-    cell = request.form['number']
-    new_username = request.form['username']
-    password = request.form['password']
 
-    if cell is None:
-        return 'No Number Provided'
-    if new_username is None:
-        return 'No Username Provided'
-    if password is None:
-        return 'No Password Provided'
+    if "number" not in request.form:
+        return make_response('No number provided!', 400)
+    if "username" not in request.form:
+        return make_response('No username provided!', 400)
+    if "password" not in request.form:
+        return make_response('No password provided!', 400)
 
-    # See if user has registered, register if not
-    number = db.session.query(User).filter_by(cell_number=cell).scalar()
-    if number is None:
+    cell = request.form["number"]
+    username = request.form["username"]
+    password = request.form["password"]
+
+    # See if user has registered
+    numbers = db.session.query(User).filter_by(cell_number=cell).scalar()
+    usernames = db.session.query(User).filter_by(username=username).scalar()
+    if numbers is not None:
+        return make_response('Phone number already registered!', 400)
+    elif usernames is not None:
+        return make_response('Username already registered!', 400)
+
+    if not valid_phone_number(cell):
+        return make_response('Phone number is invalid!', 400)
+
+    if not valid_username(username):
+        return make_response('Username is invalid!', 400)
+
+    else:
         newuser = User(
-        username=new_username,
+        username=username,
         hash=generate_password_hash(password),
         cell_number=cell
         )
         db.session.add(newuser)
         db.session.commit()
-        return str(newuser.id)
-    else:
-        return 'Already Registered'
+        return make_response(str(newuser.id), 201)
+
+def valid_phone_number(cell):
+    return (len(cell) >= 10)
+
+def valid_username(username):
+    return (len(username) > 2)
 
 ###########################################################################
 # Request all info about a user
@@ -56,18 +73,15 @@ def create_new_user():
 @user_api.route("/<uid>", methods=['GET'])
 @auth_required
 def show_user_by_id(uid):
-    number = request.args.get('number')
     if number is None and uid is None:
-        return "No Number or Id Provided"
+        return make_response("No Number or Id Provided", 400)
 
-    if number is None:
-        user = db.session.query(User).get(int(uid))
-    else:
-        user = db.session.query(User).filter_by(cell_number=number).scalar()
+    user = db.session.query(User).get(int(uid))
+
     if user is None:
-        return "This User does not exist"
+        return make_response("This user does not exist", 404)
 
-    return repr(user)
+    return make_response(repr(user), 200)
 
 ###########################################################################
 # Login user (checks if user exists and is authorized)
@@ -84,7 +98,8 @@ def login_user():
     if not verify_password(username, auth.password):
         return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Incorrect username or password"'})
     else:
-        return repr(user)
+        user = db.session.query(User).filter_by(username=username).scalar()
+        return make_response(str(user.id), 200)
 
 ###########################################################################
 # Show all questions asked by user
@@ -93,7 +108,7 @@ def login_user():
 @auth_required
 def get_questions_asked_by_user(uid):
     if uid is None:
-        return 'need user id'
+        return make_response("No user id provided", 400)
     uid = int(uid)
     user = db.session.query(User).get(uid)
     asked = json.loads(user.askQuest)
@@ -103,7 +118,7 @@ def get_questions_asked_by_user(uid):
         s.append(question.serialize())
 
     sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
-    return json.dumps(sorted_questions, sort_keys=True, indent=4)
+    return make_response(json.dumps(sorted_questions, sort_keys=True, indent=4), 200)
 
 ###########################################################################
 # Show all questions answered by user
@@ -112,7 +127,7 @@ def get_questions_asked_by_user(uid):
 @auth_required
 def get_questions_answered_by_user(uid):
         if uid is None:
-            return 'need user id'
+            return make_response("No user id provided", 400)
         uid = int(uid)
         user = db.session.query(User).get(uid)
         answered = json.loads(user.ansQuest)
@@ -122,4 +137,4 @@ def get_questions_answered_by_user(uid):
             s.append(question.serialize())
 
         sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
-        return json.dumps(sorted_questions, sort_keys=True, indent=4)
+        return make_response(json.dumps(sorted_questions, sort_keys=True, indent=4), 200)
