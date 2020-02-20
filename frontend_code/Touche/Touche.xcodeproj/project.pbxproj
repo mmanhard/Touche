@@ -20,6 +20,7 @@
 		27DF176B1B0294A4003B2B49 /* MuseoSans_500.otf in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176A1B0294A4003B2B49 /* MuseoSans_500.otf */; };
 		27DF176D1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176C1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf */; };
 		27DF176F1B0294F1003B2B49 /* touche_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176E1B0294F1003B2B49 /* touche_icon.png */; };
+		27F94C9523FCB12700E46EBF /* ViewController_SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F94C9423FCB12700E46EBF /* ViewController_SignUp.swift */; };
 		27FA9FF123F1C9DD00242397 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF023F1C9DD00242397 /* User.swift */; };
 		27FA9FF323F1D3B900242397 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF223F1D3B900242397 /* Question.swift */; };
 		27FA9FF623F1EEAC00242397 /* LogIn.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27FA9FF423F1EEAC00242397 /* LogIn.storyboard */; };
@@ -66,6 +67,7 @@
 		27DF176A1B0294A4003B2B49 /* MuseoSans_500.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MuseoSans_500.otf; sourceTree = "<group>"; };
 		27DF176C1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThirstyScriptExtraBoldDemo.otf; sourceTree = "<group>"; };
 		27DF176E1B0294F1003B2B49 /* touche_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touche_icon.png; sourceTree = "<group>"; };
+		27F94C9423FCB12700E46EBF /* ViewController_SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController_SignUp.swift; sourceTree = "<group>"; };
 		27FA9FF023F1C9DD00242397 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		27FA9FF223F1D3B900242397 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		27FA9FF523F1EEAC00242397 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LogIn.storyboard; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				27B471C61B0122F8003F7B1C /* ViewController_NoLocation.swift */,
 				BA63EF581AFB0CC400E47C2C /* ViewController.swift */,
 				27FA9FF723F1EF8600242397 /* ViewController_Login.swift */,
+				27F94C9423FCB12700E46EBF /* ViewController_SignUp.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27F94C9523FCB12700E46EBF /* ViewController_SignUp.swift in Sources */,
 				27FA9FF123F1C9DD00242397 /* User.swift in Sources */,
 				BA63EF631AFB0CC400E47C2C /* ViewController_Profile.swift in Sources */,
 				BA63EF621AFB0CC400E47C2C /* ViewController_Post.swift in Sources */,

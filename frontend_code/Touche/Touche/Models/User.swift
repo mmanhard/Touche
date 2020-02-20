@@ -11,13 +11,13 @@ import Foundation
 class User : Codable {
     var username: String
     var password: String
-    private var cellNumber: String
+    private var cellNumber: String?
     var userID: Int?
     
     private var userDomain = "http://127.0.0.1:5000/users/"
     static var userDomain = "http://127.0.0.1:5000/users/"
     
-    init(username: String, password: String, cellNumber: String, signUp: Bool, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
+    init(username: String, password: String, cellNumber: String?, signUp: Bool, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
         self.cellNumber = cellNumber
         self.username = username
         self.password = password
@@ -27,9 +27,9 @@ class User : Codable {
         var urlDomain = self.userDomain
         var httpMethod = "POST"
         if signUp {
-            params = ["number": cellNumber,
-                          "username": username,
-                          "password": password]
+            params = ["number": cellNumber!,
+                      "username": username,
+                      "password": password]
         } else {
             urlDomain += "login"
             auth = ["username": username,
@@ -54,8 +54,8 @@ class User : Codable {
         let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: true, doOnSuccess: doOnSuccess, doOnFailure: doOnFailure)
     }
     
-    class func logIn(username: String, password: String, cellNumber: String, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
-        let _ = User(username: username, password: password, cellNumber: cellNumber, signUp: false, doOnSuccess: doOnSuccess, doOnFailure: doOnFailure)
+    class func logIn(username: String, password: String, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
+        let _ = User(username: username, password: password, cellNumber: nil, signUp: false, doOnSuccess: doOnSuccess, doOnFailure: doOnFailure)
     }
     
     class func logOut() {
