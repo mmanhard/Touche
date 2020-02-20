@@ -21,7 +21,7 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     var question: Question!
     var prevView:String!
     var selectedIndex = -1
-    var voteBool = false
+    var voteBool: Bool!
     var voteChange = 0
     var firstClick = 0
     
@@ -94,7 +94,6 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
             if (self.voteBool == true)
             {
                 let scaling = CGFloat(self.question.answers[answerID].numvotes) / CGFloat(self.question.total_votes)
-                print(scaling)
                 cell.Label.backgroundColor =  UIColor(red:CGFloat(1.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(scaling))
                 let scalingPercentage = Int(round(scaling * 100))
                 cell.Percentage.isHidden = false

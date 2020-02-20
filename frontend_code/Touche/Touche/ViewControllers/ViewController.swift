@@ -35,10 +35,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation!
     
+    var currentUser: User?
+    
     // MARK: Methods to setup current view
     
     override func viewWillAppear(_ animated: Bool) {
-        if User.getCurrentUser() != nil {
+        self.currentUser = User.getCurrentUser()
+        if self.currentUser != nil {
             print("Logged In")
         } else {
             self.performSegue(withIdentifier: "needsLogin", sender: self)
@@ -214,6 +217,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if (segue.identifier == "viewQuestionFromHome") {
             let upcoming: ViewController_Voting = segue.destination as! ViewController_Voting
             upcoming.question = self.questionPass
+            upcoming.voteBool = self.questionPass.responders.contains(self.currentUser!.userID!)
         }
 
         self.locationManager.stopUpdatingLocation()
