@@ -21,7 +21,7 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     var question: Question!
     var prevView:String!
     var selectedIndex = -1
-    var voteBool = 0
+    var voteBool = false
     var voteChange = 0
     var firstClick = 0
     
@@ -91,14 +91,15 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
             let answerID = indexPath.row - 1
             let cell:TableViewCell_Voting = tableView.dequeueReusableCell(withIdentifier: "Cell") as! TableViewCell_Voting;
             cell.textLabel!.text = self.question.answers[answerID].text
-            if (self.voteBool == 1)
+            if (self.voteBool == true)
             {
-                let scaling = CGFloat(self.question.answers[answerID].numvotes * 100) / CGFloat(self.question.total_votes)
-                cell.Label.backgroundColor =  UIColor(red:CGFloat(1.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(1.0));
-                //cell.Label.backgroundColor = UIColor(hue: 1.0, saturation: scaling / 100, brightness: 1.0, alpha: 1.0)
-                let scaling3 = Int(round(scaling))
+                let scaling = CGFloat(self.question.answers[answerID].numvotes) / CGFloat(self.question.total_votes)
+                print(scaling)
+                cell.Label.backgroundColor =  UIColor(red:CGFloat(1.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(scaling))
+                let scalingPercentage = Int(round(scaling * 100))
                 cell.Percentage.isHidden = false
-                cell.Percentage.text = "\(scaling3)%"
+                cell.Percentage.text = "\(scalingPercentage)%"
+                cell.selectionStyle = .none
             } else {
                 cell.Percentage.isHidden = true
                 cell.Label.backgroundColor = UIColor.white
@@ -106,6 +107,7 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
             return cell
         } else {
             let cell: TableViewCell = tableView.dequeueReusableCell(withIdentifier: "otherCell") as! TableViewCell
+            cell.selectionStyle = .none
             return cell
         }
     }
@@ -114,14 +116,22 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         if (indexPath.row != 0) {
             let answerID = indexPath.row-1
             
-            QuestionData.voteOnQuestion(questionId: self.question.id, answerID: answerID) { data in
+            QuestionData.voteOnQuestion(questionId: self.question.id, answerID: answerID, doOnSuccess: { data in
                 self.question.total_votes = self.question.total_votes + 1
                 self.question.answers[answerID].numvotes = self.question.answers[answerID].numvotes + 1
-                self.voteBool = 1
+                self.voteBool = true
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-            }
+            }, doOnFailure: { data, response, error in
+                DispatchQueue.main.async {
+                    let message = String(decoding: data!, as: UTF8.self)
+                    let alert = UIAlertController(title: "Please try again.", message: message, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
+                    self.present(alert, animated: true, completion: nil)
+                    self.voteBool = true
+                }
+            })
         }
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }

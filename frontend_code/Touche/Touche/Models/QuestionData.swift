@@ -61,15 +61,13 @@ class QuestionData  {
         }
     }
     
-    class func voteOnQuestion(questionId: Int, answerID: Int, doOnSuccess: @escaping (Data?)->Void) {
+    class func voteOnQuestion(questionId: Int, answerID: Int, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
         if let user = User.getCurrentUser() {
             let parameters : [String : Any] = ["user_id" : user.userID!,
                                                "answer_id" : answerID]
             
             let urlDomain = "\(QuestionData.questionDomain)\(questionId)/vote"
-            Utility.performDataTask(urlDomain: urlDomain, httpMethod: "PATCH", args: [:], parameters: parameters, auth: User.getUserAuthorization()) { data in
-                doOnSuccess(data)
-            }
+            Utility.performDataTask(urlDomain: urlDomain, httpMethod: "PATCH", args: [:], parameters: parameters, auth: User.getUserAuthorization(), doOnSuccess: doOnSuccess, doOnFailure: doOnFailure)
         } else {
             print("NO USER - MUST HANDLE CASE")
         }
