@@ -158,7 +158,7 @@ def vote(q_id):
     #error check
     responders = json.loads(question.responders)
     if u_id in responders:
-        return make_response("Question not found!", 404)
+        return make_response("User already responded!", 400)
     answers = json.loads(question.answers)
     if a_id >= len(answers):
         return make_response("Answer id not legitimate!", 400)
