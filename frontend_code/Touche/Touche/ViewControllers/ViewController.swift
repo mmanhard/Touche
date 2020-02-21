@@ -146,8 +146,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     }
                     self.did_I.add(will_I)
                 }
-            } catch {
-                print("JSON error: \(error.localizedDescription)")
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()

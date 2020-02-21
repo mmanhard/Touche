@@ -21,6 +21,8 @@
 		27DF176D1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176C1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf */; };
 		27DF176F1B0294F1003B2B49 /* touche_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DF176E1B0294F1003B2B49 /* touche_icon.png */; };
 		27F94C9523FCB12700E46EBF /* ViewController_SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F94C9423FCB12700E46EBF /* ViewController_SignUp.swift */; };
+		27F94C9E23FF0BC800E46EBF /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F94C9D23FF0BC800E46EBF /* CollectionViewCell.swift */; };
+		27F94CA023FF0BFF00E46EBF /* CollectionViewCell_Voting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F94C9F23FF0BFF00E46EBF /* CollectionViewCell_Voting.swift */; };
 		27FA9FF123F1C9DD00242397 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF023F1C9DD00242397 /* User.swift */; };
 		27FA9FF323F1D3B900242397 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF223F1D3B900242397 /* Question.swift */; };
 		27FA9FF623F1EEAC00242397 /* LogIn.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27FA9FF423F1EEAC00242397 /* LogIn.storyboard */; };
@@ -68,6 +70,8 @@
 		27DF176C1B0294B7003B2B49 /* ThirstyScriptExtraBoldDemo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThirstyScriptExtraBoldDemo.otf; sourceTree = "<group>"; };
 		27DF176E1B0294F1003B2B49 /* touche_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touche_icon.png; sourceTree = "<group>"; };
 		27F94C9423FCB12700E46EBF /* ViewController_SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController_SignUp.swift; sourceTree = "<group>"; };
+		27F94C9D23FF0BC800E46EBF /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		27F94C9F23FF0BFF00E46EBF /* CollectionViewCell_Voting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell_Voting.swift; sourceTree = "<group>"; };
 		27FA9FF023F1C9DD00242397 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		27FA9FF223F1D3B900242397 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		27FA9FF523F1EEAC00242397 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LogIn.storyboard; sourceTree = "<group>"; };
@@ -125,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				2782D80B1AFA8F8100549F29 /* LaunchScreen.xib */,
+				27F94C9C23FF0B9D00E46EBF /* CollectionViewCells */,
 				2712B3A823EB4B26008FE70A /* Storyboards */,
 				2712B3A923EB4B37008FE70A /* TableViewCells */,
 			);
@@ -210,6 +215,15 @@
 				2782D8171AFA8F8100549F29 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		27F94C9C23FF0B9D00E46EBF /* CollectionViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				27F94C9D23FF0BC800E46EBF /* CollectionViewCell.swift */,
+				27F94C9F23FF0BFF00E46EBF /* CollectionViewCell_Voting.swift */,
+			);
+			path = CollectionViewCells;
 			sourceTree = "<group>";
 		};
 		27FA9FEF23F1C82400242397 /* Models */ = {
@@ -347,6 +361,7 @@
 				27F94C9523FCB12700E46EBF /* ViewController_SignUp.swift in Sources */,
 				27FA9FF123F1C9DD00242397 /* User.swift in Sources */,
 				BA63EF631AFB0CC400E47C2C /* ViewController_Profile.swift in Sources */,
+				27F94CA023FF0BFF00E46EBF /* CollectionViewCell_Voting.swift in Sources */,
 				BA63EF621AFB0CC400E47C2C /* ViewController_Post.swift in Sources */,
 				27B471C71B0122F8003F7B1C /* ViewController_NoLocation.swift in Sources */,
 				BA63EF611AFB0CC400E47C2C /* ViewController.swift in Sources */,
@@ -354,6 +369,7 @@
 				2782D8031AFA8F8100549F29 /* AppDelegate.swift in Sources */,
 				BA63EF5F1AFB0CC400E47C2C /* ViewController_chooseCategory.swift in Sources */,
 				2782D8411AFB5D1000549F29 /* TableViewCell_Voting.swift in Sources */,
+				27F94C9E23FF0BC800E46EBF /* CollectionViewCell.swift in Sources */,
 				BA63EF681AFB0EE300E47C2C /* TableViewCell.swift in Sources */,
 				BA63EF5E1AFB0CC400E47C2C /* TableViewCell_Question.swift in Sources */,
 				BA63EF601AFB0CC400E47C2C /* TableViewCell_AnswerCell.swift in Sources */,

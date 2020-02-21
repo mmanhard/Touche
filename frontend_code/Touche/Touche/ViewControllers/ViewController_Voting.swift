@@ -11,9 +11,9 @@
 //
 import UIKit
 
-class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableViewDelegate{
+class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
-    @IBOutlet var tableView:UITableView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet var Question:UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var CategorySlot: UILabel!
@@ -26,6 +26,11 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
     var firstClick = 0
     
     var prevScreen: String?
+    
+    private let sectionInsets = UIEdgeInsets(top: 10.0,
+    left: 20.0,
+    bottom: 10.0,
+    right: 20.0)
     
     // MARK: Methods to set up current view.
     
@@ -42,9 +47,10 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         }
         
         self.Question.text = self.question.question
+        self.Question.sizeToFit()
         self.CategorySlot.text = self.question.category
         
-        self.tableView.reloadData()
+        self.collectionView.reloadData()
     }
     
     // Auxiliary function to resize an image.
@@ -78,62 +84,109 @@ class ViewController_Voting: UIViewController,  UITableViewDataSource, UITableVi
         // ********
         return newImage!
     }
+
+    // MARK: Collection view methods
     
-    // MARK: UITableViewDataSource and UITableViewDelegate Methods
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        return self.question.answers.count + 1
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if (indexPath.row != 0) {
-            let answerID = indexPath.row - 1
-            let cell:TableViewCell_Voting = tableView.dequeueReusableCell(withIdentifier: "Cell") as! TableViewCell_Voting;
-            cell.textLabel!.text = self.question.answers[answerID].text
-            if (self.voteBool == true)
-            {
-                let scaling = CGFloat(self.question.answers[answerID].numvotes) / CGFloat(self.question.total_votes)
-                cell.Label.backgroundColor =  UIColor(red:CGFloat(1.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(scaling))
-                let scalingPercentage = Int(round(scaling * 100))
-                cell.Percentage.isHidden = false
-                cell.Percentage.text = "\(scalingPercentage)%"
-                cell.selectionStyle = .none
-            } else {
-                cell.Percentage.isHidden = true
-                cell.Label.backgroundColor = UIColor.white
-            }
-            return cell
-        } else {
-            let cell: TableViewCell = tableView.dequeueReusableCell(withIdentifier: "otherCell") as! TableViewCell
-            cell.selectionStyle = .none
-            return cell
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        switch self.question.answers.count {
+        case 2:
+            return 1
+        case 3:
+            return 2 - section
+        case 4:
+            return 2
+        default:
+            return 1
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.row != 0) {
-            let answerID = indexPath.row-1
-            
-            QuestionData.voteOnQuestion(questionId: self.question.id, answerID: answerID, doOnSuccess: { data in
-                self.question.total_votes = self.question.total_votes + 1
-                self.question.answers[answerID].numvotes = self.question.answers[answerID].numvotes + 1
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "mainCell", for: indexPath) as! CollectionViewCell_Voting
+        var answerID : Int
+        if self.question.answers.count == 2 {
+            answerID = indexPath.section
+        } else {
+            answerID = indexPath.section * 2 + indexPath.row
+        }
+        
+        if (self.voteBool == true)
+        {
+            let scaling = CGFloat(self.question.answers[answerID].numvotes) / CGFloat(self.question.total_votes)
+            cell.backgroundColor =  UIColor(red:CGFloat(1.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(0.7*scaling))
+            cell.Label.backgroundColor =  UIColor(red:CGFloat(0.0),green: CGFloat(0.0),blue: CGFloat(0.0), alpha:CGFloat(0))
+            let scalingPercentage = Int(round(scaling * 100))
+            cell.Percentage.isHidden = false
+            cell.Percentage.text = "\(scalingPercentage)%"
+        } else {
+            cell.Percentage.isHidden = true
+            cell.Label.backgroundColor = UIColor.white
+        }
+        cell.Label.text = self.question.answers[answerID].text
+        
+        cell.layer.cornerRadius = 10
+        cell.layer.borderColor = CGColor(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.7)
+        cell.layer.borderWidth = 5
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let answerID = indexPath.row + indexPath.section * 2
+        
+        QuestionData.voteOnQuestion(questionId: self.question.id, answerID: answerID, doOnSuccess: { data in
+            self.question.total_votes = self.question.total_votes + 1
+            self.question.answers[answerID].numvotes = self.question.answers[answerID].numvotes + 1
+            self.voteBool = true
+            DispatchQueue.main.async {
+                collectionView.deselectItem(at: indexPath, animated: false)
+                self.collectionView.reloadData()
+            }
+        }, doOnFailure: { data, response, error in
+            DispatchQueue.main.async {
+                let message = String(decoding: data!, as: UTF8.self)
+                let alert = UIAlertController(title: "Please try again.", message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
+                self.present(alert, animated: true, completion: nil)
                 self.voteBool = true
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    collectionView.deselectItem(at: indexPath, animated: false)
+                    self.collectionView.reloadData()
                 }
-            }, doOnFailure: { data, response, error in
-                DispatchQueue.main.async {
-                    let message = String(decoding: data!, as: UTF8.self)
-                    let alert = UIAlertController(title: "Please try again.", message: message, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
-                    self.present(alert, animated: true, completion: nil)
-                    self.voteBool = true
-                }
-            })
-        }
-        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
+            }
+        })
     }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let numItemsInSection = CGFloat(collectionView.numberOfItems(inSection: indexPath.section))
+        let paddingSpaceX = sectionInsets.left * (numItemsInSection+1)
+        let availableWidth = collectionView.frame.width - paddingSpaceX
+        let widthPerItem = availableWidth / numItemsInSection
+        
+        let numSections = CGFloat(collectionView.numberOfSections)
+        let paddingSpaceY = sectionInsets.bottom * (numSections+1)
+        let availableHeight = collectionView.frame.height - paddingSpaceY
+        let heightPerItem = availableHeight / numSections
+      
+        return CGSize(width: widthPerItem, height: heightPerItem)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+      return sectionInsets
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+      return sectionInsets.left
+    }
+    
     
     // MARK: Methods to transition to another view controller.
     
