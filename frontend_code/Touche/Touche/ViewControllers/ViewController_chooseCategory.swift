@@ -12,9 +12,9 @@
 
 import UIKit
 
-class ViewController_chooseCategory: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ViewController_chooseCategory: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var bar: UIView!
     
     var categories = ["Academics", "Business", "Food", "Health", "Humor", "Movies", "Music", "Sex", "Social", "Sports", "Miscellaneous"]
@@ -22,39 +22,74 @@ class ViewController_chooseCategory: UIViewController, UITableViewDataSource, UI
     
     let minRowHeight: CGFloat = 36.0
     
+    private let sectionInsets = UIEdgeInsets(top: 10.0,
+    left: 20.0,
+    bottom: 10.0,
+    right: 20.0)
+    
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) ->
-        Int{
-            return self.categories.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell:TableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "categoryCell") as! TableViewCell;
-        cell.titleLabel.text = self.categories[indexPath.row]
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let barHeight = Float(self.bar.frame.size.height)
-        let viewHeight = Float(self.view.frame.height)
-        let rowHeight = (viewHeight - barHeight) / Float(categories.count)
-        
-        if (CGFloat(rowHeight) < minRowHeight) {
-            return minRowHeight
-        } else {
-            return CGFloat(rowHeight)
-        }
-    }
+
     
     // MARK: Transition to Other VC
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return (self.categories.count / 2 + self.categories.count % 2)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section < (self.categories.count / 2) {
+            return 2
+        } else {
+            return 2 - (self.categories.count % 2)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCell", for: indexPath) as! CollectionViewCell
+    
+        let categoryNum = 2 * (indexPath.section) + indexPath.row
+        cell.titleLabel.text = self.categories[categoryNum]
+        cell.layer.cornerRadius = 10
+        cell.layer.borderColor = CGColor(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.7)
+        cell.layer.borderWidth = 5
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let numItemsInSection = CGFloat(collectionView.numberOfItems(inSection: indexPath.section))
+        let paddingSpaceX = sectionInsets.left * (numItemsInSection + 1)
+        let availableWidth = collectionView.frame.width - paddingSpaceX
+        print(availableWidth)
+        let widthPerItem = availableWidth / numItemsInSection
+        
+        let numSections = CGFloat(collectionView.numberOfSections)
+        let paddingSpaceY = (sectionInsets.bottom + sectionInsets.top) * numSections
+        let availableHeight = collectionView.frame.height - paddingSpaceY
+        let heightPerItem = availableHeight / numSections
+      
+        return CGSize(width: widthPerItem, height: heightPerItem)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+      return sectionInsets
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+      return sectionInsets.left
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let numVCs = self.navigationController?.viewControllers.count
         let nextVC = self.navigationController?.viewControllers[numVCs! - 2] as! ViewController_Post
-        nextVC.chosenCategory = self.self.categories[indexPath.row]
-        tableView.deselectRow(at: indexPath, animated: true)
+        let categoryNum = 2 * (indexPath.section) + indexPath.row
+        nextVC.chosenCategory = self.self.categories[categoryNum]
+        collectionView.deselectItem(at: indexPath, animated: true)
         
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
