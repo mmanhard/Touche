@@ -23,7 +23,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
     @IBOutlet weak var backButton: UIButton!
     
     var keyboardFrame: CGRect = CGRect.null
-    var keyboardIsShowing: Bool = false
+    var viewIsUp: Bool = false
     weak var activeTextField: UITextField?
     weak var activeTextView: UITextView?
     
@@ -58,6 +58,9 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         if (self.chosenCategory != nil) {
             self.Category.setTitle(self.chosenCategory!, for: .normal)
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidLoad() {
@@ -95,10 +98,6 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         
         textCount.text = "\(Question.text.count) / 160"
         placeholder.isHidden = Question.text.count > 0
-        
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         Category.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         
@@ -138,6 +137,14 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
     }
     
     // MARK: UITextViewDelegate Methods
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        if self.viewIsUp {
+            self.moveView(up: false)
+        }
+        
+        return true
+    }
     
     func textViewDidChange(_ textView: UITextView) {
         placeholder.isHidden = (textView.text.count != 0)
@@ -292,12 +299,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
     
     // MARK: UITextFieldDelegate Methods
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if (self.activeTextField != nil) {
-            self.activeTextField!.resignFirstResponder()
-            self.activeTextField = nil
-        }
         self.activeTextField = textField
-
         return true
     }
 
@@ -305,14 +307,16 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         let newLength = textField.text!.count + string.count - range.length
         return newLength <= maxAnswerLength
     }
-
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        self.activeTextField = nil
-
         return true
     }
 
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        self.activeTextField = nil
+    }
+    
     // MARK: Methods to deal with keyboard popping up.
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -322,38 +326,35 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
 
     @objc func keyboardWillShow(notification: NSNotification)
     {
-        self.keyboardIsShowing = true
-
         if let userInfo = notification.userInfo {
             if let keyboardSize =  (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-                kbHeight = keyboardSize.height
-                self.moveView(up: true)
+                if (!self.viewIsUp) {
+                    self.kbHeight = keyboardSize.height
+                    if self.activeTextField != nil {
+                        self.kbHeight = self.view.frame.height - keyboardSize.height - self.view.convert(self.activeTextField!.frame, from: self.activeTextField!.superview!).maxY - 100
+                        self.moveView(up: true)
+                    }
+                }
             }
         }
-
     }
 
     @objc func keyboardWillHide(notification: NSNotification)
     {
-        self.keyboardIsShowing = false
-
-        self.moveView(up: false)
+        if self.viewIsUp {
+            self.moveView(up: false)
+        }
     }
     
-    func moveView(up: Bool) {
-        if up {
-            print("Moving view up as required")
-        } else {
-            print("Moving view back down")
-        }
-        
-         if (self.activeTextField != nil) {
-             let movement = (up ? -kbHeight : kbHeight)
-
-             UIView.animate(withDuration: 0.3, animations: {
-                 self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement!)
+    private func moveView(up: Bool) {
+        if self.kbHeight < 0 {
+            let movement: CGFloat = (up ? self.kbHeight : -self.kbHeight)
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                 self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
              })
-         }
+             self.viewIsUp = !self.viewIsUp
+        }
      }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
