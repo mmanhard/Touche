@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2712B3AC23EB6C68008FE70A /* NoLocation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2712B3AA23EB6C68008FE70A /* NoLocation.storyboard */; };
+		275842A724043FA600F1579E /* CollectionViewCell_AnswerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275842A624043FA600F1579E /* CollectionViewCell_AnswerCell.swift */; };
 		275A45441AFD2E20004A19A4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 275A45431AFD2E20004A19A4 /* CoreLocation.framework */; };
 		2782D8031AFA8F8100549F29 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782D8021AFA8F8100549F29 /* AppDelegate.swift */; };
 		2782D8081AFA8F8100549F29 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2782D8061AFA8F8100549F29 /* Main.storyboard */; };
@@ -53,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		2712B3AB23EB6C68008FE70A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/NoLocation.storyboard; sourceTree = "<group>"; };
+		275842A624043FA600F1579E /* CollectionViewCell_AnswerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell_AnswerCell.swift; sourceTree = "<group>"; };
 		275A45431AFD2E20004A19A4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2782D7FD1AFA8F8100549F29 /* Touche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Touche.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2782D8011AFA8F8100549F29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				27F94C9D23FF0BC800E46EBF /* CollectionViewCell.swift */,
+				275842A624043FA600F1579E /* CollectionViewCell_AnswerCell.swift */,
 				27F94C9F23FF0BFF00E46EBF /* CollectionViewCell_Voting.swift */,
 			);
 			path = CollectionViewCells;
@@ -366,6 +369,7 @@
 				27B471C71B0122F8003F7B1C /* ViewController_NoLocation.swift in Sources */,
 				BA63EF611AFB0CC400E47C2C /* ViewController.swift in Sources */,
 				27FA9FF323F1D3B900242397 /* Question.swift in Sources */,
+				275842A724043FA600F1579E /* CollectionViewCell_AnswerCell.swift in Sources */,
 				2782D8031AFA8F8100549F29 /* AppDelegate.swift in Sources */,
 				BA63EF5F1AFB0CC400E47C2C /* ViewController_chooseCategory.swift in Sources */,
 				2782D8411AFB5D1000549F29 /* TableViewCell_Voting.swift in Sources */,

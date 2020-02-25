@@ -13,15 +13,14 @@
 import UIKit
 import CoreLocation
 
-class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate {
+class ViewController_Post: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate {
     
-    @IBOutlet var Answers : UITableView!
+    @IBOutlet var Answers : UICollectionView!
     @IBOutlet weak var Category: UIButton!
     @IBOutlet weak var placeholder: UILabel!
     @IBOutlet weak var textCount: UILabel!
     @IBOutlet weak var Question: UITextView!
     @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var tableHeight: NSLayoutConstraint!
     
     var keyboardFrame: CGRect = CGRect.null
     var keyboardIsShowing: Bool = false
@@ -43,6 +42,16 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     let maxNumAnswers = 4
     var kbHeight: CGFloat!
     
+    private let cellInsets = UIEdgeInsets(top: 10.0,
+    left: 20.0,
+    bottom: 10.0,
+    right: 20.0)
+    
+    private let sectionInsets = UIEdgeInsets(top: 10.0,
+    left: 20.0,
+    bottom: 10.0,
+    right: 20.0)
+    
     // MARK: Methods to set up current view.
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,7 +69,7 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.startUpdatingLocation()
         currentLocation = self.locationManager.location
-        
+
         
         // Set the top left button to be the right image.
         if (prevScreen != nil) {
@@ -90,22 +99,6 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        for subview in self.view.subviews
-        {
-            if (subview is TableViewCell_AnswerCell)
-            {
-                
-                let cell = subview as! TableViewCell_AnswerCell
-                let textField = cell.Answer!
-                textField.delegate = self
-                
-                textField.addTarget(self, action: Selector(("textFieldDidReturn:")), for: UIControl.Event.editingDidEndOnExit)
-                textField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingDidBegin)
-                
-            }
-            
-        }
         
         Category.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         
@@ -167,67 +160,88 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     
     // MARK: UITableViewDataSource and UITableViewDelegate Methods
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) ->
-        Int{
-            let numCells = self.answerArray.count + 1
-            resizeTable(numCells: numCells)
-            return numCells
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return self.answerArray.count + 1
     }
     
-    func resizeTable(numCells: Int) {
-        let suggestedTableHeight = CGFloat(numCells  * rowHeight)
-        let availableHeight = self.view.frame.height - self.Answers.frame.origin.y
-        
-        if (suggestedTableHeight < availableHeight) {
-            self.tableHeight.constant = suggestedTableHeight
-        } else {
-            self.tableHeight.constant = availableHeight
-        }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
     }
     
-    // Populate each cell in the answer table view.
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (indexPath.row < self.answerArray.count) {
-            let cell: TableViewCell_AnswerCell = tableView.dequeueReusableCell(withIdentifier: "answerCell") as! TableViewCell_AnswerCell
-            cell.Answer.text = answerArray[indexPath.row]
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if (indexPath.section < self.answerArray.count) {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "answerCell", for: indexPath) as! CollectionViewCell_AnswerCell
+            cell.Answer.text = answerArray[indexPath.section]
+            cell.Answer.delegate = self
+            cell.layer.cornerRadius = 10
+            cell.layer.borderColor = CGColor(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.7)
+            cell.layer.borderWidth = 5
             return cell
         } else {
-            let cell: TableViewCell = tableView.dequeueReusableCell(withIdentifier: "addAnswerCell") as! TableViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "addAnswerCell", for: indexPath)
+            cell.layer.cornerRadius = 10
             return cell
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.row == self.answerArray.count) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (indexPath.section == self.answerArray.count) {
             if (self.answerArray.count < maxNumAnswers) {
                 self.answerArray = getAnswerArray()
-                self.answerArray.append("Answer \(indexPath.row + 1)")
+                self.answerArray.append("Answer \(indexPath.section + 1)")
             } else {
                 let alertController = UIAlertController(title: "Cannot Add Answer", message: "Max Number of Answers Reached", preferredStyle: UIAlertController.Style.alert)
                 alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default,handler: nil))
-                
+
                 self.present(alertController, animated: true, completion: nil)
             }
         }
-        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
-        tableView.reloadData()
+        collectionView.deselectItem(at: indexPath, animated: false)
+        collectionView.reloadData()
     }
+//
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        // Must have 2 answers and cannot delete final cell.
+//        if (self.answerArray.count > 2 && indexPath.row < self.answerArray.count) {
+//            if (editingStyle == UITableViewCell.EditingStyle.delete) {
+//                answerArray = getAnswerArray()
+//                answerArray.remove(at: indexPath.row)
+//                tableView.deleteRows(at: [(indexPath as IndexPath)], with: UITableView.RowAnimation.automatic)
+//            }
+//            tableView.reloadData()
+//        } else if (self.answerArray.count <= 2 && indexPath.row < self.answerArray.count) {
+//            let alertController = UIAlertController(title: "Cannot Delete Answer", message: "Must have at least 2 answers", preferredStyle: UIAlertController.Style.alert)
+//            alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default,handler: nil))
+//
+//            self.present(alertController, animated: true, completion: nil)
+//        }
+//    }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        // Must have 2 answers and cannot delete final cell.
-        if (self.answerArray.count > 2 && indexPath.row < self.answerArray.count) {
-            if (editingStyle == UITableViewCell.EditingStyle.delete) {
-                answerArray = getAnswerArray()
-                answerArray.remove(at: indexPath.row)
-                tableView.deleteRows(at: [(indexPath as IndexPath)], with: UITableView.RowAnimation.automatic)
-            }
-            tableView.reloadData()
-        } else if (self.answerArray.count <= 2 && indexPath.row < self.answerArray.count) {
-            let alertController = UIAlertController(title: "Cannot Delete Answer", message: "Must have at least 2 answers", preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default,handler: nil))
-            
-            self.present(alertController, animated: true, completion: nil)
-        }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let paddingSpaceX = cellInsets.left + cellInsets.right
+        let availableWidth = collectionView.frame.width - paddingSpaceX
+
+        let numSections = CGFloat(collectionView.numberOfSections)
+        let paddingSpaceY = (sectionInsets.bottom + sectionInsets.top) * numSections
+        let availableHeight = collectionView.frame.height - paddingSpaceY
+        let heightPerItem = availableHeight / numSections
+
+        return CGSize(width: availableWidth, height: heightPerItem)
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+      return sectionInsets
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+      return sectionInsets.left
     }
     
     // MARK: Method to post a question.
@@ -249,10 +263,9 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             // Get the answer text.
             var ansText: String = ""
             
-            print("HELLO")
-            for i in 0...(self.Answers.numberOfRows(inSection: 0) - 2) {
-                let ind = NSIndexPath(row: i, section: 0)
-                let cell = self.Answers.cellForRow(at: ind as IndexPath) as! TableViewCell_AnswerCell
+            for i in 0...(self.Answers.numberOfSections - 2) {
+                let ind = NSIndexPath(row: 0, section: i)
+                let cell = self.Answers.cellForItem(at: ind as IndexPath) as! CollectionViewCell_AnswerCell
                 if i == 0 {
                     ansText = ansText + cell.Answer.text!
                 } else {
@@ -278,64 +291,71 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     // MARK: UITextFieldDelegate Methods
-    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if (self.activeTextField != nil) {
             self.activeTextField!.resignFirstResponder()
             self.activeTextField = nil
         }
         self.activeTextField = textField
-        
-        if(self.keyboardIsShowing)
-        {
-            self.animateTextField(up: true)
-        }
-        
+
         return true
     }
-    
-    func animateTextField(up: Bool) {
-        if (self.activeTextField != nil) {
-            let movement = (up ? -kbHeight : kbHeight)
-            
-            UIView.animate(withDuration: 0.3, animations: {
-                self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement!)
-            })
-        }
-    }
-    
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newLength = textField.text!.count + string.count - range.length
         return newLength <= maxAnswerLength
     }
-    
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        self.activeTextField = nil
+
+        return true
+    }
+
     // MARK: Methods to deal with keyboard popping up.
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     @objc func keyboardWillShow(notification: NSNotification)
     {
         self.keyboardIsShowing = true
-        
+
         if let userInfo = notification.userInfo {
             if let keyboardSize =  (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-                kbHeight = keyboardSize.height / 2
-                self.animateTextField(up: true)
+                kbHeight = keyboardSize.height
+                self.moveView(up: true)
             }
         }
-        
+
     }
-    
+
     @objc func keyboardWillHide(notification: NSNotification)
     {
         self.keyboardIsShowing = false
-        
-        self.animateTextField(up: false)
+
+        self.moveView(up: false)
     }
     
+    func moveView(up: Bool) {
+        if up {
+            print("Moving view up as required")
+        } else {
+            print("Moving view back down")
+        }
+        
+         if (self.activeTextField != nil) {
+             let movement = (up ? -kbHeight : kbHeight)
+
+             UIView.animate(withDuration: 0.3, animations: {
+                 self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement!)
+             })
+         }
+     }
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         if (self.activeTextField != nil)
@@ -344,20 +364,13 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
             self.activeTextField = nil
         }
     }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        self.activeTextField = nil
-        
-        return true
-    }
-    
+
     // MARK: CLLocationManagerDelegate Methods
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: NSArray) {
         let newLocation = locations[0] as? CLLocation
         currentLocation = newLocation
@@ -387,9 +400,9 @@ class ViewController_Post: UIViewController, UITableViewDataSource, UITableViewD
     
     func getAnswerArray() -> Array<String> {
         var answers: Array<String> = []
-        for i in 0...(self.Answers.numberOfRows(inSection: 0) - 2) {
-            let ind = NSIndexPath(row: i, section: 0)
-            let cell = self.Answers.cellForRow(at: ind as IndexPath) as! TableViewCell_AnswerCell
+        for i in 0...(self.Answers.numberOfSections - 2) {
+            let ind = NSIndexPath(row: 0, section: i)
+            let cell = self.Answers.cellForItem(at: ind as IndexPath) as! CollectionViewCell_AnswerCell
             answers.append(cell.Answer.text!)
         }
         return answers

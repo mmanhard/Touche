@@ -65,10 +65,10 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
         let widthPerItem = availableWidth / numItemsInSection
         
         let numSections = CGFloat(collectionView.numberOfSections)
-        let paddingSpaceY = (sectionInsets.bottom + sectionInsets.top) * numSections
+        let paddingSpaceY = sectionInsets.bottom * (numSections+1)
         let availableHeight = collectionView.frame.height - paddingSpaceY
         let heightPerItem = availableHeight / numSections
-      
+        
         return CGSize(width: widthPerItem, height: heightPerItem)
     }
     
