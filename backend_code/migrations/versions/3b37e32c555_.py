@@ -1,17 +1,19 @@
-"""try to fix tables v7
+"""empty message
 
-Revision ID: 11c2b11b636
-Revises: 182cae057e2
-Create Date: 2020-02-15 13:53:34.549646
+Revision ID: 3b37e32c555
+Revises: 
+Create Date: 2020-08-26 14:18:51.152586
 
 """
-
-# revision identifiers, used by Alembic.
-revision = '11c2b11b636'
-down_revision = '182cae057e2'
-
 from alembic import op
 import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision = '3b37e32c555'
+down_revision = None
+branch_labels = None
+depends_on = None
 
 
 def upgrade():
@@ -33,6 +35,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('cell_number', sa.String(length=16), nullable=True),
     sa.Column('username', sa.String(), nullable=True),
+    sa.Column('hash', sa.String(), nullable=True),
     sa.Column('ansQuest', sa.String(), nullable=True),
     sa.Column('askQuest', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
