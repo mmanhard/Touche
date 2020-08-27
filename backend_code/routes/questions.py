@@ -7,6 +7,10 @@ from models import Base, User, Question
 from app import app, db
 from auth import auth_required
 
+# Constant (5000m) used to filter out questions that are farther than
+# 5km from requested latitude and longitude
+max_distance_filter = 5000
+
 question_api = Blueprint('question_api', __name__)
 
 ###########################################################################
@@ -26,7 +30,7 @@ def index():
         lat = float(lat)
         lng = float(lng)
         valid_questions = db.session.query(Question).filter(
-            Question.within(lat,lng,32000)
+            Question.within(lat,lng,max_distance_filter)
         )
 
     #filter by time
