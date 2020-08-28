@@ -36,8 +36,8 @@ In Xcode, make sure the **Touche** scheme is selected (up in the top-left corner
 You have (3) options:
 
 1. Use the live version of the backend hosted on Heroku. The URL for this option is `https://touche-backend.herokuapp.com/`. Feel free to use this option as this application is hosted for demonstration purposes only.
-2. Run the backend locally. Follow (these steps)[https://github.com/mmanhard/Touche#local-setup-and-usage---backend] to do so. If you used the default port, the URL will be `http://localhost:5000`.
-3. Host your own version of the backend on Heroku. Follow (these steps)[https://github.com/mmanhard/Touche#deployment---backend] to do so. Heroku will let you know the URL of your backend application.
+2. Run the backend locally. Follow [these steps](https://github.com/mmanhard/Touche#local-setup-and-usage---backend) to do so. If you used the default port, the URL will be `http://localhost:5000`.
+3. Host your own version of the backend on Heroku. Follow [these steps](https://github.com/mmanhard/Touche#deployment---backend) to do so. Heroku will let you know the URL of your backend application.
 
 Next, you'll need to configure the frontend to connect to the appropriate backend.  To do so, change the host in `Touche/Application/AppConstants.swift` to the URL of your backend. NOTE: You won't need to change this if using option (1).
 
