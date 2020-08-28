@@ -118,6 +118,10 @@ PostgreSQL server you are using.
 $ flask run
 ```
 
+By default, the flask development server will listen on port **5000**. If you need
+to use a different one, append `-p <PORT_NUM>`, where `<PORT_NUM>` is the desired port
+number, to `flask run`.
+
 ## Deployment - Back-End
 
 The live version is hosted on Heroku.
