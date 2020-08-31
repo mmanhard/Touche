@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import FacebookCore
-import FacebookLogin
 
 class ViewController_Login: UIViewController {
     
@@ -23,8 +21,6 @@ class ViewController_Login: UIViewController {
         
         self.loginButton.layer.cornerRadius = 10
         self.passwordFieldText.isSecureTextEntry = true
-//        loginButtonFB.permissions = ["public_profile", "email"];
-//        loginButtonFB.delegate = self
     }
     
     private func logInFailed(data: Data?, response: URLResponse?, error: Error?) {
@@ -49,25 +45,5 @@ class ViewController_Login: UIViewController {
                 print("COULD NOT RETRIEVE USER")
             }
         }, doOnFailure: logInFailed(data:response:error:))
-    }
-}
-
-extension ViewController_Login: LoginButtonDelegate {
-    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        if let e = error {
-            print(e.localizedDescription)
-        } else {
-            if (result!.isCancelled) {
-                print("DID NOT LOG IN!")
-            } else {
-                navigationController?.popViewController(animated: true)
-
-                dismiss(animated: true, completion: nil)
-            }
-        }
-    }
-    
-    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
-        print("LOGGED OUT")
     }
 }

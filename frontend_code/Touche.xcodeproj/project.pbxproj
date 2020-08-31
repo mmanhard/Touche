@@ -29,7 +29,6 @@
 		27FA9FF323F1D3B900242397 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF223F1D3B900242397 /* Question.swift */; };
 		27FA9FF623F1EEAC00242397 /* LogIn.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27FA9FF423F1EEAC00242397 /* LogIn.storyboard */; };
 		27FA9FF823F1EF8600242397 /* ViewController_Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FF723F1EF8600242397 /* ViewController_Login.swift */; };
-		27FA9FFB23F1F48E00242397 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 27FA9FFA23F1F48E00242397 /* FacebookLogin */; };
 		27FA9FFE23F3266C00242397 /* QuestionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FFD23F3266C00242397 /* QuestionData.swift */; };
 		27FAA00023F45F8600242397 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA9FFF23F45F8600242397 /* Utility.swift */; };
 		BA63EF5E1AFB0CC400E47C2C /* TableViewCell_Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA63EF551AFB0CC400E47C2C /* TableViewCell_Question.swift */; };
@@ -98,7 +97,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27FA9FFB23F1F48E00242397 /* FacebookLogin in Frameworks */,
 				275A45441AFD2E20004A19A4 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,7 +267,6 @@
 			);
 			name = Touche;
 			packageProductDependencies = (
-				27FA9FFA23F1F48E00242397 /* FacebookLogin */,
 			);
 			productName = Touche;
 			productReference = 2782D7FD1AFA8F8100549F29 /* Touché.app */;
@@ -676,14 +673,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		27FA9FFA23F1F48E00242397 /* FacebookLogin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27FA9FF923F1F48D00242397 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookLogin;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2782D7F51AFA8F8100549F29 /* Project object */;
 }

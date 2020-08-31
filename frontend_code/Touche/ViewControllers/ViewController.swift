@@ -10,8 +10,6 @@
 
 import UIKit
 import CoreLocation
-import FacebookCore
-import FacebookLogin
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
