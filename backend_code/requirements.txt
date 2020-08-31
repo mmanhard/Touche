@@ -9,7 +9,7 @@ GeoAlchemy2==0.2.4
 geographiclib==1.50
 geopy==1.21.0
 gunicorn==19.5.0
-httplib2==0.9
+httplib2==0.18.0
 itsdangerous==0.24
 Jinja2==2.11.1
 Mako==1.0.1
