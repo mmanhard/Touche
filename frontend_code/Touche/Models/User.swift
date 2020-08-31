@@ -14,8 +14,7 @@ class User : Codable {
     private var cellNumber: String?
     var userID: Int?
     
-    private var userDomain = "http://127.0.0.1:5000/users/"
-    static var userDomain = "http://127.0.0.1:5000/users/"
+    static var userURL = Constants.host + Constants.userPath
     
     init(username: String, password: String, cellNumber: String?, signUp: Bool, doOnSuccess: @escaping (Data?)->Void, doOnFailure: @escaping (Data?, URLResponse?, Error?)->Void) {
         self.cellNumber = cellNumber
@@ -24,7 +23,7 @@ class User : Codable {
         
         var auth : [String : String] = [:]
         var params : [String : String] = [:]
-        var urlDomain = self.userDomain
+        var urlDomain = User.userURL
         var httpMethod = "POST"
         if signUp {
             params = ["number": cellNumber!,
@@ -87,7 +86,7 @@ class User : Codable {
     // MARK: Instance methods
     
     func getQuestionsAsked(doOnSuccess: @escaping (Data?)->Void)->Void {
-        let urlDomain = self.userDomain + "\(String(describing: self.userID!))/asked"
+        let urlDomain = User.userURL + "\(String(describing: self.userID!))/asked"
         
         let auth = ["username": self.username,
                     "password": self.password]
@@ -98,7 +97,7 @@ class User : Codable {
     }
     
     func getQuestionsAnswered(doOnSuccess: @escaping (Data?)->Void)->Void {
-        let urlDomain = self.userDomain + "\(String(describing: self.userID!))/answered"
+        let urlDomain = User.userURL + "\(String(describing: self.userID!))/answered"
         
         let auth = ["username": self.username,
                     "password": self.password]

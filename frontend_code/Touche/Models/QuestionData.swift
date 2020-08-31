@@ -9,7 +9,7 @@
 import Foundation
 
 class QuestionData  {
-    static var questionDomain = "http://127.0.0.1:5000/questions/"
+    static var questionURL = Constants.host + Constants.questionPath
     
     var questionData: [Question]?
     
@@ -39,7 +39,7 @@ class QuestionData  {
         }
         
         
-        Utility.performDataTask(urlDomain: QuestionData.questionDomain, httpMethod: "GET", args: args, parameters: [:], auth: User.getUserAuthorization()) { data in
+        Utility.performDataTask(urlDomain: QuestionData.questionURL, httpMethod: "GET", args: args, parameters: [:], auth: User.getUserAuthorization()) { data in
             doOnSuccess(data)
         }
     }
@@ -53,7 +53,7 @@ class QuestionData  {
                                                "lng" : longitude,
                                                "category" : category]
             
-            Utility.performDataTask(urlDomain: QuestionData.questionDomain, httpMethod: "POST", args: [:], parameters: parameters, auth: User.getUserAuthorization()) { data in
+            Utility.performDataTask(urlDomain: QuestionData.questionURL, httpMethod: "POST", args: [:], parameters: parameters, auth: User.getUserAuthorization()) { data in
                 doOnSuccess(data)
             }
         } else {
@@ -66,7 +66,7 @@ class QuestionData  {
             let parameters : [String : Any] = ["user_id" : user.userID!,
                                                "answer_id" : answerID]
             
-            let urlDomain = "\(QuestionData.questionDomain)\(questionId)/vote"
+            let urlDomain = "\(QuestionData.questionURL)\(questionId)/vote"
             Utility.performDataTask(urlDomain: urlDomain, httpMethod: "PATCH", args: [:], parameters: parameters, auth: User.getUserAuthorization(), doOnSuccess: doOnSuccess, doOnFailure: doOnFailure)
         } else {
             print("NO USER - MUST HANDLE CASE")
