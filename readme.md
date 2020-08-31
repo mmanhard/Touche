@@ -37,7 +37,7 @@ open Touche.xcodeproj
 
 ##### 2. Choose the correct scheme:
 
-In Xcode, make sure the **Touché** scheme is selected (up in the top-left corner
+In Xcode, make sure the **Touche** scheme is selected (up in the top-left corner
 of Xcode).
 
 ##### 3. Set up the back-end:

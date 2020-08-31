@@ -57,7 +57,7 @@
 		2712B3AB23EB6C68008FE70A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/NoLocation.storyboard; sourceTree = "<group>"; };
 		275842A624043FA600F1579E /* CollectionViewCell_AnswerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell_AnswerCell.swift; sourceTree = "<group>"; };
 		275A45431AFD2E20004A19A4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		2782D7FD1AFA8F8100549F29 /* Touché.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Touché.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2782D7FD1AFA8F8100549F29 /* Touche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Touche.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2782D8011AFA8F8100549F29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2782D8021AFA8F8100549F29 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2782D8071AFA8F8100549F29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -172,7 +172,7 @@
 		2782D7FE1AFA8F8100549F29 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2782D7FD1AFA8F8100549F29 /* Touché.app */,
+				2782D7FD1AFA8F8100549F29 /* Touche.app */,
 				2782D8121AFA8F8100549F29 /* ToucheTests.xctest */,
 			);
 			name = Products;
@@ -269,7 +269,7 @@
 			packageProductDependencies = (
 			);
 			productName = Touche;
-			productReference = 2782D7FD1AFA8F8100549F29 /* Touché.app */;
+			productReference = 2782D7FD1AFA8F8100549F29 /* Touche.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2782D8111AFA8F8100549F29 /* ToucheTests */ = {
@@ -558,7 +558,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Touche.app;
-				PRODUCT_NAME = "Touché";
+				PRODUCT_NAME = Touche;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -579,7 +579,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Touche.app;
-				PRODUCT_NAME = "Touché";
+				PRODUCT_NAME = Touche;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
