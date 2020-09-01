@@ -51,8 +51,6 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = Constants.desiredLocAccuracy
         self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.startUpdatingLocation()
-        currentLocation = self.locationManager.location
         
         // Set the top left button to be the right image.
         if (prevScreen != nil) {
@@ -90,6 +88,14 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         // If we came from the choose category view, set the question title equal to what it was before.
         if (self.chosenCategory != nil) {
             self.Category.setTitle(self.chosenCategory!, for: .normal)
+        }
+        
+        // Check if we are authorized to monitor the user's location. If so, listen for updates to the location, set the current location, and update the table.
+        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse) {
+            self.locationManager.startUpdatingLocation()
+            self.currentLocation = self.locationManager.location
+        } else {
+            self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
         }
         
         // Add keyboard observers.
@@ -378,13 +384,29 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
 
     // MARK: Location Manager Methods
     
+    // Listen for changes to the location services authorization status. If authorized, start updating locations, set the current location, and update the table view.
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if (status == CLAuthorizationStatus.authorizedWhenInUse) {
+            self.locationManager.startUpdatingLocation()
+            currentLocation = self.locationManager.location
+        }
+    }
+    
+    // Listen for location errors. If error is of type CLError.denied, the user has disabled location services, so we segue to the no location services view.
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
+        if let clErr = error as? CLError {
+            switch clErr {
+                case CLError.denied:
+                    self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
+                default:
+                    print("other Core Location error")
+            }
+        }
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: NSArray) {
-        let newLocation = locations[0] as? CLLocation
-        currentLocation = newLocation
+    // Listen for updates to the current location.
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        currentLocation = locations[0]
     }
 
     // MARK: Transition Methods
@@ -407,7 +429,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
             
             upcoming.oldCategory = Category.currentTitle!
         }
-        locationManager.stopUpdatingLocation()
+        self.locationManager.stopUpdatingLocation()
     }
     
     // MARK: Misc. methods
