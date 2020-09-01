@@ -29,7 +29,8 @@ class ViewController_NoLocation: UIViewController, CLLocationManagerDelegate {
     // Listen for changes to location services authorization. If authorized, go back to the main view.
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if (status == .authorizedWhenInUse ){
-            self.performSegue(withIdentifier: "locationServicesEnabled", sender: self)
+            self.navigationController?.popToRootViewController(animated: true)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
