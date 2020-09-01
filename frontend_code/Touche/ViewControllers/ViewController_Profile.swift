@@ -1,9 +1,10 @@
 //
-//  ViewController.swift
+//  ViewController_Profile.swift
 //  Prototype
 //
-//  Created by Paimon Pakzad on 4/7/15.
-//  Copyright (c) 2015 cos333. All rights reserved.
+//  View controller for the profile view.
+//
+//  Updated by Michael Manhard on 9/1/20.
 //
 
 import UIKit
