@@ -86,7 +86,7 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         
         // Extract all display information from the question.
         cell.questionLabel.text = question.question
-        cell.timeLabel.text = getTime(timeDifference: question.datetime)
+        cell.timeLabel.text = Utility.getTime(timeDifference: question.datetime)
         cell.Answers = question.answers as NSArray
         cell.QUID = question.id
         cell.numVote = question.total_votes
@@ -156,22 +156,6 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         User.logOut()
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
-    }
-    
-    // Convert the time to a string representation.
-    func getTime(timeDifference: Float) -> String {
-        if timeDifference < 60 {
-            return "\(Int(timeDifference))s"
-        } else if timeDifference < 3600 {
-            let timeDifference = Int(round(timeDifference/60))
-            return "\(timeDifference)m"
-        } else if timeDifference < 86400 {
-            let timeDifference = Int(round(timeDifference/3600))
-            return "\(timeDifference)h"
-        } else {
-            let timeDifference = Int(round(timeDifference/86400))
-            return "\(timeDifference)d"
-        }
     }
     
     // Handler for toggling the asked or answered toggle. Reloads the table with data based on the toggle.

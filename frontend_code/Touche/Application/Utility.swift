@@ -81,6 +81,23 @@ class Utility {
     
     // MARK: Other Methods
     
+    // Convert the time difference (given in seconds) to a string representation.
+    // (i.e. seconds if less than a minute, minutes if less than an hour, hour if less than a day, days otherwise)
+    class func getTime(timeDifference: Float) -> String {
+        if timeDifference < 60 {
+            return "\(Int(timeDifference))s"
+        } else if timeDifference < 3600 {
+            let timeDifference = Int(round(timeDifference/60))
+            return "\(timeDifference)m"
+        } else if timeDifference < 86400 {
+            let timeDifference = Int(round(timeDifference/3600))
+            return "\(timeDifference)h"
+        } else {
+            let timeDifference = Int(round(timeDifference/86400))
+            return "\(timeDifference)d"
+        }
+    }
+    
     // Auxiliary function to resize an image given a target size.
     // Adapted from: https://gist.github.com/hcatlin/180e81cd961573e3c54d
     class func RBResizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
