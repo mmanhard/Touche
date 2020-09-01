@@ -27,11 +27,6 @@ class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayou
     
     var prevScreen: String?
     
-    private let sectionInsets = UIEdgeInsets(top: 10.0,
-    left: 20.0,
-    bottom: 10.0,
-    right: 20.0)
-    
     // MARK: Lifecycle Methods
     
     override func viewDidLoad() {
@@ -163,13 +158,13 @@ class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayou
         
         // Determine the width of the item.
         let numItemsInSection = CGFloat(collectionView.numberOfItems(inSection: indexPath.section))
-        let paddingSpaceX = sectionInsets.left * (numItemsInSection+1)
+        let paddingSpaceX = Constants.typSectionInsets.left * (numItemsInSection+1)
         let availableWidth = collectionView.frame.width - paddingSpaceX
         let widthPerItem = availableWidth / numItemsInSection
         
         // Determine the height of the item.
         let numSections = CGFloat(collectionView.numberOfSections)
-        let paddingSpaceY = sectionInsets.bottom * (numSections+1)
+        let paddingSpaceY = Constants.typSectionInsets.bottom * (numSections+1)
         let availableHeight = collectionView.frame.height - paddingSpaceY
         let heightPerItem = availableHeight / numSections
       
@@ -180,14 +175,14 @@ class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayou
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-      return sectionInsets
+      return Constants.typSectionInsets
     }
     
     // Determine the minimum line spacing for each section.
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-      return sectionInsets.left
+      return Constants.typSectionInsets.left
     }
     
     

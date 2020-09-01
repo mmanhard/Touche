@@ -19,13 +19,6 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
     
     var oldCategory: String?
     
-    let minRowHeight: CGFloat = 36.0
-    
-    private let sectionInsets = UIEdgeInsets(top: 10.0,
-    left: 20.0,
-    bottom: 10.0,
-    right: 20.0)
-    
     // MARK: Collection View Methods
     
     // Determine the number of sections (2 categories per section).
@@ -64,14 +57,14 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
         
         // Determine the width of the item.
         let numItemsInSection = CGFloat(collectionView.numberOfItems(inSection: indexPath.section))
-        let paddingSpaceX = sectionInsets.left * (numItemsInSection + 1)
+        let paddingSpaceX = Constants.typSectionInsets.left * (numItemsInSection + 1)
         let availableWidth = collectionView.frame.width - paddingSpaceX
         print(availableWidth)
         let widthPerItem = availableWidth / numItemsInSection
         
         // Determine the height of the item.
         let numSections = CGFloat(collectionView.numberOfSections)
-        let paddingSpaceY = sectionInsets.bottom * (numSections+1)
+        let paddingSpaceY = Constants.typSectionInsets.bottom * (numSections+1)
         let availableHeight = collectionView.frame.height - paddingSpaceY
         let heightPerItem = availableHeight / numSections
         
@@ -82,14 +75,14 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-      return sectionInsets
+      return Constants.typSectionInsets
     }
     
     // Determine the minimum line spacing for each section.
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-      return sectionInsets.left
+      return Constants.typSectionInsets.left
     }
     
     // Handler for selecting a given category.
