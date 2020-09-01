@@ -2,6 +2,9 @@
 //  Question.swift
 //  Touche
 //
+//
+//  Model for the Question resource.
+//
 //  Created by Michael Manhard on 2/10/20.
 //  Copyright © 2020 Michael Manhard. All rights reserved.
 //
