@@ -20,19 +20,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var categoryRectangle: UIView!
     
     var questions: [Question] = []
-    
     var hot: Bool = false
     var categoryString = "All Categories"
-    
-    var questionPass: Question!
-    
-    var did_I: NSMutableArray = NSMutableArray()
-    var ddnt_I: Int!
-    var myID: Int!
-    
+    var questionToPass: Question!
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation!
-    
     var currentUser: User?
     
     // MARK: Methods to setup current view
@@ -78,6 +70,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    // Updates the table by reloading questions from the backend and reloading the table view.
     func updateTable() {
         var lat: Double?
         var lng: Double?
@@ -97,22 +90,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             category = categoryString
         }
         
+        // Get all questions, store them, and reload the table view.
         QuestionData.getAllQuestions(latitude: lat, longitude: lng, sortBy: sortBy, category: category) { data in
             do {
                 self.questions = QuestionData(data: data!).questionData!
-                
-                for question in self.questions {
-                    var will_I = 0
-                    for responder in question.responders
-                    {
-                        let responded = responder
-                        if (responded == self.myID)
-                        {
-                            will_I = 1
-                        }
-                    }
-                    self.did_I.add(will_I)
-                }
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -184,7 +165,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.questionPass = self.questions[indexPath.row]
+        self.questionToPass = self.questions[indexPath.row]
         self.performSegue(withIdentifier: "viewQuestionFromHome", sender: self)
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
@@ -198,8 +179,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         if (segue.identifier == "viewQuestionFromHome") {
             let upcoming: ViewController_Voting = segue.destination as! ViewController_Voting
-            upcoming.question = self.questionPass
-            upcoming.voteBool = self.questionPass.responders.contains(self.currentUser!.userID!)
+            upcoming.question = self.questionToPass
+            upcoming.voteBool = self.questionToPass.responders.contains(self.currentUser!.userID!)
         }
 
         self.locationManager.stopUpdatingLocation()
