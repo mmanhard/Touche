@@ -31,7 +31,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
     var qTextSegue: String?
     var prevScreen: String?
     
-    var answerArray = ["Yes", "No"]
+    var answerArray = ["Yes", "No"] // Default answers are "Yes" and "No"
     var maxQuestionLength = 160
     var maxAnswerLength = 30
     
@@ -42,37 +42,17 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
     let maxNumAnswers = 4
     var kbHeight: CGFloat!
     
-    private let cellInsets = UIEdgeInsets(top: 10.0,
-    left: 20.0,
-    bottom: 10.0,
-    right: 20.0)
-    
-    private let sectionInsets = UIEdgeInsets(top: 10.0,
-    left: 20.0,
-    bottom: 10.0,
-    right: 20.0)
-    
-    // MARK: Methods to set up current view.
-    
-    override func viewWillAppear(_ animated: Bool) {
-        if (self.chosenCategory != nil) {
-            self.Category.setTitle(self.chosenCategory!, for: .normal)
-        }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
+    // MARK: Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Initialize the location manager delegate.
         self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.desiredAccuracy = Constants.desiredLocAccuracy
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.startUpdatingLocation()
         currentLocation = self.locationManager.location
-
         
         // Set the top left button to be the right image.
         if (prevScreen != nil) {
@@ -96,6 +76,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
             Question.text = self.qTextSegue
         }
         
+        // Set the character count for the question and show a placeholder if there are no characters.
         textCount.text = "\(Question.text.count) / 160"
         placeholder.isHidden = Question.text.count > 0
         
@@ -104,8 +85,31 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         self.Answers.reloadData()
     }
     
-    // MARK: UITextViewDelegate Methods
+    override func viewWillAppear(_ animated: Bool) {
+        
+        // If we came from the choose category view, set the question title equal to what it was before.
+        if (self.chosenCategory != nil) {
+            self.Category.setTitle(self.chosenCategory!, for: .normal)
+        }
+        
+        // Add keyboard observers.
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Remove keyboard observers.
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: TextView Methods
+    
+    // Determine if the text view should begin editining.
+    // Always true, but move the view down if it is already up.
+    // This is necessary for when the user goes from editing an answer that
+    // would have been hidden by the keyboard to this textview.
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         if self.viewIsUp {
             self.moveView(up: false)
@@ -114,13 +118,15 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         return true
     }
     
+    // Handler for when the text view changes. Updates the text count and toggles the placeholder's visibility.
     func textViewDidChange(_ textView: UITextView) {
         placeholder.isHidden = (textView.text.count != 0)
         textCount.text = "\(textView.text.count) / 160"
     }
     
     
-    // Restrict the question text to 160 characters.
+    // Determine if the text view text should change.
+    // True if the user does not type enter and if the question length is less than the max question length.
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if (text.contains("\n")) {
             textView.resignFirstResponder()
@@ -133,24 +139,34 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
     
-    // MARK: UITableViewDataSource and UITableViewDelegate Methods
+    // MARK: CollectionView Methods
     
+    // Determine the total number of sections. Equal to the number of answers plus one (for the add answer button).
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.answerArray.count + 1
     }
     
+    // Determine the number of items in a section. Always 1.
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
     
+    // Populate each item of the answers collection.
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if (indexPath.section < self.answerArray.count) {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "answerCell", for: indexPath) as! CollectionViewCell_AnswerCell
+            
+            // Get the answer text.
             cell.Answer.text = answerArray[indexPath.section]
+            
+            // Set the cells textfield delegate to this controller.
             cell.Answer.delegate = self
+            
+            // Add styles to the cell.
             cell.layer.cornerRadius = 10
             cell.layer.borderColor = CGColor(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.7)
             cell.layer.borderWidth = 5
+            
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "addAnswerCell", for: indexPath)
@@ -159,7 +175,11 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
     
+    // Handler for selecting a given answer. On success, updates the display with the new number of votes. On failure, displays
+    // an alert with information about the error.
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        // Check if the last cell was selected (i.e. the add answer button). If so, add another cell to the answer table if we have not reached the max number of answers. Otherwise, display an alert.
         if (indexPath.section == self.answerArray.count) {
             if (self.answerArray.count < maxNumAnswers) {
                 self.answerArray = getAnswerArray()
@@ -192,38 +212,49 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
 //        }
 //    }
     
-    
+    // Determine the size of the collection view item at the given index path.
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let paddingSpaceX = cellInsets.left + cellInsets.right
+        
+        // Determine the width of the item.
+        let paddingSpaceX = Constants.typSectionInsets.left + Constants.typSectionInsets.right
         let availableWidth = collectionView.frame.width - paddingSpaceX
 
+        // Determine the height of the item.
         let numSections = CGFloat(collectionView.numberOfSections)
-        let paddingSpaceY = (sectionInsets.bottom + sectionInsets.top) * numSections
+        let paddingSpaceY = (Constants.typSectionInsets.bottom + Constants.typSectionInsets.top) * numSections
         let availableHeight = collectionView.frame.height - paddingSpaceY
         let heightPerItem = availableHeight / numSections
 
         return CGSize(width: availableWidth, height: heightPerItem)
     }
 
+    // Determine the insets for each section.
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-      return sectionInsets
+      return Constants.typSectionInsets
     }
 
+    // Determine the minimum line spacing for each section.
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-      return sectionInsets.left
+      return Constants.typSectionInsets.left
     }
     
     // MARK: Method to post a question.
     
+    // Handler for posting a question. Gets all data together for the question and posts it to the backend.
+    // If successful, goes back to the most recent view controller.
+    // If not, displays an alert indicating what went wrong.
     @IBAction func postQuestion(with sender: UIButton) {
         
+        // Determine if the question is valid.
         let (isValid, ErrorMessage) = validQuestion()
+        
+        // If valid, post the question.
         if isValid {
             
             let latitude = currentLocation.coordinate.latitude
@@ -235,9 +266,8 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
                 categoryText = Category.currentTitle!
             }
         
-            // Get the answer text.
+            // Format the answer text for the HTTP request. (i.e. concatenates all answers together with ',' as a delimiter).
             var ansText: String = ""
-            
             for i in 0...(self.Answers.numberOfSections - 2) {
                 let ind = NSIndexPath(row: 0, section: i)
                 let cell = self.Answers.cellForItem(at: ind as IndexPath) as! CollectionViewCell_AnswerCell
@@ -250,6 +280,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         
             let qText: String = self.Question.text
 
+            // Create the question. If succesful, move to the most recent view controller.
             QuestionData.createNewQuestion(question: qText, answers: ansText, latitude: latitude, longitude: longitude, category: categoryText) { data in
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
@@ -257,6 +288,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
                 }
             }
         } else {
+            // Otherwise, display an alert.
             let alertController = UIAlertController(title: "Not a Valid Question!", message:
                 ErrorMessage, preferredStyle: UIAlertController.Style.alert)
             alertController.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default,handler: nil))
@@ -265,37 +297,44 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
     
-    // MARK: UITextFieldDelegate Methods
+    // MARK: Text Field Methods
+    
+    // Determines if the text field should begin editing.
+    // It always does but sets the text field as the active one first.
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         self.activeTextField = textField
         return true
     }
 
+    // Handler for when user changes the string in the text field. Allows changes if the replacement string is not longer than maxAnswerLength.
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newLength = textField.text!.count + string.count - range.length
         return newLength <= maxAnswerLength
     }
     
+    // Determines if the text field should end editing when pressing the return button.
+    // It always does but removes the field's responder first.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
 
+    // Handler for when user stops editing text field.
     func textFieldDidEndEditing(_ textField: UITextField) {
         self.activeTextField = nil
     }
     
-    // MARK: Methods to deal with keyboard popping up.
+    // MARK: Keyboard Handlers
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
-    }
-
+    // Handler for when keyboard will show. Moves the view so the active text field is still in sight after the keyboard has moved up.
     @objc func keyboardWillShow(notification: NSNotification)
     {
         if let userInfo = notification.userInfo {
+            
+            // Determine the keyboard size.
             if let keyboardSize =  (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                
+                // If the view is not already moved up, move it up.
                 if (!self.viewIsUp) {
                     self.kbHeight = keyboardSize.height
                     if self.activeTextField != nil {
@@ -307,6 +346,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
 
+    // Handler for when keyboard will hide. Moves the view back down if it was up.
     @objc func keyboardWillHide(notification: NSNotification)
     {
         if self.viewIsUp {
@@ -314,6 +354,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
     
+    // Moves the view up to avoid the keyboard if up is true. If it is false, moves the view back down.
     private func moveView(up: Bool) {
         if self.kbHeight < 0 {
             let movement: CGFloat = (up ? self.kbHeight : -self.kbHeight)
@@ -325,6 +366,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         }
      }
 
+    // Handler for when user touches begin. If the text field is not active, removes its responder.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         if (self.activeTextField != nil)
@@ -334,7 +376,7 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
 
-    // MARK: CLLocationManagerDelegate Methods
+    // MARK: Location Manager Methods
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
@@ -345,17 +387,20 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         currentLocation = newLocation
     }
 
-    // MARK: Methods to transition to another view controller.
+    // MARK: Transition Methods
     
+    // Handler for selecting choose category. Transitions to the choose category view controller.
     @IBAction func getCategory(with sender: UIButton) {
         self.performSegue(withIdentifier: "chooseCategory", sender: self)
     }
     
+    // Handler for selectingt the cancel button. Transitions to the most recent view controller.
     @IBAction func cancelPost(with sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
     }
     
+    // Handler for preparing for a segue. Primarily used for passing data to the next view controller.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "chooseCategory") {
             let upcoming: ViewController_chooseCategory = segue.destination as! ViewController_chooseCategory
@@ -365,10 +410,13 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         locationManager.stopUpdatingLocation()
     }
     
-    // MARK: Miscellaneous methods
+    // MARK: Misc. methods
     
+    // Get the answers from the display.
     func getAnswerArray() -> Array<String> {
         var answers: Array<String> = []
+        
+        // Go through each section in the answers collection and extract the answer string.
         for i in 0...(self.Answers.numberOfSections - 2) {
             let ind = NSIndexPath(row: 0, section: i)
             let cell = self.Answers.cellForItem(at: ind as IndexPath) as! CollectionViewCell_AnswerCell
@@ -377,7 +425,11 @@ class ViewController_Post: UIViewController, UICollectionViewDataSource, UIColle
         return answers
     }
     
+    // Determines if the question is valid.
+    // The question string and all answer strings must not be empty.
+    // The current location must also not be nil.
     func validQuestion() -> (Bool, String?) {
+        
         if (Question.text.count <= 0) {
             return (false, "Question left blank")
         } else {
