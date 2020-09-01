@@ -37,20 +37,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // MARK: Methods to setup current view
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.currentUser = User.getCurrentUser()
-        if self.currentUser != nil {
-            print("Logged In")
-        } else {
-            self.performSegue(withIdentifier: "needsLogin", sender: self)
-        }
-        
-        self.currentCategory.text = self.categoryString
-        if (currentLocation != nil) {
-            updateTable()
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.currentCategory.text = self.categoryString
@@ -61,20 +47,35 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         self.tableView.rowHeight = UITableView.automaticDimension
         
+        // Configure the location manage delegate.
         self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.desiredAccuracy = Constants.desiredLocAccuracy
         self.locationManager.requestWhenInUseAuthorization()
-        
-        currentLocation = self.locationManager.location
-        
-        if (currentLocation != nil) && (User.getCurrentUser() != nil) {
-            updateTable()
-        }
-        
-        self.locationManager.startUpdatingLocation()
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 160.0
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.currentUser = User.getCurrentUser()
+        if self.currentUser != nil {
+            print("Logged In")
+        } else {
+            self.performSegue(withIdentifier: "needsLogin", sender: self)
+        }
+        
+        self.currentCategory.text = self.categoryString
+        
+        // Check if we are authorized to monitor the user's location. If so, listen for updates to the location, set the current location, and update the table.
+        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse) {
+            self.locationManager.startUpdatingLocation()
+            self.currentLocation = self.locationManager.location
+            if (self.currentLocation != nil) {
+                updateTable()
+            }
+        } else {
+            self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
+        }
     }
     
     // Auxiliary function to resize an image.
@@ -153,15 +154,32 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // MARK: CLLocationManagerDelegate Methods
     
+    // Listen for changes to the location services authorization status. If authorized, start updating locations, set the current location, and update the table view.
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if (status == CLAuthorizationStatus.authorizedWhenInUse) {
+            self.locationManager.startUpdatingLocation()
+            currentLocation = self.locationManager.location
+            updateTable()
+        }
+    }
+    
+    // Listen for location errors. If error is of type CLError.denied, the user has disabled location services, so we segue to the no location services view.
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
+        if let clErr = error as? CLError {
+            switch clErr {
+                case CLError.denied:
+                    self.performSegue(withIdentifier: "locationServicesDisabled", sender: self)
+                default:
+                    print("other Core Location error")
+            }
+        }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: NSArray) {
-        let newLocation = locations[0] as? CLLocation
-        currentLocation = newLocation
+    // Listen for updates to the current location.
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        currentLocation = locations[0]
     }
-    
+
     // MARK: UITableViewDataSource Methods
     // Determine the number of questions.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

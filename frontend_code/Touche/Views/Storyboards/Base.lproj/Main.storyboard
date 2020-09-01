@@ -945,7 +945,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mEV-6M-73G">
-                                <rect key="frame" x="20" y="133" width="374" height="79.5"/>
+                                <rect key="frame" x="20" y="133" width="374" height="82"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="82" id="QVZ-Jg-0Yu"/>
                                 </constraints>
@@ -955,7 +955,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WUq-ax-lg3">
-                                <rect key="frame" x="0.0" y="359.5" width="414" height="502.5"/>
+                                <rect key="frame" x="0.0" y="362" width="414" height="500"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JkO-xf-1sn">
                                     <size key="itemSize" width="200" height="200"/>
@@ -1011,7 +1011,7 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2bE-dS-54h">
-                                <rect key="frame" x="0.0" y="284.5" width="414" height="75"/>
+                                <rect key="frame" x="0.0" y="287" width="414" height="75"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vote Below" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HQ4-Mf-ZoT">
                                         <rect key="frame" x="132" y="22.5" width="150" height="30"/>
@@ -1032,7 +1032,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sp8-zY-1AA">
-                                <rect key="frame" x="20" y="220.5" width="86" height="30"/>
+                                <rect key="frame" x="20" y="223" width="91.5" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="8O7-rO-wRs"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="82" id="fl2-aM-2DZ"/>
@@ -1042,7 +1042,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CategorySlot" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SdR-nf-Woz">
-                                <rect key="frame" x="20" y="255.5" width="200" height="21"/>
+                                <rect key="frame" x="20" y="258" width="200" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="It5-5O-pYi"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="eY3-ze-IjL"/>
@@ -1129,7 +1129,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="N6X-tk-CX6"/>
-        <segue reference="GLO-8t-bUk"/>
+        <segue reference="Cnc-tH-i8u"/>
+        <segue reference="ehm-o5-375"/>
     </inferredMetricsTieBreakers>
 </document>

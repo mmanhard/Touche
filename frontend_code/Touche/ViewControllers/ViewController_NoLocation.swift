@@ -15,30 +15,27 @@ import CoreLocation
 
 class ViewController_NoLocation: UIViewController, CLLocationManagerDelegate {
 
+    @IBOutlet weak var visitSettingsButton: UIButton!
+
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         
-        // Configure the location manager.
         self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.startUpdatingLocation()
+        
+        visitSettingsButton.layer.cornerRadius = 10
     }
     
-    // MARK: CLLocationManagerDelegate Methods
-    
-    
-    func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
-        self.performSegue(withIdentifier: "locationServicesEnabled", sender: self)
-    }
-    
-    // MARK: Method to transition to another view controller
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "gotLocation") {
-            self.locationManager.stopUpdatingLocation()
+    // Listen for changes to location services authorization. If authorized, go back to the main view.
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if (status == .authorizedWhenInUse ){
+            self.performSegue(withIdentifier: "locationServicesEnabled", sender: self)
         }
+    }
+    
+    // Visits the settings page.
+    @IBAction func visitSettings() {
+        UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
     }
 
 }

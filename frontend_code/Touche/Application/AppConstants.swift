@@ -7,11 +7,14 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct Constants {
     static let host = "http://127.0.0.1:5000/"
     
     static let userPath = "users/"
     static let questionPath = "questions/"
+    
+    static let desiredLocAccuracy = kCLLocationAccuracyHundredMeters
 }
 
