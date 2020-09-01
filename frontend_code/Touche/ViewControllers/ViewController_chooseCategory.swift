@@ -17,7 +17,6 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var bar: UIView!
     
-    var categories = ["Academics", "Business", "Food", "Health", "Humor", "Movies", "Music", "Sex", "Social", "Sports", "Miscellaneous"]
     var oldCategory: String?
     
     let minRowHeight: CGFloat = 36.0
@@ -33,14 +32,14 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
     // MARK: Transition to Other VC
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return (self.categories.count / 2 + self.categories.count % 2)
+        return (Constants.availCategories.count / 2 + Constants.availCategories.count % 2)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section < (self.categories.count / 2) {
+        if section < (Constants.availCategories.count / 2) {
             return 2
         } else {
-            return 2 - (self.categories.count % 2)
+            return 2 - (Constants.availCategories.count % 2)
         }
     }
     
@@ -48,7 +47,7 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCell", for: indexPath) as! CollectionViewCell
     
         let categoryNum = 2 * (indexPath.section) + indexPath.row
-        cell.titleLabel.text = self.categories[categoryNum]
+        cell.titleLabel.text = Constants.availCategories[categoryNum]
         cell.layer.cornerRadius = 10
         cell.layer.borderColor = CGColor(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.7)
         cell.layer.borderWidth = 5
@@ -88,7 +87,7 @@ class ViewController_chooseCategory: UIViewController, UICollectionViewDataSourc
         let numVCs = self.navigationController?.viewControllers.count
         let nextVC = self.navigationController?.viewControllers[numVCs! - 2] as! ViewController_Post
         let categoryNum = 2 * (indexPath.section) + indexPath.row
-        nextVC.chosenCategory = self.self.categories[categoryNum]
+        nextVC.chosenCategory = Constants.availCategories[categoryNum]
         collectionView.deselectItem(at: indexPath, animated: true)
         
         self.navigationController?.popViewController(animated: true)

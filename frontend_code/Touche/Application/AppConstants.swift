@@ -15,6 +15,8 @@ struct Constants {
     static let userPath = "users/"
     static let questionPath = "questions/"
     
+    static let availCategories = ["All Categories", "Academics", "Business", "Food", "Health", "Humor", "Movies", "Music", "Sex", "Social", "Sports", "Miscellaneous"]
+    
     static let desiredLocAccuracy = kCLLocationAccuracyHundredMeters
 }
 
