@@ -23,6 +23,7 @@ class ViewController_Login: UIViewController {
         self.passwordFieldText.isSecureTextEntry = true
     }
     
+    // On login failure, displays an alert given the response from the backend.
     private func logInFailed(data: Data?, response: URLResponse?, error: Error?) {
         DispatchQueue.main.async {
             let message = String(decoding: data!, as: UTF8.self)
@@ -32,6 +33,7 @@ class ViewController_Login: UIViewController {
         }
     }
     
+    // Handler for selecting login. Creates a new User instance from the user details returned from the backend. On success, goes to the main screen. On failure, displays an alert.
     @IBAction func didTapLogIn(sender: AnyObject) {
         User.logIn(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, doOnSuccess: { data in
             
