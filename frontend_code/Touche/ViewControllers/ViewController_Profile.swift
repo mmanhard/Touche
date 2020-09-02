@@ -29,11 +29,13 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         let size = CGSize(width: 36, height: 36)
         self.homeButton.setImage(Utility.RBResizeImage(image: image!, targetSize: size), for: .normal)
         
-        updateTable()
-        
         // Configure the table.
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 160.0
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        updateTable()
     }
     
     // MARK: TableView Methods

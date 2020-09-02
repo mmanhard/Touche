@@ -50,6 +50,19 @@ class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayou
         self.Question.sizeToFit()
         self.CategorySlot.text = self.question.category
         
+        // Determine if the user has voted on this question before.
+        if let currentUser = User.getCurrentUser() {
+            let userID = currentUser.userID
+            if (userID != nil) {
+                for responder in self.question.responders {
+                    if (responder == userID) {
+                        self.voteBool = true
+                        break
+                    }
+                }
+            }
+        }
+        
         self.collectionView.reloadData()
     }
 
@@ -81,6 +94,7 @@ class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "mainCell", for: indexPath) as! CollectionViewCell_Voting
         var answerID : Int
+        
         if self.question.answers.count == 2 {
             answerID = indexPath.section
         } else {
