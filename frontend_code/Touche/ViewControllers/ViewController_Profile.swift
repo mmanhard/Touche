@@ -1,9 +1,10 @@
 //
-//  ViewController.swift
+//  ViewController_Profile.swift
 //  Prototype
 //
-//  Created by Paimon Pakzad on 4/7/15.
-//  Copyright (c) 2015 cos333. All rights reserved.
+//  View controller for the profile view.
+//
+//  Updated by Michael Manhard on 9/1/20.
 //
 
 import UIKit
@@ -12,68 +13,42 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
     
     @IBOutlet var tableView:UITableView!
     @IBOutlet weak var homeButton: UIButton!
-    var selectedIndex = -1
     
     var questions_asked: [Question] = []
     var questions_answered: [Question] = []
-    
     var questionPass : Question!
-    
     var asked: Bool = true
     
-    // MARK: Methods to set up current view.
+    // MARK: Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
+        // Set the touche icon as the header button and resize it.
         let image = UIImage(named:"touche_icon.png") as UIImage?
         let size = CGSize(width: 36, height: 36)
-        self.homeButton.setImage(RBResizeImage(image: image!, targetSize: size), for: .normal)
+        self.homeButton.setImage(Utility.RBResizeImage(image: image!, targetSize: size), for: .normal)
         
-        updateTable()
-        
+        // Configure the table.
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 160.0
     }
     
-    // Auxiliary function to resize an image.
-    // Adapted from: https://gist.github.com/hcatlin/180e81cd961573e3c54d
-    func RBResizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
-        let size = image.size
-        
-        let widthRatio  = targetSize.width  / image.size.width
-        let heightRatio = targetSize.height / image.size.height
-        
-        // Figure out what our orientation is, and use that to form the rectangle
-        var newSize: CGSize
-        if(widthRatio > heightRatio) {
-            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
-        } else {
-            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
-        }
-        
-        // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        
-        // Actually do the resizing to the rect using the ImageContext stuff
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.draw(in: rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        // ******************
-        // MUST ADD EXCEPTION CASE!!!!
-        //
-        // ********
-        return newImage!
+    override func viewWillAppear(_ animated: Bool) {
+        updateTable()
     }
     
+    // MARK: TableView Methods
+    
+    // Updates the table after get questions from the backend for the current user.
     func updateTable() {
+        // Get the current user.
         if let user = User.getCurrentUser() {
+            // If there is a current user, get questions asked by that user.
             user.getQuestionsAsked() { data in
                 self.questions_asked = QuestionData(data: data!).questionData!
                 
+                // After getting questions asked, get questions answer by the user and reload the table.
                 user.getQuestionsAnswered() { data in
                     self.questions_answered = QuestionData(data: data!).questionData!
 
@@ -83,15 +58,12 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
                 }
             }
         } else {
-            // ******************
-            // MUST ADD EXCEPTION CASE!!!!
-            // ********
-            print("SHOULD HANDLE ERROR")
+            // If unsuccesful, log out as the user needs to re enter credentials.
+            self.logOut()
         }
     }
     
-    // MARK: UITableViewDataSource and UITableViewDelegate Methods
-    
+    // Determine the number of rows in the table.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (asked)
         {
@@ -103,23 +75,27 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         }
     }
     
+    // Determine the row for the given index.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "questionCell", for: indexPath) as! TableViewCell_Question
         
+        // Get the appropriate question.
         var question : Question
         if (asked) {
             question = self.questions_asked[indexPath.row]
         } else {
             question = self.questions_answered[indexPath.row]
         }
-            
+        
+        // Extract all display information from the question.
         cell.questionLabel.text = question.question
-        cell.timeLabel.text = getTime(timeDifference: question.datetime)
+        cell.timeLabel.text = Utility.getTime(timeDifference: question.datetime)
         cell.Answers = question.answers as NSArray
         cell.QUID = question.id
         cell.numVote = question.total_votes
         cell.qCategory = question.category
         
+        // Determine the number of votes and format the string for it.
         let numVotes = question.total_votes
         if numVotes == 1 {
             cell.voteCountLabel.text = "\(numVotes) vote"
@@ -130,35 +106,40 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         return cell
     }
     
+    // Handler for selecting the row at the given index. Transition to the voting view controller for that item.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
+        // Get the appropriate question.
         if asked {
             self.questionPass = self.questions_asked[indexPath.row]
         } else {
             self.questionPass = self.questions_answered[indexPath.row]
         }
         
+        // Transition to the view for the chosen question and deselect the item.
         self.performSegue(withIdentifier: "viewQuestionFromProfile", sender: self)
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
     
-    // MARK: Methods to transition to another view controller.
+    // MARK: Transition Methods
     
+    // Handler for selecting post question. Transitions to the post view controller.
     @IBAction func postQuestion(with sender: UIButton) {
         self.performSegue(withIdentifier: "postFromProfile", sender: self)
     }
     
+    // Handler for selecting the go home button. Transitions back to the most recent view.
     @IBAction func goHome(with sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
     }
     
+    // Handler for selecting log out. Logs the user out and goes to the login view.
     @IBAction func logOut(with sender: UIButton) {
-        User.logOut()
-        self.navigationController?.popViewController(animated: true)
-        self.dismiss(animated: true, completion: nil)
+        self.logOut()
     }
     
+    // Handler for preparing for segues. Primarily deals with passing data to the next view.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "viewQuestionFromProfile")
         {
@@ -171,22 +152,16 @@ class ViewController_Profile: UIViewController,  UITableViewDataSource, UITableV
         }
     }
     
-    // MARK: Miscellaneous methods    
-    func getTime(timeDifference: Float) -> String {
-        if timeDifference < 60 {
-            return "\(Int(timeDifference))s"
-        } else if timeDifference < 3600 {
-            let timeDifference = Int(round(timeDifference/60))
-            return "\(timeDifference)m"
-        } else if timeDifference < 86400 {
-            let timeDifference = Int(round(timeDifference/3600))
-            return "\(timeDifference)h"
-        } else {
-            let timeDifference = Int(round(timeDifference/86400))
-            return "\(timeDifference)d"
-        }
+    // MARK: Miscellaneous methods
+    
+    // Logs the user out and goes to the login view.
+    private func logOut() {
+        User.logOut()
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
     
+    // Handler for toggling the asked or answered toggle. Reloads the table with data based on the toggle.
     @IBAction func askedOrAnswered(with sender: AnyObject) {
         asked = !asked
         self.tableView.reloadData()

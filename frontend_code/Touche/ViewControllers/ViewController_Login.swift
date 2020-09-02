@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import FacebookCore
-import FacebookLogin
 
 class ViewController_Login: UIViewController {
     
@@ -23,10 +21,9 @@ class ViewController_Login: UIViewController {
         
         self.loginButton.layer.cornerRadius = 10
         self.passwordFieldText.isSecureTextEntry = true
-//        loginButtonFB.permissions = ["public_profile", "email"];
-//        loginButtonFB.delegate = self
     }
     
+    // On login failure, displays an alert given the response from the backend.
     private func logInFailed(data: Data?, response: URLResponse?, error: Error?) {
         DispatchQueue.main.async {
             let message = String(decoding: data!, as: UTF8.self)
@@ -36,6 +33,7 @@ class ViewController_Login: UIViewController {
         }
     }
     
+    // Handler for selecting login. Creates a new User instance from the user details returned from the backend. On success, goes to the main screen. On failure, displays an alert.
     @IBAction func didTapLogIn(sender: AnyObject) {
         User.logIn(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, doOnSuccess: { data in
             
@@ -49,25 +47,5 @@ class ViewController_Login: UIViewController {
                 print("COULD NOT RETRIEVE USER")
             }
         }, doOnFailure: logInFailed(data:response:error:))
-    }
-}
-
-extension ViewController_Login: LoginButtonDelegate {
-    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        if let e = error {
-            print(e.localizedDescription)
-        } else {
-            if (result!.isCancelled) {
-                print("DID NOT LOG IN!")
-            } else {
-                navigationController?.popViewController(animated: true)
-
-                dismiss(animated: true, completion: nil)
-            }
-        }
-    }
-    
-    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
-        print("LOGGED OUT")
     }
 }

@@ -22,6 +22,7 @@ class ViewController_SignUp: UIViewController {
         self.passwordFieldText.isSecureTextEntry = true
     }
     
+    // On sign up failure, displays an alert given the response from the backend.
     private func signUpFailed(data: Data?, response: URLResponse?, error: Error?) {
         DispatchQueue.main.async {
             let message = String(decoding: data!, as: UTF8.self)
@@ -31,6 +32,7 @@ class ViewController_SignUp: UIViewController {
         }
     }
     
+    // Handler for selecting sign up. Creates a new user. On success, goes to the main screen. On failure, displays an alert.
     @IBAction func didTapSignUp(sender: AnyObject) {
         User.signUp(username: self.usernameFieldText.text!, password: self.passwordFieldText.text!, cellNumber: self.cellFieldText.text!, doOnSuccess: { data in
                 if let user = User.getCurrentUser() {
@@ -46,6 +48,7 @@ class ViewController_SignUp: UIViewController {
         }, doOnFailure: signUpFailed(data:response:error:))
     }
     
+    // Handler for selecting log in. Goes back to the login view.
     @IBAction func didTapLogIn(sender: AnyObject) {
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
