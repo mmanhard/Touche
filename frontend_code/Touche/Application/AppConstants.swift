@@ -11,7 +11,7 @@ import CoreLocation
 import UIKit
 
 struct Constants {
-    static let host = "http://127.0.0.1:5000/"
+    static let host = "https://touche-backend.herokuapp.com/"
     
     static let userPath = "users/"
     static let questionPath = "questions/"
