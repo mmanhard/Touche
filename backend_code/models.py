@@ -46,12 +46,16 @@ class Question(db.Model, Base):
 	lat = Column(Float)
 	lng = Column(Float)
 
+	# Determines if a location (latitude = l1 and longitude = l2) is within a
+	# specified distance, dist (in m), of where the question was posted. 
 	@hybrid_method
 	def within(self, l1, l2, dist):
 		me = func.ll_to_earth(self.lat, self.lng)
 		you = func.ll_to_earth(l1, l2)
 		return func.earth_distance(me, you) < dist
 
+	# Determines if a location (latitude = l1 and longitude = l2) is within a
+	# specified distance, dist (in m), of where the question was posted.
 	@within.expression
 	def within(cls, l1, l2, dist):
 		me = func.ll_to_earth(cls.lat, cls.lng)

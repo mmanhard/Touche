@@ -11,6 +11,7 @@ def create_app():
 
     return app
 
+# Create the app and set up the database.
 app = create_app()
 db = SQLAlchemy(app)
 
@@ -18,6 +19,7 @@ from routes.users import user_api
 from routes.questions import question_api
 from routes.others import other_api
 
+# Register blueprints for routing.
 app.register_blueprint(user_api, url_prefix='/users')
 app.register_blueprint(question_api, url_prefix='/questions')
 app.register_blueprint(other_api, url_prefix='/')
