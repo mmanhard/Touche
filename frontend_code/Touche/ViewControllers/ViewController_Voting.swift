@@ -135,7 +135,14 @@ class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayou
     // Handler for selecting a given answer. On success, updates the display with the new number of votes. On failure, displays
     // an alert with information about the error.
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let answerID = indexPath.row + indexPath.section * 2
+        
+        // Determine the selected answer id.
+        var answerID = indexPath.row
+        if (self.question.answers.count == 2) {
+            answerID += indexPath.section
+        } else {
+            answerID += indexPath.section * 2
+        }
         
         // Send a request to the backend indicating the user has voted on the question.
         QuestionData.voteOnQuestion(questionId: self.question.id, answerID: answerID, doOnSuccess: { data in
