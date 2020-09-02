@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2782D7FC1AFA8F8100549F29"
-               BuildableName = "Touche&#x301;.app"
+               BuildableName = "Touche.app"
                BlueprintName = "Touche"
                ReferencedContainer = "container:Touche.xcodeproj">
             </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2782D7FC1AFA8F8100549F29"
-            BuildableName = "Touche&#x301;.app"
+            BuildableName = "Touche.app"
             BlueprintName = "Touche"
             ReferencedContainer = "container:Touche.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2782D7FC1AFA8F8100549F29"
-            BuildableName = "Touche&#x301;.app"
+            BuildableName = "Touche.app"
             BlueprintName = "Touche"
             ReferencedContainer = "container:Touche.xcodeproj">
          </BuildableReference>
