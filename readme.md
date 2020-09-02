@@ -15,6 +15,15 @@ The back-end of the application is hosted on Heroku and can be found
 
 Unfortunately, the front-end is not available on the Apple App Store.
 
+#### Test Account
+
+There is a test account that has already posted and answered a number of questions.
+If you would like to use this account to play around with the app, feel free. The
+credentials are as follows:
+
+&nbsp;&nbsp;&nbsp;&nbsp;**Username:** toucheTest
+&nbsp;&nbsp;&nbsp;&nbsp;**Password:** password1234
+
 ## Tech Stack
 
 Front-End: Swift
@@ -134,8 +143,10 @@ directory where your local repo is located:
 
 ```
 $ heroku login
-$ heroku create
+$ heroku create <APP_NAME>
 ```
+
+Where `<APP_NAME>` is the name you have selected for your back-end application.
 
 ##### 2. Configure the app for production:
 
@@ -149,9 +160,8 @@ Make sure you complete the following from the top-level directory of this repo.
 
 ```
 $ heroku git:remote -a <APP_NAME>
-$ git subtree push --prefix back-end_code heroku master
+$ git subtree push --prefix backend_code heroku master
 ```
-Where `<APP_NAME>` is the name you have selected for your back-end application.
 
 After pushing changes, Heroku will automatically build the production version of
 the app and run it. However, you still need to set up the database tables.
@@ -160,5 +170,5 @@ the app and run it. However, you still need to set up the database tables.
 
 ```
 $ heroku run python manage.py db upgrade --app <APP_NAME>
-$ heroku run python3 manage.py add_earth_ext --app <APP_NAME>
+$ heroku run python manage.py add_earth_ext --app <APP_NAME>
 ```
