@@ -70,7 +70,7 @@ From there, follow the steps below:
 ##### 1. Set up the virtual environment:
 
 ```
-$ cd back-end_code
+$ cd backend_code
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ pip3 install -r requirements.txt
@@ -94,6 +94,7 @@ export APP_SETTINGS="config.DevelopmentConfig"
 ```
 $ psql
     # CREATE DATABASE <DATABASE_NAME>;
+    # \c <DATABASE_NAME>
     # CREATE EXTENSION IF NOT EXISTS cube;
     # CREATE EXTENSION IF NOT EXISTS earthdistance;
     # \q
