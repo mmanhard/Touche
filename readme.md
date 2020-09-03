@@ -32,6 +32,11 @@ Back-End: Flask + Python + PostgreSQL
 
 ## Setup and Usage - Front-End
 
+#### Requirements
+
+* `XCode` >= v11.3.1
+* `Swift` >= v5.1.3
+
 The easiest way to test and build the front-end is with Xcode.
 
 ##### 1. Open the project:
@@ -68,10 +73,13 @@ requests. NOTE: You won't need to change this if using option (1).
 Build and run the code by pressing the play button in the top-left corner of
 Xcode. The application should open up in the Simulator.
 
-**NOTE**: This application was tested using Xcode Version 11.3.1. Older versions
-may have issues building the application.
-
 ## Local Setup and Usage - Back-End
+
+#### Requirements
+
+* `pip3` >= v19.0.3
+* `PostgreSQL` >= v12.4
+* `python` >= v3.7.4
 
 After cloning this repo, navigate to the directory containing the cloned repo.
 From there, follow the steps below:
@@ -133,6 +141,10 @@ to use a different one, append `-p <PORT_NUM>`, where `<PORT_NUM>` is the desire
 number, to `flask run`.
 
 ## Deployment - Back-End
+
+#### Requirements
+
+* `heroku CLI` >= 7.42.11
 
 The live version is hosted on Heroku.
 
