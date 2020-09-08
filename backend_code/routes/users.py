@@ -115,7 +115,8 @@ def get_questions_asked_by_user(uid):
     s = []
     for a in asked:
         question = db.session.query(Question).get(a)
-        s.append(question.serialize())
+        if question:
+            s.append(question.serialize())
 
     sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
     return make_response(json.dumps(sorted_questions, sort_keys=True, indent=4), 200)
@@ -134,7 +135,8 @@ def get_questions_answered_by_user(uid):
         s = []
         for a in answered:
             question = db.session.query(Question).get(a)
-            s.append(question.serialize())
+            if question:
+                s.append(question.serialize())
 
         sorted_questions = sorted(s, key=lambda user:(user['datetime']), reverse=False)
         return make_response(json.dumps(sorted_questions, sort_keys=True, indent=4), 200)
