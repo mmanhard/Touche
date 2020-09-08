@@ -185,7 +185,7 @@ class ViewController_Voting: UIViewController, UICollectionViewDelegateFlowLayou
         
         // Determine the height of the item.
         let numSections = CGFloat(collectionView.numberOfSections)
-        let paddingSpaceY = Constants.typSectionInsets.bottom * (numSections+1)
+        let paddingSpaceY = (Constants.typSectionInsets.bottom + Constants.typSectionInsets.top) * numSections
         let availableHeight = collectionView.frame.height - paddingSpaceY
         let heightPerItem = availableHeight / numSections
       
