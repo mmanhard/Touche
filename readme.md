@@ -45,8 +45,8 @@ After cloning this repo, navigate to the directory containing the cloned repo.
 Open the Xcode project with:
 
 ```
-cd frontend_code
-open Touche.xcodeproj
+$ cd frontend_code
+$ open Touche.xcodeproj
 ```
 
 ##### 2. Choose the correct scheme:
@@ -61,8 +61,12 @@ You have (3) options:
 1. Use the live version of the back-end hosted on Heroku. Feel free to use this
 as the app is hosted for demonstration purposes only. The URL for this option is
 `https://touche-back-end.herokuapp.com/`.
-2. Run the back-end locally with [these steps](https://github.com/mmanhard/Touche#local-setup-and-usage---back-end). If you used the default port, the URL will be `http://localhost:5000/`.
-3. Host your own version of the back-end on Heroku using [these steps](https://github.com/mmanhard/Touche#deployment---back-end). Heroku will let you know the URL of your back-end application.
+2. Run the back-end locally with [these steps](https://github.com/mmanhard/Touche#local-setup-and-usage---back-end).
+If you used the default port, the URL will be `http://127.0.0.1:5000/`. **NOTE**:
+The iOS simulator may have issues connecting if you use `localhost` instead of
+your localhost's IP address (typically `127.0.0.1`).
+3. Host your own version of the back-end on Heroku using [these steps](https://github.com/mmanhard/Touche#deployment---back-end).
+Heroku will let you know the URL of your back-end application.
 
 Next, change the variable `host` in `Touche/Application/AppConstants.swift` to
 the URL of your back-end. This will let the front-end know where to make HTTP
@@ -101,9 +105,9 @@ This will create a virtual environment for managing package dependencies.
 ##### 2. Configure the app:
 
 ```
-export FLASK_APP=app
-export FLASK_ENV=development
-export APP_SETTINGS="config.DevelopmentConfig"
+$ export FLASK_APP=app
+$ export FLASK_ENV=development
+$ export APP_SETTINGS="config.DevelopmentConfig"
 ```
 
 ##### 3. Set up the database:
@@ -166,7 +170,7 @@ Where `<APP_NAME>` is the name you have selected for your back-end application.
 $ heroku config:set APP_SETTINGS=config.ProductionConfig
 ```
 
-##### 3. Push all files from the `back-end_code` directory only:
+##### 3. Push all files from the `backend_code` directory only:
 
 Make sure you complete the following from the top-level directory of this repo.
 
