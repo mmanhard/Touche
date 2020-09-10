@@ -167,7 +167,7 @@ Where `<APP_NAME>` is the name you have selected for your back-end application.
 ##### 2. Configure the app for production:
 
 ```
-$ heroku config:set APP_SETTINGS=config.ProductionConfig
+$ heroku config:set APP_SETTINGS=config.ProductionConfig -a <APP_NAME>
 ```
 
 ##### 3. Push all files from the `backend_code` directory only:
@@ -176,6 +176,8 @@ Make sure you complete the following from the top-level directory of this repo.
 
 ```
 $ heroku git:remote -a <APP_NAME>
+$ git add .
+$ git commit -am "Enter a nice commit message here!"
 $ git subtree push --prefix backend_code heroku master
 ```
 
@@ -185,6 +187,6 @@ the app and run it. However, you still need to set up the database tables.
 ##### 4. Set up the database:
 
 ```
-$ heroku run python manage.py db upgrade --app <APP_NAME>
-$ heroku run python manage.py add_earth_ext --app <APP_NAME>
+$ heroku run python manage.py db upgrade -a <APP_NAME>
+$ heroku run python manage.py add_earth_ext -a <APP_NAME>
 ```
