@@ -11,7 +11,7 @@ geopy==1.21.0
 gunicorn==19.5.0
 httplib2==0.18.0
 itsdangerous==0.24
-Jinja2==2.11.1
+Jinja2==2.11.3
 Mako==1.0.1
 MarkupSafe==0.23
 psycopg2-binary==2.8.4
